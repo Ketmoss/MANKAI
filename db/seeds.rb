@@ -36,11 +36,12 @@ end
 def create_manga(manga_data)
   # Adaptation selon votre modèle Manga
   # Ajustez les attributs selon votre schema
-  Manga.find_or_create_by(jikan_id: manga_data['mal_id']) do |manga|
+  DbManga.find_or_create_by(jikan_id: manga_data['mal_id']) do |manga|
     manga.title = manga_data['title_english']
     manga.genre = manga_data['genres'].map { |g| g['name'] }.join(', ')
     manga.synopsis = manga_data['synopsis']&.truncate(1000) # Limiter la taille
     manga.status = manga_data['status']
+    manga.author = manga_data['authors'].map { |g| g['name'] }.join(', ')
     manga.chapter = manga_data['chapters']
     manga.volume = manga_data['volumes']
     manga.image_url = manga_data.dig('images', 'jpg', 'large_image_url')
@@ -115,9 +116,8 @@ puts "   - Mangas créés: #{total_created}"
 puts "   - Pages traitées: #{page - 1}"
 
 # Afficher quelques stats
-if Manga.count > 0
+if DbManga.count > 0
   puts "\n📈 Aperçu des données:"
-  puts "   - Total mangas en base: #{Manga.count}"
-  puts "   - Dernier manga ajouté: #{Manga.last&.title}"
-  puts "   - Manga le mieux noté: #{Manga.where.not(score: nil).order(score: :desc).first&.title}"
+  puts "   - Total mangas en base: #{DbManga.count}"
+  puts "   - Dernier manga ajouté: #{DbManga.last&.title}"
 end
