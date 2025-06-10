@@ -1,0 +1,2 @@
+class DbManga < ApplicationRecord
+end
