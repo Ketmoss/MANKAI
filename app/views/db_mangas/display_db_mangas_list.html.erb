@@ -1,0 +1,5 @@
+<% @db_mangas.each do |manga| %>
+	<%= link_to user_collection_creating_owned_manga_path(@user_collection, manga.id) , data: {turbo_method: :post} do %>
+		<%= manga.title %>
+	<% end %>
+<% end %>
