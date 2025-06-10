@@ -41,8 +41,8 @@ def create_manga(manga_data)
     manga.genre = manga_data['genres'].map { |g| g['name'] }.join(', ')
     manga.synopsis = manga_data['synopsis']&.truncate(1000) # Limiter la taille
     manga.status = manga_data['status']
-    manga.chapters = manga_data['chapters']
-    manga.volumes = manga_data['volumes']
+    manga.chapter = manga_data['chapters']
+    manga.volume = manga_data['volumes']
     manga.image_url = manga_data.dig('images', 'jpg', 'large_image_url')
 
   end
