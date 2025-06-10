@@ -1,3 +1,4 @@
 class UserCollection < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, dependent: :destroy
+  has_many :owned_manga
 end
