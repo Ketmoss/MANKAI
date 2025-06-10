@@ -121,3 +121,14 @@ if DbManga.count > 0
   puts "   - Total mangas en base: #{DbManga.count}"
   puts "   - Dernier manga ajouté: #{DbManga.last&.title}"
 end
+
+
+
+# user1 = User.create!(email: "test@gmail.com", password: "azerty")
+# user_collection_test = UserCollection.create!(name: "Shonen",user_id: user1.id)
+# OwnedManga.create!(db_manga_id: DbManga.first.id , user_collection_id: user_collection_test.id)
+
+# User.first.owned_mangas.each do |ow|
+#   ow.db_manga.title
+# end
+

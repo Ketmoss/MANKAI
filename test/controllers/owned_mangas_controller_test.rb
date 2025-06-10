@@ -1,6 +1,6 @@
 require "test_helper"
 
-class OwnedmangasControllerTest < ActionDispatch::IntegrationTest
+class OwnedMangasControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end
