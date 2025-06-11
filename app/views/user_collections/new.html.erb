@@ -1,0 +1,17 @@
+
+<div class="container my-5">
+  <div class="form-wrapper">
+    <h1 class="form-title">📓 New Collection</h1>
+
+    <%= simple_form_for(@user_collection) do |f| %>
+      <div class="mb-3">
+        <%= f.input :name, label: "Collection name", input_html: { class: "form-control" } %>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <%= link_to "← Retour aux listes", user_collections_path, class: "btn custom-btn-outline" %>
+        <%= f.submit "📁 Créer la liste", class: "btn custom-btn-gradient" %>
+      </div>
+    <% end %>
+  </div>
+</div>
