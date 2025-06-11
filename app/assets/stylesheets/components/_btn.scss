@@ -1,0 +1,18 @@
+.btn-red {
+  background-color: $manga-primary !important;
+  color: $on_background !important;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $background !important;
+    color: $on_background !important;
+    outline: $manga-primary solid 2px;
+  }
+
+  &:focus, &:active {
+    box-shadow: 0 0 0 0.2rem $manga-primary !important;
+  }
+}
