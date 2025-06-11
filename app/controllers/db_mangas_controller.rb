@@ -1,8 +1,9 @@
 class DbMangasController < ApplicationController
-
+  include Pagy::Backend
 
 
   def index
+    @pagy, @dbmangas = pagy(DbManga.all, items: 10)
     @dbmangas = DbManga.all
     if params[:query].present?
       if params[:query].present?
