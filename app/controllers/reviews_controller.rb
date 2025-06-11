@@ -7,8 +7,9 @@ before_action :set_dbmanga, only: %i[new create]
 
   def create
     @review = Review.new(review_params)
+    @review.user = current_user
     @review.db_manga = @dbmanga
-    if @review.save
+    if @review.save!
       redirect_to db_manga_path(@dbmanga)
     else
       render :new, status: :unprocessable_entity
@@ -28,7 +29,7 @@ def destroy
   private
 
   def set_dbmanga
-    @manga = DbManga.find(params[:db_manga_id])
+    @dbmanga = DbManga.find(params[:db_manga_id])
   end
 
   def review_params
