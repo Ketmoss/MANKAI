@@ -27,8 +27,23 @@
         <% end %>
         <% end %>
     </div>
-    <div class="card mx-4">
-      <p><strong>Synopsis:</strong> <%= @dbmanga.synopsis %></p>
+    <div class="card mx-4 mb-4">
+      <h4><strong>Synopsis</strong></h4>
+      <p><%= @dbmanga.synopsis %></p>
+    </div>
+    <div class="card mx-4 mb-4">
+      <h4><strong>Avis</strong></h4>
+      <ul class="list-group list-group-flush">
+        <% @dbmanga.reviews.each do |review| %>
+        <li class="bg-color-surface list-group-item  d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold"><%= review.user.username%></div>
+            <p><%= review.content %></p>
+          </div>
+          <span><i class="fas fa-star"></i> <%= review.score %></span>
+        </li>
+        <% end %>
+      </ul>
     </div>
     </div>
   </div>

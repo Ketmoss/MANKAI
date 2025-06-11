@@ -4,11 +4,14 @@
     border-radius: 8px;
     padding: 16px;
     color: $on_surface;
+    border-top: 0px;
   }
 
-
-
-
+  .bg-color-surface {
+    background-color: $surface;
+    color: $on_surface;
+    border-color: $outline;
+  }
 
 
 
