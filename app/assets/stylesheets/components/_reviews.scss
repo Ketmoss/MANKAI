@@ -8,13 +8,13 @@
   display: none;
 }
 .star-rating label {
-  color: #ccc;
+  color: $surface;
   cursor: pointer;
 }
 .star-rating input[type="radio"]:checked ~ label {
-  color: gold;
+  color: $tertiary;
 }
 .star-rating label:hover,
 .star-rating label:hover ~ label {
-  color: gold;
+  color: $tertiary;
 }
