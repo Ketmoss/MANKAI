@@ -1,10 +1,25 @@
 
 <div class="container background-grey">
-  <h1 class="text-center pt-5">Tous les mangas</h1>
+
 
   <%= link_to "back to home", root_path, class: "btn btn-magic text-center my-3" %>
-  <hr>
 
+    <!-- Search bar-->
+    <h1 class="text-center pt-5">Explore Mangas universe</h1>
+    <div class="row justify-content-center">
+      <div class="col-sm-8 my-3">
+        <%= form_with url: db_mangas_path, method: :get, class: "d-flex" do %>
+          <%= text_field_tag :query,
+                params[:query],
+                class: "form-control",
+                placeholder: "Type a keyword"
+            %>
+          <%= submit_tag "Search", name: "", class: "btn btn-primary" %>
+        <% end %>
+      </div>
+    </div>
+        <!-- Search bar-->
+<hr>
   <!-- Grid container pour les cards -->
   <div class="row g-4 my-4">
     <% @dbmangas.each do |manga| %>
