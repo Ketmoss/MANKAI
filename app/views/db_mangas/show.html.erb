@@ -1,1 +1,24 @@
-<h1>Coucou encore une fois Racha </h1>
+
+<div class="container mt-5">
+  <div class="row">
+    <%= link_to "Back to Mangas", db_mangas_path %>
+    <!-- Colonne image -->
+    <div class="col-md-4">
+      <img src="<%= @dbmanga.image_url %>" alt="<%= @dbmanga.title %>" class="img-fluid rounded shadow">
+    </div>
+
+    <!-- Colonne infos -->
+    <div class="col-md-8">
+      <h1><%= @dbmanga.title %></h1>
+      <hr>
+      <p><strong>Title:</strong> <%= @dbmanga.title %></p>
+      <p><strong>Genre:</strong> <%= @dbmanga.genre %></p>
+      <p><strong>Author:</strong> <%= @dbmanga.author %></p>
+      <p><strong>Status:</strong> <%= @dbmanga.status %></p>
+      <p><strong>Chapters:</strong> <%= @dbmanga.chapter %></p>
+      <p><strong>Volumes:</strong> <%= @dbmanga.volume %></p>
+      <p><strong>Synopsis:</strong> <%= @dbmanga.synopsis %></p>
+
+    </div>
+  </div>
+</div>
