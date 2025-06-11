@@ -1,8 +1,8 @@
 class DbMangasController < ApplicationController
-
+  include Pagy::Backend
 
   def index
-    @dbmangas = DbManga.all
+    @pagy, @dbmangas = pagy(DbManga.all, items: 10)
   end
 
   def show
