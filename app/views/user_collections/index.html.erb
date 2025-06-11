@@ -1,3 +1,4 @@
+
 <h1>Ma Mangathèque</h1>
 
 <%= link_to "Create a collection", new_user_collection_path %>
@@ -5,3 +6,4 @@
 <% @usercollections.each do |collection| %>
 <%= link_to collection.name, user_collection_path(collection) %>
 <% end %>
+

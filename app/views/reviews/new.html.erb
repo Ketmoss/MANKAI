@@ -1,11 +1,13 @@
-<h1>Laissez un avis !</h1>
-<%= simple_form_for [@dbmanga, @review] do |f| %>
-<div class="star-rating">
-      <% 5.downto(1) do |i| %>
-        <%= f.radio_button :score, i, id: "star#{i}" %>
-        <label for="star<%= i %>">★</label>
-      <% end %>
-    </div>
-<%= f.input :content %>
- <%= f.submit "Envoyer", class: "btn btn-primary" %>
-<% end %>
+<div class="container mt-4">
+  <h1>Laissez un avis !</h1>
+  <%= simple_form_for [@dbmanga, @review] do |f| %>
+  <div class="star-rating">
+        <% 5.downto(1) do |i| %>
+          <%= f.radio_button :score, i, id: "star#{i}" %>
+          <label for="star<%= i %>"><i class="fas fa-star"></i></label>
+        <% end %>
+      </div>
+  <%= f.input :content %>
+  <%= f.submit "Envoyer", class: "btn btn-primary" %>
+  <% end %>
+</div>
