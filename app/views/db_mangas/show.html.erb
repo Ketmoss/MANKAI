@@ -49,8 +49,9 @@
         <% end %>
         <%= link_to new_user_collection_path, class: "btn btn-red" do%>
         <i class="fas fa-bookmark"></i>
-        <span>Je le veux</span>
+        <span>Je possède ce manga</span>
         <% end %>
+        <%= link_to "Faire une demande d'échange", exchange_candidates_db_manga_path(@db_manga), class: "btn btn-red" %>
       </div>
     <% end %>
   <% else %>
@@ -61,12 +62,6 @@
 </div>
 </div>
   </div>
-      <span>Je le veux</span>
-      <%= link_to db_mangas_path, class: "btn btn-red ms-4" do%>
-      <i class="fas fa-chevron-left"></i>
-      <span>Back to mangas</span>
-        <% end %>
-    <%= link_to "Voir qui propose ce manga", exchange_candidates_db_manga_path(@db_manga), class: "btn btn-secondary" %>
     </div>
     <div class="card mx-4 mb-4">
    <div class="card mx-2 my-4">
