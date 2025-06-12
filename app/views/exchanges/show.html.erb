@@ -1,0 +1,19 @@
+<h1>Détail de l'échange</h1>
+
+<p><strong>Demandeur :</strong> <%= @exchange.initiator.username %></p>
+<p><strong>Destinataire :</strong> <%= @exchange.recipient.username %></p>
+<p><strong>Manga souhaité :</strong> <%= @exchange.wanted_manga.db_manga.title %></p>
+
+<% if @exchange.offered_manga %>
+  <p><strong>Manga proposé :</strong> <%= @exchange.offered_manga.db_manga.title %></p>
+<% end %>
+
+<p><strong>Message initial :</strong> <%= @exchange.initial_message %></p>
+<p><strong>Status :</strong> <%= @exchange.status.humanize %></p>
+
+<% if @exchange.chat %>
+  <p><%= link_to "Accéder au chat", chat_path(@exchange.chat) %></p>
+<% end %>
+
+<%= link_to "Modifier", edit_exchange_path(@exchange), class: "btn" %>
+<%= link_to "Retour à la liste", exchanges_path, class: "btn" %>

@@ -1,0 +1,21 @@
+<%= form_with(model: exchange, local: true) do |f| %>
+  <div>
+    <%= f.label :wanted_manga_id, "Manga souhaité" %><br>
+    <%= hidden_field_tag :wanted_manga_id, @wanted_manga.id %>
+    <p><%= @wanted_manga.db_manga.title %> — possédé par <%= @wanted_manga.user_collection.user.username %></p>
+  </div>
+
+  <div>
+    <%= f.label :offered_manga_id, "Vous proposez (facultatif)" %><br>
+    <%= f.collection_select :offered_manga_id, @available_mangas, :id, ->(m) { m.db_manga.title }, prompt: "Choisir un manga de votre collection" %>
+  </div>
+
+  <div>
+    <%= f.label :initial_message, "Message" %><br>
+    <%= f.text_area :initial_message, rows: 4 %>
+  </div>
+
+  <div>
+    <%= f.submit "Envoyer la demande", class: "btn" %>
+  </div>
+<% end %>

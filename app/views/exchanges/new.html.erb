@@ -1,9 +1,12 @@
-<div class="container">
-  <h1>Echanger mon manga</h1>
-  <%= simple_form_for [@dbmanga, @review] do |f| %>
-  <div class="star-rating">
-      </div>
-  <%= f.input :status %>
-  <%= f.submit "Envoyer", class: "btn btn-primary" %>
-  <% end %>
-</div>
+<h2>Nouvelle demande d’échange</h2>
+
+<%= form_with model: @exchange, url: exchanges_path, local: true do |form| %>
+  <%= form.hidden_field :wanted_manga_id, value: @wanted_manga.id %>
+
+  <div class="mb-3">
+    <%= form.label :initial_message, "Message à l'utilisateur" %><br>
+    <%= form.text_area :initial_message, rows: 4, class: "w-full border rounded p-2" %>
+  </div>
+
+  <%= form.submit "Envoyer la demande", class: "btn btn-primary" %>
+<% end %>

@@ -1,7 +1,6 @@
 class DbMangasController < ApplicationController
   include Pagy::Backend
 
-
   def index
 
     @dbmangas = DbManga.all
@@ -43,4 +42,13 @@ class DbMangasController < ApplicationController
                     notice: "#{@db_manga.title} ajouté à #{@user_collection.name}.")
       end
   end
+
+  def exchange_candidates
+    @db_manga = DbManga.find(params[:id])
+    @available_owned_mangas = OwnedManga
+      .includes(user_collection: :user)
+      .where(db_manga: @db_manga, available_for_exchange: true)
+      .where.not(user_collections: { user_id: current_user.id })
+  end
+
 end

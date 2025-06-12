@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_12_151708) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_12_160901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -81,7 +81,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_12_151708) do
     t.bigint "db_manga_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "model_id"
+    t.integer "input_tokens"
+    t.integer "output_tokens"
+    t.bigint "tool_call_id"
     t.index ["db_manga_id"], name: "index_messagebots_on_db_manga_id"
+    t.index ["tool_call_id"], name: "index_messagebots_on_tool_call_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -90,7 +95,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_12_151708) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.string "model_id"
+    t.integer "input_tokens"
+    t.integer "output_tokens"
+    t.bigint "tool_call_id"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
+    t.index ["tool_call_id"], name: "index_messages_on_tool_call_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
@@ -115,6 +125,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_12_151708) do
     t.datetime "updated_at", null: false
     t.index ["db_manga_id"], name: "index_reviews_on_db_manga_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
+  create_table "tool_calls", force: :cascade do |t|
+    t.bigint "messagebot_id", null: false
+    t.string "tool_call_id"
+    t.string "name"
+    t.jsonb "arguments"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["messagebot_id"], name: "index_tool_calls_on_messagebot_id"
+    t.index ["tool_call_id"], name: "index_tool_calls_on_tool_call_id"
   end
 
   create_table "user_collections", force: :cascade do |t|
@@ -152,11 +173,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_12_151708) do
   add_foreign_key "exchanges", "users", column: "initiator_id"
   add_foreign_key "exchanges", "users", column: "recipient_id"
   add_foreign_key "messagebots", "db_mangas"
+  add_foreign_key "messagebots", "tool_calls"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
   add_foreign_key "owned_mangas", "db_mangas"
   add_foreign_key "owned_mangas", "user_collections"
   add_foreign_key "reviews", "db_mangas"
   add_foreign_key "reviews", "users"
+  add_foreign_key "tool_calls", "messagebots"
   add_foreign_key "user_collections", "users"
 end

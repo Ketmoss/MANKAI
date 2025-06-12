@@ -57,6 +57,18 @@
     <%= link_to "Connectez-vous pour ajouter", new_user_session_path,
                 class: "btn btn-secondary" %>
   <% end %>
+
+</div>
+</div>
+  </div>
+      <span>Je le veux</span>
+      <%= link_to db_mangas_path, class: "btn btn-red ms-4" do%>
+      <i class="fas fa-chevron-left"></i>
+      <span>Back to mangas</span>
+        <% end %>
+    <%= link_to "Voir qui propose ce manga", exchange_candidates_db_manga_path(@db_manga), class: "btn btn-secondary" %>
+    </div>
+    <div class="card mx-4 mb-4">
    <div class="card mx-2 my-4">
       <h4><strong>Synopsis</strong></h4>
       <p><%= @db_manga.synopsis %></p>
