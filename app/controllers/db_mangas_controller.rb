@@ -15,7 +15,7 @@ class DbMangasController < ApplicationController
 
 
   def show
-    @dbmanga = DbManga.find(params[:id])
+    @db_manga = DbManga.find(params[:id])
   end
 
 	def display_db_mangas_list
@@ -24,30 +24,24 @@ class DbMangasController < ApplicationController
 	end
 
   def add_to_collection
-  @db_manga = DbManga.find(params[:id])
-  @user_collection = UserCollection.find(params[:user_collection_id])
+      @db_manga = DbManga.find(params[:id])
+      @user_collection = current_user.user_collections.find(params[:user_collection_id])
 
-  # Vérifier que l'utilisateur a accès à cette collection
-  unless @user_collection.user == current_user
-    redirect_to user_collections_path, alert: 'Accès non autorisé.'
-    return
-  end
+      # Vérifier si ce manga n'est pas déjà dans la collection
+      existing_manga = @user_collection.owned_mangas.find_by(db_manga: @db_manga)
 
-  # Vérifier si ce manga n'est pas déjà dans la collection
-  existing_manga = @user_collection.owned_mangas.find_by(db_manga: @db_manga)
+      if existing_manga
+        redirect_back(fallback_location: @db_manga,
+                    alert: 'Ce manga est déjà dans cette collection.')
+      else
+        @owned_manga = @user_collection.owned_mangas.create!(
+          db_manga: @db_manga,
+          state: params[:state] || 'good',  # Utiliser 'state' au lieu de 'condition'
+          available: true  # Par défaut disponible
+        )
 
-  if existing_manga
-    redirect_back(fallback_location: display_db_mangas_list_db_mangas_path(user_collection_id: @user_collection.id),
-                 alert: 'Ce manga est déjà dans cette collection.')
-  else
-    @owned_manga = @user_collection.owned_mangas.create!(
-      db_manga: @db_manga,
-      volume: params[:volume] || 1,
-      condition: params[:condition] || 'good'
-    )
-
-    redirect_back(fallback_location: user_collection_path(@user_collection),
-                 notice: "#{@db_manga.title} ajouté à #{@user_collection.name}.")
-  end
+        redirect_back(fallback_location: @db_manga,
+                    notice: "#{@db_manga.title} ajouté à #{@user_collection.name}.")
+      end
   end
 end

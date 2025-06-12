@@ -4,6 +4,6 @@ class OwnedManga < ApplicationRecord
 
   validates :db_manga_id, uniqueness: { scope: :user_collection_id,
                                        message: "est déjà dans cette collection" }
-  validates :volume, presence: true, numericality: { greater_than: 0 }
-  validates :condition, presence: true
+  delegate :volume, to: :db_manga
+  delegate :chapter, to: :db_manga
 end

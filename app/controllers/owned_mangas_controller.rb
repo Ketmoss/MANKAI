@@ -13,16 +13,30 @@ class OwnedMangasController < ApplicationController
   end
 
   def create
-    @owned_manga = OwnedManga.new
-    @user_collection = UserCollection.find(params[:user_collection_id])
-    @db_manga = DbManga.find(params[:id])
-    @owned_manga.user_collection = @user_collection
-    @owned_manga.db_manga = @db_manga
-    if @owned_manga.save!
-      # user_collections/1/owned_mangas/1
-      redirect_to user_collection_owned_manga_path(@user_collection, @owned_manga)
+    @user_collection = current_user.user_collections.find(params[:user_collection_id])
+    @db_manga = DbManga.find(params[:dbmanga_id] || params[:db_manga_id])
+
+    # Vérifier les doublons
+    existing = @user_collection.owned_mangas.joins(:db_manga)
+                              .where(db_manga: @db_manga).exists?
+
+    if existing
+      redirect_to @user_collection, alert: 'Ce manga est déjà dans votre collection'
+      return
+    end
+
+    @owned_manga = @user_collection.owned_mangas.build(
+      db_manga: @db_manga,
+      state: params[:state] || 'good',
+      available: true
+    )
+
+    if @owned_manga.save
+      redirect_to user_collection_path(@user_collection),
+                  notice: 'Manga ajouté à votre collection'
     else
-      render "db_mangas/display_db_mangas_list", status: :unprocessable_entity
+      redirect_to db_mangas_path,
+                  alert: 'Impossible d\'ajouter le manga'
     end
   end
 
@@ -30,7 +44,14 @@ class OwnedMangasController < ApplicationController
 
   def update;end
 
-  def destroy;end
+  def destroy
+    @user_collection = current_user.user_collections.find(params[:user_collection_id])
+    @owned_manga = @user_collection.owned_mangas.find(params[:id])
+    @owned_manga.destroy
+
+    redirect_to user_collection_path(@user_collection), notice: "Manga retiré de la collection."
+  end
+
 
   private
 
@@ -40,7 +61,6 @@ class OwnedMangasController < ApplicationController
   # end
 
   def set_owned_manga
-    # Provient de la db_mangas a tester lors du create
-    @owned_manga = OwnedManga.find(params[:db_manga_id])
+      @owned_manga = OwnedManga.find(params[:db_manga_id])
   end
 end

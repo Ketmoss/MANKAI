@@ -62,8 +62,9 @@ class UserCollectionsController < ApplicationController
   end
 
   def destroy
+    @user_collection = current_user.user_collections.find(params[:id])
     @user_collection.destroy
-    redirect_to user_collections_path, notice: 'Collection supprimée avec succès.'
+    redirect_to user_collections_path, notice: "Collection supprimée."
   end
 
   private
