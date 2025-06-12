@@ -28,7 +28,7 @@ class OwnedMangasController < ApplicationController
     @owned_manga = @user_collection.owned_mangas.build(
       db_manga: @db_manga,
       state: params[:state] || 'good',
-      available: true
+      available_for_exchange: true
     )
 
     if @owned_manga.save
