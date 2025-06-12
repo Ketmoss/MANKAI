@@ -1,6 +1,5 @@
 .navbar-lewagon {
   justify-content: space-between;
-  background: white;
 }
 
 .navbar-lewagon .navbar-collapse {
@@ -9,4 +8,16 @@
 
 .navbar-lewagon .navbar-brand img {
   width: 40px;
+}
+// Background color de la navbar
+.bg-grey {
+  background-color: $surface_variant;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+// Animation en css des liens de la navbar
+.nav-link, .navbar-brand{
+  color: $on_surface;
+  &:hover {
+    color: $secondary;
+  }
 }

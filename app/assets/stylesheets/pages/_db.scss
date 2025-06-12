@@ -9,27 +9,8 @@
   outline: 1px solid greenyellow;
 }
 // Style pour index.html.erb
-.style-image-card {
+.size-image {
   width: 150px;
   height: 250px;
   object-fit: cover;
-}
-
-.manga-card {
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-// Effet background color pour le mode mobile
-@media (hover: none) and (pointer: coarse) {
-  .manga-card:active {
-    transform: scale(0.98);
-    background-color: $hover;
-  }
-}
-// Hover pour le mode bureau
-@media (hover: hover) and (pointer: fine) {
-  .manga-card:hover {
-    transform: translateY(-4px);
-    border: 1px solid $hover;
-  }
 }
