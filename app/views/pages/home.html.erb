@@ -1,6 +1,6 @@
 <div class="container text-center pt-4 landing-general-style">
   <h1 class="py-4">Welcome to your new favorite app</h1>
-    <div class="chat-bot-card h-100">
+    <div class="container chat-bot-card h-100">
       <div class="d-flex justify-content-start align-items-center">
         <a href="#" class="avatar-chat-bot me-3">
           <%= image_tag "https://ik.imagekit.io/oc2ow6e7b/f3bb2be2649c409a247f0a6d866281e8bb44aae0_hq.jpg", class: "avatar-chat-bot", alt: "chat-bot" %>
@@ -12,6 +12,7 @@
       </div>
     </div>
 
+<div class="container w-100">
     <div class="row g-4 my-4">
       <% dbmangas = @dbmangas.sample(4) %>
       <% dbmangas.each do |manga| %>
@@ -48,6 +49,7 @@
       <% end %>
     </div>
   <% end %>
+</div>
 </div>
 
 

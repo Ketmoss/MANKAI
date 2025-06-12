@@ -3,7 +3,7 @@
     <!-- Search bar-->
     <h1 class="text-center pt-5">Chercher un manga</h1>
     <div class="row justify-content-center">
-      <div class="col-sm-8 my-3">
+      <div class="col-sm-8 my-3 w-50">
         <%= form_with url: db_mangas_path, method: :get, class: "d-flex" do %>
           <%= text_field_tag :query,
                 params[:query],
@@ -19,6 +19,7 @@
         <!-- Search bar-->
 
   <!-- Grid container pour les cards -->
+  <div class="container w-100">
   <div class="row g-4 my-4">
   <% @dbmangas.each do |manga| %>
     <div class="col-12 col-sm-6 col-md-6 col-lg-4">
@@ -55,6 +56,7 @@
       <% end %>
     </div>
   <% end %>
+</div>
 </div>
 
 <div class="container text-center">

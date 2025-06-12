@@ -1,0 +1,17 @@
+.input-on-surface {
+  background-color: $surface;
+  color: $on_surface;
+  border: 1px solid transparent;
+  transition: border 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    color: $on_surface
+  }
+
+  &:focus {
+    background-color: $surface !important;
+    color: $on_surface;
+    border: $secondary;
+    box-shadow: 0 0 0 0.2rem rgba($secondary, 0.35);
+  }
+}
