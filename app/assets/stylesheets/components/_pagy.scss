@@ -1,0 +1,33 @@
+/* Styles de base pour Pagy */
+.pagy.nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 1rem 0;
+}
+
+.pagy.nav a {
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  text-decoration: none;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  background-color: white;
+}
+
+.pagy.nav a:hover {
+  background-color: #f3f4f6;
+}
+
+.pagy.nav a.current {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.pagy.nav a[aria-disabled="true"] {
+  color: #9ca3af;
+  cursor: not-allowed;
+  background-color: #f9fafb;
+}
