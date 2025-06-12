@@ -1,0 +1,9 @@
+<div class="container">
+  <h1>Echanger mon manga</h1>
+  <%= simple_form_for [@dbmanga, @review] do |f| %>
+  <div class="star-rating">
+      </div>
+  <%= f.input :status %>
+  <%= f.submit "Envoyer", class: "btn btn-primary" %>
+  <% end %>
+</div>
