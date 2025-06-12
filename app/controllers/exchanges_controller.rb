@@ -6,7 +6,7 @@ before_action :set_manga,  only: %i[new create]
   end
 
   def new
-  @exchange = Exchange.new
+    @exchange = Exchange.new
   end
 
   def create
