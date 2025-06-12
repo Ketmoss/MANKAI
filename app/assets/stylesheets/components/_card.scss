@@ -13,6 +13,14 @@
     border-color: $outline;
   }
 
+  .chat-bot-card {
+    background-color: $secondary;
+    border-radius: 8px;
+    padding: 16px;
+    color: $on_background;
+    border-top: 0px;
+  }
+
 
 
   // .manga-card {
