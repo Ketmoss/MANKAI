@@ -2,15 +2,13 @@ class DbMangasController < ApplicationController
   include Pagy::Backend
 
   def index
-
     @dbmangas = DbManga.all
     if params[:query].present?
       sql_subquery = "title ILIKE :query OR genre ILIKE :query OR author ILIKE :query"
       @dbmangas = @dbmangas.where(sql_subquery, query: "%#{params[:query]}%")
     end
-    @pagy, @dbmangas = pagy(DbManga.all, items: 10)
+      @pagy, @dbmangas = pagy(@dbmangas, items: 10)
   end
-
 
   def show
     @db_manga = DbManga.find(params[:id])
