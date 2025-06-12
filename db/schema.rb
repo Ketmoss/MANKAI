@@ -37,7 +37,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_12_091109) do
     t.integer "jikan_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["jikan_id"], name: "index_db_mangas_on_jikan_id", unique: true
   end
 
   create_table "exchanges", force: :cascade do |t|

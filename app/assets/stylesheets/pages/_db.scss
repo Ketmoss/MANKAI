@@ -8,9 +8,14 @@
 .outline{
   outline: 1px solid greenyellow;
 }
-// Style pour index.html.erb
-.size-image {
-  width: 150px;
-  height: 250px;
+
+.general-style-image {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  max-height: 595px;
   object-fit: cover;
+  border-radius: 8px; // optionnel pour un effet plus doux
+  display: block;
+  margin: 0 auto; // centre l’image dans son conteneur
 }

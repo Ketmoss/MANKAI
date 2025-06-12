@@ -28,7 +28,7 @@
           <!-- Image à gauche -->
           <div class="col-5">
             <% if manga.image_url.present? %>
-              <%= image_tag manga.image_url, class: "size-image img-fluid rounded-start", alt: manga.title %>
+              <%= image_tag manga.image_url, class: "size-image-card img-fluid rounded-start", alt: manga.title %>
             <% else %>
               <div class="d-flex align-items-center justify-content-center bg-light h-100">
                 <i class="fas fa-book fa-2x text-muted"></i>

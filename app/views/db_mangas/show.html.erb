@@ -1,13 +1,13 @@
 
 <div class="container pt-5 general-style">
   <div class="row">
-    <!-- Colonne image -->
-    <div class="col-md-5 d-flex justify-content-center">
-      <img src="<%= @db_manga.image_url %>" alt="<%= @db_manga.title %>" class="img-fluid rounded-lg py-3">
+    <%# Colone de l'image %>
+    <div class="col-md-5 d-flex img-fluid justify-content-start flex-column mt-4">
+      <img src="<%= @db_manga.image_url%>" alt="<%= @db_manga.title %>" class="general-style-image py-3">
     </div>
 
-    <div class="col-md-7">
-      <h1 class="text-center"><%= @db_manga.title%></h1>
+    <div class="col-md-7 mt-4">
+      <h1 class="text-center mb-4"><%= @db_manga.title%></h1>
       <div class="card mx-4">
         <p><strong>Title:</strong> <%= @db_manga.title %></p>
         <p><strong>Author:</strong> <%= @db_manga.author %></p>
@@ -17,55 +17,50 @@
         <p><strong>Volumes:</strong> <%= @db_manga.volume %></p>
       </div>
     <div class="container text-center py-3">
-      <%# Attention ici il faut changer la route pour le link-to "je le veux" %>
-
-<!-- app/views/db_mangas/show.html.erb -->
-<!-- app/views/db_mangas/show.html.erb -->
-<div class="add-to-collection-section">
-  <% if user_signed_in? %>
-    <% if current_user.user_collections.any? %>
-      <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Ajouter à une collection
-        </button>
-        <ul class="dropdown-menu">
-          <% current_user.user_collections.each do |collection| %>
-            <li>
-              <%= form_with url: user_collection_owned_mangas_path(collection),
+              <div class="add-to-collection-section">
+                <% if user_signed_in? %>
+                <% if current_user.user_collections.any? %>
+                <div class="dropdown">
+                   <%= link_to db_mangas_path, class: "btn btn-red btn-sm ms-4 align-self-center py-2" do%>
+                    <i class="fas fa-chevron-left"></i>
+                    <% end %>
+                  <button class="btn btn-red dropdown-toggle my-4" type="button" data-bs-toggle="dropdown">
+                    Ajouter à une collection
+                  </button>
+                    <ul class="dropdown-menu">
+                      <% current_user.user_collections.each do |collection| %>
+                       <li>
+                         <%= form_with url: user_collection_owned_mangas_path(collection),
                             method: :post,
                             class: "dropdown-item p-0" do |f| %>
-                <%= hidden_field_tag :db_manga_id, @db_manga.id %>
-                <%= f.submit collection.name, class: "dropdown-item text-start border-0 bg-transparent w-100" %>
-              <% end %>
-            </li>
-          <% end %>
-        </ul>
+                        <%= hidden_field_tag :db_manga_id, @db_manga.id %>
+                        <%= f.submit collection.name, class: "dropdown-item text-start border-0 bg-transparent w-100" %>
+                        <% end %>
+                      </li>
+                      <% end %>
+                    </ul>
       </div>
     <% else %>
-      <p class="text-muted">
-        <%= link_to "Créez une collection", new_user_collection_path %>
-        pour ajouter des mangas
-      </p>
+      <div class="text-muted py-4">
+         <%= link_to db_mangas_path, class: "btn btn-red btn-sm ms-4 align-self-center py-2" do%>
+        <i class="fas fa-chevron-left"></i>
+        <span>Back to mangas</span>
+        <% end %>
+        <%= link_to new_user_collection_path, class: "btn btn-red" do%>
+        <i class="fas fa-bookmark"></i>
+        <span>Je le veux</span>
+        <% end %>
+      </div>
     <% end %>
   <% else %>
     <%= link_to "Connectez-vous pour ajouter", new_user_session_path,
                 class: "btn btn-secondary" %>
   <% end %>
-</div>
-</div>
-  </div>
-      <span>Je le veux</span>
-      <%= link_to db_mangas_path, class: "btn btn-red ms-4" do%>
-      <i class="fas fa-chevron-left"></i>
-      <span>Back to mangas</span>
-        <% end %>
-
-    </div>
-    <div class="card mx-4 mb-4">
+   <div class="card mx-2 my-4">
       <h4><strong>Synopsis</strong></h4>
       <p><%= @db_manga.synopsis %></p>
     </div>
-    <div class="card mx-4 mb-4">
+    <div class="card mx-2 mb-4">
       <h4><strong>Avis</strong></h4>
       <ul class="list-group list-group-flush">
         <% @db_manga.reviews.each do |review| %>
@@ -79,6 +74,10 @@
         <% end %>
       </ul>
     </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
