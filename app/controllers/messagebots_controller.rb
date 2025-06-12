@@ -1,0 +1,2 @@
+class MessagebotsController < ApplicationController
+end
