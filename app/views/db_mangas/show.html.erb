@@ -31,12 +31,12 @@
                     <ul class="dropdown-menu">
                       <% current_user.user_collections.each do |collection| %>
                        <li>
-                         <%= form_with url: user_collection_owned_mangas_path(collection),
-                            method: :post,
-                            class: "dropdown-item p-0" do |f| %>
-                        <%= hidden_field_tag :db_manga_id, @db_manga.id %>
-                        <%= f.submit collection.name, class: "dropdown-item text-start border-0 bg-transparent w-100" %>
-                        <% end %>
+                        <%= form_with url: "#", method: :post,
+                        data: { controller: "collections", action: "submit->collections#submit" },
+                        class: "dropdown-item p-0" do |f| %>
+                          <%= hidden_field_tag :db_manga_id, @db_manga.id %>
+                          <input type="submit" name="coucou" value="<%= collection.name %>" data-id-collections-value= "<%= collection.id %>" class=" collection-select btn btn-red w-100">
+                          <% end %>
                       </li>
                       <% end %>
                     </ul>
