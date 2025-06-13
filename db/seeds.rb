@@ -56,7 +56,7 @@ end
 total_created = 0
 total_errors = 0
 page = 1
-max_manga = 5
+max_manga = 100
 
 puts "📚 Récupération de #{max_manga} mangas..."
 
@@ -131,4 +131,3 @@ end
 # User.first.owned_mangas.each do |ow|
 #   ow.db_manga.title
 # end
-
