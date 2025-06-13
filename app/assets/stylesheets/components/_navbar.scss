@@ -21,3 +21,36 @@
     color: $secondary;
   }
 }
+
+.nav-item i{
+  color: $secondary;
+  font-size: 26px;
+  line-height: 48px;
+}
+
+.nav-item p{
+  font-size: 12px;
+}
+
+.navbar-nav {
+  min-width: 100%;
+}
+
+@media (max-width: 991.98px) {
+    .navbar-mobile-bottom {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 1030;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .navbar-mobile-bottom {
+      position: static;
+    }
+  }
+
+  body {
+    padding-bottom: 60px; /* pour éviter que le contenu mobile soit caché par la navbar */
+  }

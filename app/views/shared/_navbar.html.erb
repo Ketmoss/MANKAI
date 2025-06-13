@@ -1,38 +1,28 @@
-<div class="navbar navbar-expand-sm navbar-light navbar-lewagon bg-grey">
+<nav class="navbar navbar-expand-lg navbar-mobile-bottom navbar-lewagon bg-grey">
   <div class="container-fluid container">
-    <%= link_to "/", class: "navbar-brand" do %>
-      <%= image_tag "https://ik.imagekit.io/oc2ow6e7b/manga.png?updatedAt=1749708375417" %>
-      <span>ManKai</span>
-    <% end %>
+    <%# <%= link_to "/", class: "navbar-brand" do %>
+      <%# <%= image_tag "https://ik.imagekit.io/oc2ow6e7b/manga.png?updatedAt=1749708375417" %>
+      <%# <span class="navbar-brand">ManKai</span> %>
+    <%# <% end %>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <%# <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> %>
+      <%# <span class="navbar-toggler-icon"></span> %>
+    <%# </button> %>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto">
+    <%# <div class="collapse navbar-collapse" id="navbarSupportedContent"> %>
+      <ul class="navbar-nav d-flex flex-row justify-content-between">
         <% if user_signed_in? %>
-          <li class="nav-item active">
-            <%= link_to "Accueil", "/", class: "nav-link" %>
+          <li class="nav-item active flex-fill text-center">
+            <%= link_to raw('<i class="fa-solid fa-house"></i> <p>Accueil</p>'), "/", class: "nav-link" %>
           </li>
-          <li class="nav-item">
-            <%= link_to "Mangathèque", "/user_collections", class: "nav-link" %>
+          <li class="nav-item flex-fill text-center">
+            <%= link_to raw('<i class="fa-solid fa-book"></i> <p>Mangathèque</p>'), "/user_collections", class: "nav-link" %>
           </li>
-          <li class="nav-item">
-            <%= link_to "Echanges", "/exchanges", class: "nav-link" %>
+          <li class="nav-item flex-fill text-center">
+            <%= link_to raw('<i class="fa-solid fa-rotate"></i> <p>Echange</p>'), "/exchanges", class: "nav-link" %>
           </li>
-          <li class="nav-item">
-            <%= link_to "Messages", "/chats", class: "nav-link" %>
-          </li>
-          <li class="nav-item dropdown">
-          <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <%= image_tag "https://ik.imagekit.io/oc2ow6e7b/f3bb2be2649c409a247f0a6d866281e8bb44aae0_hq.jpg", class: "avatar", alt: "dropdown menu" %>
-          </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <%= link_to "Profile", "/users/show", class: "dropdown-item" %>
-              <%= link_to "Edit", "/users/edit", class: "dropdown-item" %>
-              <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" %>
-            </div>
+          <li class="nav-item flex-fill text-center">
+            <%= link_to raw('<i class="fa-solid fa-user"></i> <p>Profil</p>'), "/users/edit", class: "nav-link" %>
           </li>
         <% else %>
           <li class="nav-item">
@@ -40,6 +30,6 @@
           </li>
         <% end %>
       </ul>
-    </div>
+    <%# </div> %>
   </div>
-</div>
+</nav>

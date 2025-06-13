@@ -12,3 +12,13 @@
 @import "pages/index";
 
 @import "components/reviews";
+
+// Robot font
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+// Applied to body
+body {
+    font-family: "Poppins", sans-serif !important;
+  font-weight: 300;
+  font-style: normal;
+}
