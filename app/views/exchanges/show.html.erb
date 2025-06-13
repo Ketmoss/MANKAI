@@ -15,14 +15,18 @@
 
 <% if @exchange.recipient == current_user %>
 
-  <%= button_to "Accepter", update_status_exchange_path(@exchange, status: "accepted"), method: :patch, class: "btn btn-success" %>
-  <%= button_to "Refuser", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-danger" %>
+  <p>
+    <%= button_to "Accepter", update_status_exchange_path(@exchange, status: "accepted"), method: :patch, class: "btn btn-success" %>
+  </p>
+  <p>
+    <%= button_to "Refuser", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-danger" %>
+  </p>
+  <% end %>
+
+<% if @exchange.status == "accepted" %>
+  <p> <%= link_to " Démarrer un chat", new_chat_path(@chat), class: "btn btn-info" %></p>
 <% end %>
 
-<% if @exchange.chat %>
-  <p><%= link_to "Accéder au chat", chat_path(@exchange.chat) %></p>
-<% end %>
-
-<%= link_to "Répondre en échange", edit_exchange_path(@exchange), class: "btn" %>
-<%= link_to "Retour à la liste", exchanges_path, class: "btn" %>
+<%= link_to "Choisir un manga en échange", edit_exchange_path(@exchange), class: "btn btn-primary" %>
+<%= link_to "Retour aux échanges", exchanges_path, class: "btn btn-secondary" %>
 </div>
