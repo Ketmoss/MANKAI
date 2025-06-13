@@ -1,4 +1,6 @@
+<div class="container">
 <h2>Nouvelle demande d’échange</h2>
+
 
 <%= form_with model: @exchange, url: exchanges_path, local: true do |form| %>
   <%= form.hidden_field :wanted_manga_id, value: @wanted_manga.id %>
@@ -10,3 +12,4 @@
 
   <%= form.submit "Envoyer la demande", class: "btn btn-primary" %>
 <% end %>
+</div>
