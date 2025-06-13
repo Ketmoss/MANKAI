@@ -1,64 +1,95 @@
 <!-- app/views/user_collections/show.html.erb -->
-<div class="collection-detail">
-  <h1><%= @user_collection.name %></h1>
+<div class="general-style">
+  <div class="container py-5">
+    <div class="collection-detail">
+      <h1 class="text-center py-4"><%= @user_collection.name %></h1>
+      <div class="collection-stats">
+        <p>Nombre de mangas : <%= @owned_mangas.count %></p>
+      </div>
 
-  <div class="collection-stats">
-    <p>Nombre de mangas : <%= @owned_mangas.count %></p>
-  </div>
+     <div class="owned-mangas-grid">
+  <% if @owned_mangas.any? %>
+    <div class="row">
+      <% @owned_mangas.each do |owned_manga| %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card d-flex flex-row align-items-start gap-3 p-3 h-100 shadow-sm">
 
-  <div class="owned-mangas-grid">
-    <% if @owned_mangas.any? %>
-      <div class="row">
-        <% @owned_mangas.each do |owned_manga| %>
-          <div class="col-md-4 col-sm-6 mb-4">
-            <div class="manga-card">
-              <!-- Informations du manga via la relation db_manga -->
-              <h3><%= owned_manga.db_manga.title %></h3>
+            <% if owned_manga.db_manga.image_url.present? %>
+              <%= image_tag owned_manga.db_manga.image_url,
+                  alt: owned_manga.db_manga.title,
+                  class: "img-cover-fixed" %>
+            <% else %>
+              <div class="img-cover-fixed d-flex align-items-center justify-content-center bg-light">
+                <i class="fas fa-book fa-2x text-muted"></i>
+              </div>
+            <% end %>
 
-              <% if owned_manga.db_manga.image_url.present? %>
-                <%= image_tag owned_manga.db_manga.image_url,
-                              alt: owned_manga.db_manga.title,
-                              class: "manga-cover" %>
-              <% end %>
-              <div class="manga-info">
-                <p class="author">Par : <%= owned_manga.db_manga.author %></p>
-                <p class="genre"><%= owned_manga.db_manga.genre %></p>
+            <div class="flex-grow-1 d-flex flex-column justify-content-between">
+              <div>
+                <h5 class="card-title mb-2"><%= owned_manga.db_manga.title %></h5>
 
-                <!-- Informations spécifiques à la possession -->
-
+                <div class="manga-info mb-3">
+                  <p class="author small mb-1">Par : <%= owned_manga.db_manga.author %></p>
+                  <p class="genre small text-muted mb-0"><%= owned_manga.db_manga.genre %></p>
+                </div>
               </div>
 
-
-            </div>
-            <div class="manga-actions">
-                <%= link_to "Détails",
-                            user_collection_owned_manga_path(@user_collection, owned_manga),
-                            class: "btn btn-sm btn-primary" %>
+              <div class="container">
+              <div class="d-flex gap-4 flex-wrap justify-content-center ">
+                <%= link_to user_collection_owned_manga_path(@user_collection, owned_manga),
+                            class: "btn btn-sm btn-orange px-2 d-flex align-items-center gap-1" do %>
+                  <i class="fas fa-info-circle"></i> Détails
+                <% end %>
 
                 <%= form_with url: user_collection_owned_manga_path(@user_collection, owned_manga),
-                  method: :delete,
-                  data: { turbo_confirm: "Êtes-vous sûr ?" },
-                  class: "inline-form" do %>
-                  <%= submit_tag "Retirer", class: "btn btn-sm btn-danger" %>
+                              method: :delete,
+                              data: { turbo_confirm: "Êtes-vous sûr ?" },
+                              class: "d-inline" do %>
+                  <%= button_tag type: "submit", class: "btn btn-sm btn-red px-2 d-flex align-items-center gap-1" do %>
+                    <i class="fas fa-trash-alt"></i> Retirer
+                  <% end %>
                 <% end %>
               </div>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="empty-collection">
-        <p>Aucun manga dans cette collection pour le moment.</p>
-        <%= link_to "Parcourir les mangas", db_mangas_path, class: "btn btn-primary" %>
-      </div>
-    <% end %>
-  </div>
+            </div>
+            </div>
 
-  <div class="collection-actions mt-4">
-    <%= link_to "Ajouter un manga", db_mangas_path, class: "btn btn-primary" %>
-    <%= form_with url: user_collection_path(@user_collection), method: :delete, data: { turbo_confirm: "Êtes-vous sûr ?" } do %>
-    <%= submit_tag "Supprimer la collection", class: "btn btn-danger" %>
-    <% end %>
-    <%= link_to "Retour aux collections", user_collections_path,
-                class: "btn btn-light" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center my-5">
+      <p>Aucun manga dans cette collection pour le moment.</p>
+      <%= link_to "Parcourir les mangas", db_mangas_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
+                <div class="collection-actions d-flex flex-column flex-md-row justify-content-between gap-3 mt-4">
+                  <div class="container w-100 w-md-50 text-center">
+                    <%= link_to db_mangas_path, class: "btn-sm btn btn-red" do%>
+                    <i class="fas fa-plus"></i>
+                    <span>Ajouter un manga</span>
+                    <% end %>
+                  </div>
+
+                  <div class="container w-100 w-md-auto text-center">
+                    <%= form_with url: user_collection_path(@user_collection), method: :delete, data: { turbo_confirm: "Êtes-vous sûr ?" } do %>
+                    <%= button_tag type: "submit", class: "btn-sm btn-red px-4" do%>
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Supprimer la collection</span>
+                    <% end %>
+                    <% end %>
+                  </div>
+
+                  <div class="container w-100 w-md-auto text-center">
+                    <%= link_to user_collections_path, class: "btn-sm btn btn-red" do%>
+                    <i class="fas fa-chevron-left"></i>
+                    <span>Retour à mes collections</span>
+                    <% end %>
+                  </div>
+
+
+      </div>
+    </div>
   </div>
 </div>

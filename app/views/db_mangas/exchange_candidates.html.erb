@@ -1,21 +1,33 @@
-<h2>Utilisateurs possédant le manga <%= @db_manga.title %></h2>
+<div class="general-style">
+  <div class="container d-flex justify-content-center flex-column">
+    <h2 class="text-center py-5">Utilisateurs possédant le manga <%= @db_manga.title %></h2>
+      <% if @available_owned_mangas.any? %>
+      <% @available_owned_mangas.each do |owned| %>
+        <div class="card">
+          <p><strong><%= owned.user_collection.user.username %></strong></p>
+          <p>État : <%= owned.state %></p>
+          <p>Note : <%= owned.condition_notes %></p>
 
-<% if @available_owned_mangas.any? %>
-  <% @available_owned_mangas.each do |owned| %>
-    <div class="card">
-      <p><strong><%= owned.user_collection.user.username %></strong></p>
-      <p>État : <%= owned.state %></p>
-      <p>Note : <%= owned.condition_notes %></p>
+          <div class="container text-center">
+          <% if current_user.can_request_exchange_for?(owned) %>
+            <%= link_to new_exchange_path(wanted_manga_id: owned.id), class: "btn btn-red" do%>
+            <i class="fas fa-sync"></i>
+            <span>Proposer un échange</span>
+            <% end %>
 
-      <% if current_user.can_request_exchange_for?(owned) %>
-        <%= link_to "Proposer un échange", new_exchange_path(wanted_manga_id: owned.id), class: "btn btn-primary" %>
-      <% else %>
-        <p><em>Échange non disponible</em></p>
+          <% else %>
+          <p><em>Échange non disponible</em></p>
+          <% end %>
+          </div>
+      </div>
       <% end %>
-    </div>
-  <% end %>
-<% else %>
-  <p>Aucun utilisateur ne propose ce manga actuellement.</p>
-<% end %>
+        <% else %>
+        <p>Aucun utilisateur ne propose ce manga actuellement.</p>
+      <% end %>
+      <div class="container text-center w-50 py-4">
+        <%= link_to db_manga_path(@db_manga), class: "btn btn-red" do%>
+        <i class="fas fa-chevron-left"></i>
+        <% end %>
 
-<%= link_to "← Retour à la fiche", db_manga_path(@db_manga), class: "btn" %>
+  </div>
+</div>

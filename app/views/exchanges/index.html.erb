@@ -1,15 +1,19 @@
-<h1>Mes échanges</h1>
+<div class="general-style">
+  <div class="container py-5">
+    <h1 class="text-center">Mes échanges</h1>
 
-<% @exchanges.each do |exchange| %>
-  <div class="exchange-card">
-    <h3>
-      <%= link_to "Échange ##{exchange.id}", exchange_path(exchange) %>
-    </h3>
-    <p>
-      Demandeur : <%= exchange.initiator.username %><br>
-      Destinataire : <%= exchange.recipient.username %><br>
-      Manga souhaité : <%= exchange.wanted_manga.db_manga.title %>
-    </p>
-    <p>Status : <%= exchange.status.humanize %></p>
+    <% @exchanges.each do |exchange| %>
+      <div class="exchange-card">
+        <h3>
+        <%= link_to "Échange ##{exchange.id}", exchange_path(exchange) %>
+        </h3>
+        <p>
+        Demandeur : <%= exchange.initiator.username %><br>
+        Destinataire : <%= exchange.recipient.username %><br>
+        Manga souhaité : <%= exchange.wanted_manga.db_manga.title %>
+        </p>
+        <p>Status : <%= exchange.status.humanize %></p>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>
