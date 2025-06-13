@@ -51,13 +51,14 @@
         <i class="fas fa-bookmark"></i>
         <span>Je possède ce manga</span>
         <% end %>
-        <%= link_to "Faire une demande d'échange", exchange_candidates_db_manga_path(@db_manga), class: "btn btn-red" %>
+
       </div>
     <% end %>
   <% else %>
     <%= link_to "Connectez-vous pour ajouter", new_user_session_path,
                 class: "btn btn-secondary" %>
   <% end %>
+  <%= link_to "Faire une demande d'échange", exchange_candidates_db_manga_path(@db_manga), class: "btn btn-red" %>
 
 </div>
 </div>

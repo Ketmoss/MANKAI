@@ -1,5 +1,4 @@
-<h1><%= @db_manga.title %></h1>
-<h2>Utilisateurs possédant ce manga</h2>
+<h2>Utilisateurs possédant le manga <%= @db_manga.title %></h2>
 
 <% if @available_owned_mangas.any? %>
   <% @available_owned_mangas.each do |owned| %>
