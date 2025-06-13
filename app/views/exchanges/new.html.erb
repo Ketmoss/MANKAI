@@ -4,20 +4,19 @@
     <h2 class="text-center py-4">Nouvelle demande d’échange</h2>
       <div class="d-flex justify-content-center">
         <div class="col-md-8">
-          <%= simple_form_for @exchange, url: exchanges_path do |f| %>
-          <%= f.input :wanted_manga_id, as: :hidden, input_html: { value: @wanted_manga.id } %>
-          <%= f.input :initial_message,
-              label: "Message à l'utilisateur",
-              as: :text,
-              input_html: { rows: 2, cols: 10, class: "input-on-surface" } %>
-          <div class="container text-center">
-            <%= button_tag type: "submit", class: "btn btn-red" do %>
-              <i class="fas fa-paper-plane me-2"></i>
-              <span>Envoyer la demande</span>
-              <% end %>
-          </div>
-          <% end %>
-        </div>
-      </div>
+       
+<%= form_with model: @exchange, url: exchanges_path, local: true do |form| %>
+  <%= form.hidden_field :wanted_manga_id, value: @wanted_manga.id %>
+
+  <div class="mb-3">
+    <%= form.label :initial_message, "Message à l'utilisateur" %><br>
+    <%= form.text_area :initial_message, rows: 4, class: "w-full border rounded p-2" %>
   </div>
+
+  <%= form.submit "Envoyer la demande", class: "btn btn-primary" %>
+<% end %>
+
 </div>
+ </div>
+  </div>
+   </div>

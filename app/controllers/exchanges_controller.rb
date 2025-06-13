@@ -2,14 +2,14 @@ class ExchangesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_exchange, only: [:show, :update, :destroy]
 
-  # GET /exchanges
+  # INDEX
   def index
     @exchanges = Exchange
       .where("initiator_id = ? OR recipient_id = ?", current_user.id, current_user.id)
       .includes(:wanted_manga, :offered_manga)
   end
 
-  # GET /exchanges/:id
+  # NEW
 
   def new
     @wanted_manga = OwnedManga.find(params[:wanted_manga_id])
@@ -18,45 +18,87 @@ class ExchangesController < ApplicationController
   end
 
 
-  # POST /exchanges
+  # CREATE
   def create
-    @wanted_manga = OwnedManga.find(params[:wanted_manga_id])
+      @wanted_manga = OwnedManga.find(params[:exchange][:wanted_manga_id])
 
-    unless current_user.can_request_exchange_for?(@wanted_manga)
-      return render json: { error: "Échange non autorisé" }, status: :forbidden
-    end
+      unless current_user.can_request_exchange_for?(@wanted_manga)
+        flash[:alert] = "Un échange est déjà en cours pour ce manga. Merci d’attendre une réponse avant d’en proposer un autre."
+        return redirect_to new_exchange_path(wanted_manga_id: @wanted_manga.id)
+      end
 
-    @exchange = Exchange.new(
-      initiator: current_user,
-      recipient: @wanted_manga.user_collection.user,
-      wanted_manga: @wanted_manga,
-      offered_manga_id: params[:offered_manga_id],
-      initial_message: params[:initial_message]
-    )
+      @exchange = Exchange.new(
+        initiator: current_user,
+        recipient: @wanted_manga.user_collection.user,
+        wanted_manga: @wanted_manga,
+        initial_message: params[:exchange][:initial_message]
+      )
 
-    if @exchange.save
-      # Optionnel : création automatique du chat
-      Chat.create(title: "Échange Manga", exchange: @exchange, user: current_user)
-      render json: @exchange, status: :created
-    else
-      render json: @exchange.errors, status: :unprocessable_entity
-    end
+      if @exchange.save
+        Chat.create(title: "Échange Manga", exchange: @exchange, user: current_user)
+        redirect_to exchanges_path, notice: "Demande envoyée avec succès"
+      else
+        flash.now[:alert] = "Erreur lors de la création de l’échange : #{@exchange.errors.full_messages.join(', ')}"
+        render :new, status: :unprocessable_entity
+      end
   end
 
+  # SHOW
   def show
   end
 
-  # PATCH /exchanges/:id
-  def update
-    authorize_exchange!
-    if @exchange.update(exchange_params)
-      render json: @exchange
-    else
-      render json: @exchange.errors, status: :unprocessable_entity
+  # EDIT
+    def edit
+      @exchange = Exchange.find(params[:id])
+
+      unless @exchange.recipient == current_user
+        redirect_to exchanges_path, alert: "Non autorisé."
+        return
+      end
+      # On affiche la bibliothèque de l'initiateur
+      @available_mangas = @exchange.initiator.owned_mangas.where(available_for_exchange: true)
     end
+
+
+
+  # UPDATE
+  def update
+      @exchange = Exchange.find(params[:id])
+
+      unless @exchange.recipient == current_user
+        redirect_to exchanges_path, alert: "Non autorisé."
+        return
+      end
+
+      if @exchange.update(offered_manga_id: params[:exchange][:offered_manga_id])
+        redirect_to exchange_path(@exchange), notice: "Vous avez proposé un manga en retour."
+      else
+        flash.now[:alert] = "Erreur : #{@exchange.errors.full_messages.join(', ')}"
+        @available_mangas = @exchange.initiator.owned_mangas.where(available_for_exchange: true)
+        render :edit, status: :unprocessable_entity
+      end
   end
 
-  # DELETE /exchanges/:id
+    #STATUS UPDATE
+    def update_status
+      @exchange = Exchange.find(params[:id])
+
+      unless @exchange.initiator == current_user || @exchange.recipient == current_user
+        redirect_to exchanges_path, alert: "Non autorisé." and return
+      end
+
+      if Exchange.statuses.keys.include?(params[:status])
+        if @exchange.update(status: params[:status])
+          redirect_to exchange_path(@exchange), notice: "Statut mis à jour avec succès."
+        else
+          redirect_to exchange_path(@exchange), alert: "Échec de la mise à jour du statut."
+        end
+      else
+        redirect_to exchange_path(@exchange), alert: "Statut invalide."
+      end
+    end
+
+  # DELETE
   def destroy
     authorize_exchange!
     @exchange.destroy

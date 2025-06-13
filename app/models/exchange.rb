@@ -1,6 +1,6 @@
 class Exchange < ApplicationRecord
   enum status: {
-    pending_recipient_response: 0,
+    pending: 0,
     accepted: 1,
     refused: 2,
     completed: 3,

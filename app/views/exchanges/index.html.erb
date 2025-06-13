@@ -1,19 +1,17 @@
-<div class="general-style">
-  <div class="container py-5">
-    <h1 class="text-center">Mes échanges</h1>
-
-    <% @exchanges.each do |exchange| %>
-      <div class="exchange-card">
-        <h3>
-        <%= link_to "Échange ##{exchange.id}", exchange_path(exchange) %>
-        </h3>
-        <p>
-        Demandeur : <%= exchange.initiator.username %><br>
-        Destinataire : <%= exchange.recipient.username %><br>
-        Manga souhaité : <%= exchange.wanted_manga.db_manga.title %>
-        </p>
-        <p>Status : <%= exchange.status.humanize %></p>
-      </div>
-    <% end %>
-  </div>
+<div class="container mt-5 mb-5 general-style p-4 rounded shadow text-center">
+  <h1> Echanges</h1>
+<% if @exchanges.any? %>
+  <% @exchanges.each do |exchange| %>
+  <div class="card mb-3">
+    <div class="border p-3 rounded mb-2">
+      <p><strong>Demandé par :</strong> <%= exchange.initiator.username %></p>
+      <p><strong>Manga demandé :</strong> <%= exchange.wanted_manga.db_manga.title %></p>
+      <p><strong>Status :</strong> <%= exchange.status %></p>
+      <%= link_to 'Voir', exchange_path(exchange), class: "btn btn-light" %>
+    </div>
+    </div>
+  <% end %>
+<% else %>
+  <p>Aucune demande d’échange.</p>
+<% end %>
 </div>
