@@ -1,15 +1,15 @@
-<h1>Mes échanges</h1>
-
-<% @exchanges.each do |exchange| %>
-  <div class="exchange-card">
-    <h3>
-      <%= link_to "Échange ##{exchange.id}", exchange_path(exchange) %>
-    </h3>
-    <p>
-      Demandeur : <%= exchange.initiator.username %><br>
-      Destinataire : <%= exchange.recipient.username %><br>
-      Manga souhaité : <%= exchange.wanted_manga.db_manga.title %>
-    </p>
-    <p>Status : <%= exchange.status.humanize %></p>
-  </div>
+<div class="container">
+  <h1> Echanges</h1>
+<% if @exchanges.any? %>
+  <% @exchanges.each do |exchange| %>
+    <div class="border p-3 rounded mb-2">
+      <p><strong>Demandé par :</strong> <%= exchange.initiator.username %></p>
+      <p><strong>Manga demandé :</strong> <%= exchange.wanted_manga.db_manga.title %></p>
+      <p><strong>Status :</strong> <%= exchange.status %></p>
+      <%= link_to 'Voir', exchange_path(exchange) %>
+    </div>
+  <% end %>
+<% else %>
+  <p>Aucune demande d’échange.</p>
 <% end %>
+</div>

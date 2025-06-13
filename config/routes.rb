@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   end
 
 
-  resources :chat, only: :show do
+  resources :chats do
     resources :messages, only: [:create]
   end
 
@@ -39,6 +39,12 @@ Rails.application.routes.draw do
   end
 
   resources :exchanges do
+    member do
+      patch :update_status
+    end
+  end
+
+  resources :exchanges do
     resources :chats, only: [:index, :create]
   end
 
@@ -46,11 +52,6 @@ Rails.application.routes.draw do
   member do
     get :exchange_candidates
   end
-end
-
-
-resources :chats, only: [:show] do
-  resources :messages, only: [:create]
 end
 
 end

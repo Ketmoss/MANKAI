@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Détail de l'échange</h1>
 
 <p><strong>Demandeur :</strong> <%= @exchange.initiator.username %></p>
@@ -11,9 +12,17 @@
 <p><strong>Message initial :</strong> <%= @exchange.initial_message %></p>
 <p><strong>Status :</strong> <%= @exchange.status.humanize %></p>
 
+
+<% if @exchange.recipient == current_user %>
+
+  <%= button_to "Accepter", update_status_exchange_path(@exchange, status: "accepted"), method: :patch, class: "btn btn-success" %>
+  <%= button_to "Refuser", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-danger" %>
+<% end %>
+
 <% if @exchange.chat %>
   <p><%= link_to "Accéder au chat", chat_path(@exchange.chat) %></p>
 <% end %>
 
-<%= link_to "Modifier", edit_exchange_path(@exchange), class: "btn" %>
+<%= link_to "Répondre en échange", edit_exchange_path(@exchange), class: "btn" %>
 <%= link_to "Retour à la liste", exchanges_path, class: "btn" %>
+</div>
