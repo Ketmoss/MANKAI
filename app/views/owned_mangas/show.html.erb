@@ -23,11 +23,6 @@
       <span>Back to mangas</span>
         <% end %>
 
-        <%= link_to "Proposer un échange",
-            new_exchange_path(wanted_manga_id: @owned_manga.id, target_user_id: @owned_manga.user_collection.user_id),
-            class: "btn btn-red ms-4" %>
-
-
     </div>
     <div class="card mx-4 mb-4">
       <h4><strong>Synopsis</strong></h4>
