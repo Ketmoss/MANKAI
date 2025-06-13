@@ -19,40 +19,39 @@
     </div>
 
     <%# Boutons %>
-    <div class="d-flex justify-content-center align-items-center py-4 mt-4">
+    <div class="text-center mb-4">
       <%# Choisir une collection %>
       <div class="add-to-collection-section">
         <% if user_signed_in? %>
           <% if current_user.user_collections.any? %>
-          <div class="dropdown">
-            <%= link_to db_mangas_path, class: "btn btn-red btn-sm ms-4 align-self-center py-2" do%>
-              <i class="fas fa-chevron-left"></i>
-            <% end %>
-            <button class="btn btn-red dropdown-toggle my-4" type="button" data-bs-toggle="dropdown">
-              Ajouter à une collection
-            </button>
-          </div>
+            <div class="dropdown">
+              <button class="btn btn-red dropdown-toggle mb-4"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                Ajouter à une collection
+              </button>
 
-          <ul class="dropdown-menu">
-            <% current_user.user_collections.each do |collection| %>
-              <li>
-              <%= form_with url: "#", method: :post,
-              data: { controller: "collections", action: "submit->collections#submit" },
-              class: "dropdown-item p-0" do |f| %>
-                <%= hidden_field_tag :db_manga_id, @db_manga.id %>
-                <input type="submit" name="coucou" value="<%= collection.name %>" data-id-collections-value= "<%= collection.id %>" class=" collection-select btn btn-red w-100">
-              <% end %>
-            </li>
-            <% end %>
-          </ul>
-
+              <ul class="dropdown-menu">
+                <% current_user.user_collections.each do |collection| %>
+                  <li>
+                    <%= form_with url: "#", method: :post,
+                        data: { controller: "collections", action: "submit->collections#submit" },
+                        class: "dropdown-item p-0" do |f| %>
+                      <%= hidden_field_tag :db_manga_id, @db_manga.id %>
+                      <input type="submit"
+                            name="coucou"
+                            value="<%= collection.name %>"
+                            data-id-collections-value="<%= collection.id %>"
+                            class="collection-select w-100">
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
           <% else %>
             <div class="text-muted py-4">
-              <%= link_to db_mangas_path, class: "btn btn-red btn-sm ms-4 align-self-center py-2" do%>
-                <i class="fas fa-chevron-left"></i>
-                <span>Back to mangas</span>
-                <% end %>
-              <%= link_to new_user_collection_path, class: "btn btn-red" do%>
+              <%= link_to new_user_collection_path, class: "btn btn-red" do %>
                 <i class="fas fa-bookmark"></i>
                 <span>Je possède ce manga</span>
               <% end %>
@@ -60,7 +59,7 @@
           <% end %>
         <% else %>
           <%= link_to "Connectez-vous pour ajouter", new_user_session_path,
-                      class: "btn btn-secondary" %>
+              class: "btn btn-secondary" %>
         <% end %>
       </div>
 
@@ -93,10 +92,16 @@
             </li>
             <% end %>
           </ul>
-          <div class="p-3">
+          <div class="text-center p-3">
             <%= link_to raw('<i class="fa-solid fa-pen-to-square"></i> Je donne mon avis'), "/reviews/new", class: "btn btn-red" %>
           </div>
         </div>
     </div>
   </div>
+
+  <div class="mb-5">
+    <br>
+    <br>
+  </div>
+
 </div>
