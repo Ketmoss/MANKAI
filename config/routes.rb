@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   end
 
   resources :db_mangas, only: [:index, :show] do
-    resources :reviews, only: [:create, :new, :show, :destroy]
+    resources :reviews, only: [:index, :create, :new, :show, :destroy]
     resources :owned_mangas
   end
 

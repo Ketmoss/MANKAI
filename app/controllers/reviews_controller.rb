@@ -1,6 +1,10 @@
 class ReviewsController < ApplicationController
 before_action :set_dbmanga, only: %i[new create]
 
+  def index
+    @reviews = Review.all
+  end
+
   def new
     @review = Review.new
   end
@@ -16,11 +20,11 @@ before_action :set_dbmanga, only: %i[new create]
     end
   end
 
-def show
-@review = Review.find(params[:id])
-end
+  def show
+    @review = Review.find(params[:id])
+  end
 
-def destroy
+  def destroy
     @review = Review.find(params[:id])
     @review.destroy
     redirect_to db_manga_path(@review.db_manga), status: :see_other
