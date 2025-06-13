@@ -5,6 +5,10 @@
   min-width: 100vw;
   color: $on_background;
 }
+
+.general-style .form-text {
+  color: $on_surface;
+}
 .outline{
   outline: 1px solid greenyellow;
 }
