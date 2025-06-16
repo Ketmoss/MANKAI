@@ -57,6 +57,8 @@ class ExchangesController < ApplicationController
 
   # SHOW
   def show
+    @chat = @exchange.chat
+
   end
 
   # EDIT
@@ -116,6 +118,20 @@ class ExchangesController < ApplicationController
     @exchange.destroy
     head :no_content
   end
+
+  # START CHAT
+  def start_chat
+    @exchange = Exchange.find(params[:id])
+
+    if @exchange.chat.present?
+      redirect_to chat_path(@exchange.chat)
+    else
+      @chat = Chat.create!(exchange: @exchange, user: current_user, title: "Échange Manga")
+      redirect_to chat_path(@chat)
+    end
+  end
+
+
 
   private
 

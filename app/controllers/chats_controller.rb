@@ -1,4 +1,5 @@
 class ChatsController < ApplicationController
+  before_action :set_chat
   def index
     @exchange = Exchange.find(params[:exchange_id])
     @chats = current_user.chats.where(exchange: @exchange)
@@ -6,9 +7,8 @@ class ChatsController < ApplicationController
   end
 
   def show
-    @chat = Chat.find(params[:id])
-    @message = Message.new
   end
+
 
   def create
     @exchange = Exchange.find(params[:exchange_id])
@@ -20,5 +20,11 @@ class ChatsController < ApplicationController
     else
       render :index
     end
+  end
+
+  private
+
+  def set_chat
+    @chat = Chat.find(params[:id])
   end
 end

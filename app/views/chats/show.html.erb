@@ -1,19 +1,11 @@
-<%= link_to "← Back", exchanges_chats_path(@chat.exchanges) %> /
-<%= link_to @chat.exchanges.id, exchange_path(@chat.exchange) %>
+<h1>Discussion de l'échange</h1>
 
-<h1><%= @chat.title %></h1>
+<h1>Discussion de l'échange</h1>
 
-<%= simple_form_for [@chat, @message] do |f| %>
-  <%= f.input :content, placeholder: "Send a Message", required: true, label: false %>
-  <%= f.button :submit, 'Send', class: 'btn btn-primary' %>
-<% end %>
+<div id="chat-messages">
+  <%= render @chat.messages %>
+</div>
 
-<% @chat.messages.each do |message| %>
-  <% if message.role == "current-user" %>
-    <div class="d-flex justify-content-end mb-2">
-      <div class="bg-white px-3 pb-0 pt-3 rounded-pill">
-        <%= raw(render_markdown(message.content)) %>
-      </div>
-    </div>
-  <% end %>
-<% end %>
+<div id="new_message">
+  <%= render partial: "messages/form", locals: { chat: @chat, message: Message.new } %>
+</div>
