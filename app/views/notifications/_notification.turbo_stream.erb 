@@ -1,0 +1,2 @@
+<%= turbo_stream.prepend "notification-dropdown-list", partial: "notifications/notification", locals: { notification: notification } %>
+<%= turbo_stream.replace "notification-counter", partial: "notifications/notification_counter", locals: { user: notification.recipient } %>

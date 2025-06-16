@@ -4,4 +4,16 @@ class Message < ApplicationRecord
   validates :content, presence: true
   after_create_commit -> { broadcast_append_to chat, target: "messages", partial: "messages/message", locals: { message: self, current_user: self.user } }
 
+  # Après création, déclencher la notification (sauf si l'auteur commente son propre article)
+  after_create_commit :notify_post_user
+
+  private
+
+  def notify_post_user
+    return if chat.user == user
+
+    CommentNotification.with(
+      message: "#{user.username} t'as envoyé un message"
+    ).deliver_later(chat.user)
+  end
 end

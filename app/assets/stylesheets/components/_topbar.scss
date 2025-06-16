@@ -2,3 +2,13 @@
   color: $on_background;
   text-align: center;
 }
+
+.page-title-absolute {
+  width: 100%;
+  position: absolute;
+  inset-block-start: 32px;
+}
+
+.page-title-absolute h3 {
+  text-align: center;
+}

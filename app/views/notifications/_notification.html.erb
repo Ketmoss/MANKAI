@@ -1,0 +1,10 @@
+<div id="notification-<%= notification.id %>" class="notification group relative flex flex-col sm:flex-row items-start sm:items-center hover:bg-gray-50 rounded-lg p-4 mb-2 card">
+  <div class="flex-grow w-full sm:pr-4">
+    <p class="text-gray-800 text-sm sm:text-base mb-1.5">
+      <%= notification.params[:message] %>
+    </p>
+    <p class="text-xs text-gray-500 mb-2">
+      <%= time_ago_in_words(notification.created_at) %>
+    </p>
+  </div>
+</div>
