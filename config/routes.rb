@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   resources :messages, only: [:create]
   end
 
+  resources :messages
+
   resources :exchanges do
     member do
     post :start_chat
