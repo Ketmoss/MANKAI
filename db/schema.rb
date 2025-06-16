@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_16_125903) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_16_142243) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_16_125903) do
     t.integer "jikan_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["jikan_id"], name: "index_db_mangas_on_jikan_id", unique: true
   end
 
   create_table "exchanges", force: :cascade do |t|
@@ -95,13 +96,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_16_125903) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.string "model_id"
-    t.integer "input_tokens"
-    t.integer "output_tokens"
-    t.bigint "tool_call_id"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
-    t.index ["tool_call_id"], name: "index_messages_on_tool_call_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.string "recipient_type", null: false
+    t.bigint "recipient_id", null: false
+    t.string "type", null: false
+    t.jsonb "params"
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["read_at"], name: "index_notifications_on_read_at"
+    t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient"
   end
 
   create_table "owned_mangas", force: :cascade do |t|
