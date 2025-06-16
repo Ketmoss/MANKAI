@@ -3,5 +3,4 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "@popperjs/core"
 import "bootstrap"
-
-import "./channels/chat_channel"
+import "channels"
