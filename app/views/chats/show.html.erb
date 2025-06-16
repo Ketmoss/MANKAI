@@ -1,15 +1,15 @@
 <div class="container  bg-light p-4 rounded shadow-sm text-dark text-center">
 <h1>Discussion de l'échange</h1>
 <hr>
-<div>
-
-<div id="chat-messages" data-chat-id="<%= @chat.id %>">
-  <%= render @chat.messages %>
-</div>
-
-
-<div id="new_message">
-  <%= render partial: "messages/form", locals: { chat: @chat, message: Message.new } %>
-</div>
+  <div>
+    <%= turbo_stream_from @chat %>
+      <div id="messages">
+        <%  @chat.messages.each do |message| %>
+            <%= render "messages/message", message: message, current_user: current_user %>
+        <% end %>
+      </div>
+  <div id="new_message">
+    <%= render partial: "messages/form", locals: { chat: @chat, message: Message.new } %>
+  </div>
 </div>
 </div>
