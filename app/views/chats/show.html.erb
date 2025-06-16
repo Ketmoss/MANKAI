@@ -1,6 +1,7 @@
+<div class="container  bg-light p-4 rounded shadow-sm text-dark text-center">
 <h1>Discussion de l'échange</h1>
-
-<h1>Discussion de l'échange</h1>
+<hr>
+<div>
 
 <div id="chat-messages">
   <%= render @chat.messages %>
@@ -8,4 +9,6 @@
 
 <div id="new_message">
   <%= render partial: "messages/form", locals: { chat: @chat, message: Message.new } %>
+</div>
+</div>
 </div>
