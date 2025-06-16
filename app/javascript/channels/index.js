@@ -1,3 +1,2 @@
-import consumer from "../channels/consumer"
-
+import "./consumer"
 import "./chat_channel"
