@@ -3,9 +3,10 @@
 <hr>
 <div>
 
-<div id="chat-messages">
+<div id="chat-messages" data-chat-id="<%= @chat.id %>">
   <%= render @chat.messages %>
 </div>
+
 
 <div id="new_message">
   <%= render partial: "messages/form", locals: { chat: @chat, message: Message.new } %>
