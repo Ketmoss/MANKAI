@@ -55,7 +55,7 @@ gem "ruby_llm"
 gem "kramdown"
 gem "rouge"
 gem "kramdown-parser-gfm"
-gem "redis"
+gem "solid_cable"
 
 group :development, :test do
   gem "dotenv-rails"
