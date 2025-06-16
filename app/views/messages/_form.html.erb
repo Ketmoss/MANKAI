@@ -1,0 +1,6 @@
+<%= form_with model: [chat, message], data: { turbo_stream: true }, id: "message-form", html: { autocomplete: "off" } do |f| %>
+  <div style="margin-top: 1rem;">
+    <%= f.text_field :content, placeholder: "Tapez votre message...", style: "width: 80%;" %>
+    <%= f.submit "Envoyer", style: "width: 18%;" %>
+  </div>
+<% end %>

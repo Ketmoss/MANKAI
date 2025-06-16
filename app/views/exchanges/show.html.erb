@@ -24,8 +24,13 @@
   <% end %>
 
 <% if @exchange.status == "accepted" %>
-  <p> <%= link_to " Démarrer un chat", new_chat_path(@chat), class: "btn btn-info" %></p>
+  <% if @exchange.chat.present? %>
+    <%= link_to "💬 Ouvrir le chat", chat_path(@exchange.chat), class: "btn btn-info" %>
+  <% else %>
+    <%= button_to "💬 Démarrer un chat", start_chat_exchange_path(@exchange), method: :post, class: "btn btn-primary" %>
+  <% end %>
 <% end %>
+
 
 <%= link_to "Choisir un manga en échange", edit_exchange_path(@exchange), class: "btn btn-primary" %>
 <%= link_to "Retour aux échanges", exchanges_path, class: "btn btn-secondary" %>

@@ -14,9 +14,14 @@ Rails.application.routes.draw do
     resources :exchanges
   end
 
+  resources :chats, only: [:show] do
+  resources :messages, only: [:create]
+  end
 
-  resources :chats do
-    resources :messages, only: [:create]
+  resources :exchanges do
+    member do
+    post :start_chat
+    end
   end
 
   resources :db_mangas, only: [:index, :show] do
