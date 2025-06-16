@@ -1,8 +1,8 @@
-<div data-controller="chat-message"
-     data-chat-message-user-id-value="<%= message.user.id %>"
-     data-chat-message-current-user-id-value="<%= current_user.id %>"
-     style="margin-bottom: 0.5rem; padding: 0.5rem; border-radius: 10px; max-width: 70%;"
-     id="<%= dom_id(message) %>">
+<div style="margin-bottom: 0.5rem; padding: 0.5rem;
+            background-color: <%= message.user == current_user ? '#DCF8C6' : '#F1F0F0' %>;
+            border-radius: 10px;
+            max-width: 70%;
+            <%= message.user == current_user ? 'margin-left: auto;' : 'margin-right: auto;' %>">
   <strong><%= message.user.username %></strong><br>
   <%= message.content %><br>
   <small><%= l(message.created_at, format: :short) %></small>
