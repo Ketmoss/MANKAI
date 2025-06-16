@@ -27,6 +27,17 @@ class ExchangesController < ApplicationController
         return redirect_to new_exchange_path(wanted_manga_id: @wanted_manga.id)
       end
 
+      existing_exchange = Exchange.find_by(
+        initiator: current_user,
+        recipient: @wanted_manga.user_collection.user,
+        wanted_manga: @wanted_manga
+      )
+
+      if existing_exchange
+        flash[:alert] = "Une demande d’échange identique existe déjà."
+        return redirect_to exchanges_path
+      end
+
       @exchange = Exchange.new(
         initiator: current_user,
         recipient: @wanted_manga.user_collection.user,
@@ -42,6 +53,7 @@ class ExchangesController < ApplicationController
         render :new, status: :unprocessable_entity
       end
   end
+
 
   # SHOW
   def show
