@@ -1,5 +1,7 @@
 import consumer from "channels/consumer"
 
+let chatSubscription = null;
+
 // Récupérer l'ID de l'utilisateur actuel
 function getCurrentUserId() {
   const metaTag = document.querySelector('meta[name="current-user-id"]');
@@ -8,10 +10,8 @@ function getCurrentUserId() {
 
 // Appliquer les classes CSS selon l'utilisateur
 function applyMessageStyles(messageElement, isCurrentUser) {
-  // Supprimer les anciennes classes
   messageElement.classList.remove('message-sent', 'message-received');
 
-  // Ajouter la nouvelle classe
   if (isCurrentUser) {
     messageElement.classList.add('message-sent');
   } else {
@@ -34,30 +34,46 @@ function initializeMessageStyles() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+function scrollToBottom() {
+  const chatContainer = document.getElementById('chat-messages');
+  if (chatContainer) {
+    setTimeout(() => {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }, 100);
+  }
+}
+
+function initializeChat() {
   const chatContainer = document.getElementById('chat-messages');
   const chatId = chatContainer?.dataset.chatId;
   const currentUserId = getCurrentUserId();
 
+  console.log("Initializing chat, chatId:", chatId, "userId:", currentUserId);
+
+  // Nettoyer l'ancienne subscription si elle existe
+  if (chatSubscription) {
+    consumer.subscriptions.remove(chatSubscription);
+    chatSubscription = null;
+  }
+
   if (chatId && currentUserId !== null) {
-    const subscription = consumer.subscriptions.create(
+    chatSubscription = consumer.subscriptions.create(
       { channel: "ChatChannel", chat_id: chatId },
       {
         connected() {
-          console.log("Connected to ChatChannel for chat " + chatId);
-          // Appliquer les styles à la connexion
+          console.log("✅ Connected to ChatChannel for chat " + chatId);
           setTimeout(() => {
             initializeMessageStyles();
-            this.scrollToBottom();
+            scrollToBottom();
           }, 100);
         },
 
         disconnected() {
-          console.log("Disconnected from ChatChannel");
+          console.log("❌ Disconnected from ChatChannel");
         },
 
         received(data) {
-          console.log("Received message:", data);
+          console.log("📨 Received message:", data);
           if (chatContainer && data.message) {
             chatContainer.insertAdjacentHTML('beforeend', data.message);
 
@@ -71,15 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
               applyMessageStyles(newMessage, isCurrentUser);
             }
 
-            this.scrollToBottom();
-          }
-        },
-
-        scrollToBottom() {
-          if (chatContainer) {
-            setTimeout(() => {
-              chatContainer.scrollTop = chatContainer.scrollHeight;
-            }, 100);
+            scrollToBottom();
           }
         }
       }
@@ -88,14 +96,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialiser les styles au chargement
     setTimeout(() => {
       initializeMessageStyles();
-
-      // Scroll initial
-      if (chatContainer) {
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-      }
+      scrollToBottom();
     }, 100);
   }
-});
+}
+
+function cleanupChat() {
+  if (chatSubscription) {
+    consumer.subscriptions.remove(chatSubscription);
+    chatSubscription = null;
+  }
+}
+
+// Événements Turbo (pour Rails 7)
+document.addEventListener('turbo:load', initializeChat);
+document.addEventListener('turbo:before-cache', cleanupChat);
+
+// Fallback pour le premier chargement (au cas où)
+document.addEventListener('DOMContentLoaded', initializeChat);
 
 // Réappliquer les styles si la page est restaurée depuis le cache
 window.addEventListener('pageshow', function(event) {
