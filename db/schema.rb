@@ -10,14 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_16_142243) do
+
+ActiveRecord::Schema[7.1].define(version: 2025_06_17_080534) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "chatbots", force: :cascade do |t|
     t.string "title"
     t.string "model_id"
-    t.bigint "db_manga_id", null: false
+    t.bigint "db_manga_id"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -78,13 +80,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_16_142243) do
   create_table "messagebots", force: :cascade do |t|
     t.string "role"
     t.text "content"
-    t.bigint "db_manga_id", null: false
+    t.bigint "db_manga_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "model_id"
     t.integer "input_tokens"
     t.integer "output_tokens"
     t.bigint "tool_call_id"
+    t.bigint "chatbot_id", null: false
+    t.index ["chatbot_id"], name: "index_messagebots_on_chatbot_id"
     t.index ["db_manga_id"], name: "index_messagebots_on_db_manga_id"
     t.index ["tool_call_id"], name: "index_messagebots_on_tool_call_id"
   end
@@ -193,6 +197,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_16_142243) do
   add_foreign_key "exchanges", "owned_mangas", column: "wanted_manga_id"
   add_foreign_key "exchanges", "users", column: "initiator_id"
   add_foreign_key "exchanges", "users", column: "recipient_id"
+  add_foreign_key "messagebots", "chatbots"
   add_foreign_key "messagebots", "db_mangas"
   add_foreign_key "messagebots", "tool_calls"
   add_foreign_key "messages", "chats"
