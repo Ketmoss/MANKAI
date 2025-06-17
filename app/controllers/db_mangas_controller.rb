@@ -8,15 +8,18 @@ class DbMangasController < ApplicationController
       @dbmangas = @dbmangas.where(sql_subquery, query: "%#{params[:query]}%")
     end
       @pagy, @dbmangas = pagy(@dbmangas, items: 10)
+    @page_title = "Chercher un manga"
   end
 
   def show
     @db_manga = DbManga.find(params[:id])
+    @page_title = ""
   end
 
 	def display_db_mangas_list
 		@user_collection = UserCollection.find(params[:user_collection_id])
 		@db_mangas = DbManga.all
+    @page_title = "Mangas"
 	end
 
   def add_to_collection

@@ -8,4 +8,8 @@ class PagesController < ApplicationController
   def profile
     @user = current_user
   end
+
+  def notifications
+    current_user.notifications.mark_as_read!
+  end
 end

@@ -18,7 +18,7 @@ class Message < ApplicationRecord
     return if chat.user == user
 
     CommentNotification.with(
-      message: "#{user.username} t'as envoyé un message"
+      message: "#{user.username} t'a envoyé un message"
     ).deliver_later(chat.user)
   end
 end
