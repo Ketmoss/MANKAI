@@ -1,0 +1,206 @@
+/* =============================================================================
+   CHAT STYLES - Version nettoyée et optimisée
+   ============================================================================= */
+
+/* Container principal du chat */
+#chat-messages {
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+/* =============================================================================
+   MESSAGES - Styles de base
+   ============================================================================= */
+
+.message {
+  width: 100%;
+  margin-bottom: 15px;
+  display: flex;
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+.message-bubble {
+  padding: 12px 16px;
+  position: relative;
+  word-wrap: break-word;
+  max-width: 75%;
+  transition: all 0.2s ease;
+}
+
+.message-content {
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 5px;
+}
+
+.message-content p {
+  margin: 0;
+}
+
+.message-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  margin-top: 5px;
+  opacity: 0.8;
+}
+
+/* =============================================================================
+   MESSAGES ENVOYÉS - Utilisateur actuel (droite, Orange)
+   ============================================================================= */
+
+.message.sent,
+.message-sent {
+  justify-content: flex-end;
+}
+
+.message.sent .message-bubble,
+.message-sent .message-bubble {
+  background: linear-gradient(135deg, #FE6F00 0%, #fe6e00b6 100%);
+  color: white;
+  border-radius: 20px 20px 5px 20px;
+  margin-left: 20%;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.message.sent .message-info,
+.message-sent .message-info {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* =============================================================================
+   MESSAGES REÇUS - Autres utilisateurs (gauche, gris)
+   ============================================================================= */
+
+.message.received,
+.message-received {
+  justify-content: flex-start;
+}
+
+.message.received .message-bubble,
+.message-received .message-bubble {
+  background: linear-gradient(135deg, #f8f9fa 0%, #f8f9fa 100%);
+  color: #212529;
+  border-radius: 20px 20px 20px 5px;
+  margin-right: 20%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dee2e6;
+}
+
+.message.received .message-info,
+.message-received .message-info {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* =============================================================================
+   ANIMATIONS
+   ============================================================================= */
+
+@keyframes messageSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  #chat-messages {
+    padding: 15px;
+  }
+
+  .message-bubble {
+    max-width: 85%;
+    padding: 10px 14px;
+  }
+
+  .message.sent .message-bubble,
+  .message-sent .message-bubble {
+    margin-left: 10%;
+  }
+
+  .message.received .message-bubble,
+  .message-received .message-bubble {
+    margin-right: 10%;
+  }
+
+  .message-info {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 10px;
+  }
+
+  .message.sent .message-info,
+  .message-sent .message-info {
+    align-items: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .message-bubble {
+    max-width: 90%;
+  }
+
+  .message.sent .message-bubble,
+  .message-sent .message-bubble {
+    margin-left: 5%;
+  }
+
+  .message.received .message-bubble,
+  .message-received .message-bubble {
+    margin-right: 5%;
+  }
+}
+
+/* =============================================================================
+   INDICATEUR DE FRAPPE (optionnel)
+   ============================================================================= */
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: #e9ecef;
+  border-radius: 18px;
+  max-width: 70px;
+  margin-bottom: 15px;
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+.typing-indicator span {
+  height: 8px;
+  width: 8px;
+  background-color: #999;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 3px;
+  animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+  margin-right: 0;
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}

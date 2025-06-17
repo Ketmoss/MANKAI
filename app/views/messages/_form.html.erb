@@ -1,5 +1,18 @@
-<!-- app/views/messages/_form.html.erb -->
-<%= form_with model: [chat, message], local: false do |form| %>
-  <%= form.text_area :content, placeholder: "Type your message..." %>
-  <%= form.submit "Send" %>
+<%= form_with model: [@chat, message], local: false, class: "d-flex align-items-end", data: { controller: "chat-form" } do |form| %>
+  <div class="flex-grow-1 me-2">
+    <%= form.text_area :content,
+        placeholder: "Tapez votre message...",
+        class: "form-control border-0",
+        style: "resize: none; min-height: 40px; max-height: 120px;",
+        rows: 1,
+        data: {
+          action: "keydown->chat-form#handleKeydown input->chat-form#autoResize",
+          "chat-form-target": "textarea"
+        } %>
+  </div>
+  <div>
+    <%= form.submit "Envoyer",
+        class: "btn btn-warning",
+        data: { "chat-form-target": "submit" } %>
+  </div>
 <% end %>
