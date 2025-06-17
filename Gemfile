@@ -57,7 +57,7 @@ gem "rouge"
 gem "kramdown-parser-gfm"
 gem "solid_cable"
 gem "noticed", "~> 1.6"
-gem "redis"
+gem 'redis', '~> 5.0'
 
 group :development, :test do
   gem "dotenv-rails"
