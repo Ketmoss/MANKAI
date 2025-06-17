@@ -1,19 +1,24 @@
-<%= link_to "← Back", exchanges_chats_path(@chat.exchanges) %> /
-<%= link_to @chat.exchanges.id, exchange_path(@chat.exchange) %>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-12">
+      <div class="card shadow">
+        <div class="card-header bg-warning text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><%= @chat.title %></h5>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <div id="chat-messages" data-chat-id="<%= @chat.id %>" style="height: 500px; overflow-y: auto;">
+            <%= render partial: 'messages/message', collection: @chat.messages.includes(:user), as: :message %>
+          </div>
 
-<h1><%= @chat.title %></h1>
-
-<%= simple_form_for [@chat, @message] do |f| %>
-  <%= f.input :content, placeholder: "Send a Message", required: true, label: false %>
-  <%= f.button :submit, 'Send', class: 'btn btn-primary' %>
-<% end %>
-
-<% @chat.messages.each do |message| %>
-  <% if message.role == "current-user" %>
-    <div class="d-flex justify-content-end mb-2">
-      <div class="bg-white px-3 pb-0 pt-3 rounded-pill">
-        <%= raw(render_markdown(message.content)) %>
+          <div class="border-top p-3 bg-white">
+            <div id="message-form">
+              <%= render partial: 'messages/form', locals: { chat: @chat, message: Message.new } %>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  <% end %>
-<% end %>
+  </div>
+</div>

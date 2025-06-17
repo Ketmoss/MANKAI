@@ -1,0 +1,6 @@
+
+<%= form_with model: [chat, message], local: false do |form| %>
+
+  <%= form.text_area :content, placeholder: "Type your message..." %>
+  <%= form.submit "Send" %>
+<% end %>

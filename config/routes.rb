@@ -2,7 +2,10 @@ Rails.application.routes.draw do
   devise_for :users
   root to: "pages#home"
 
+  mount ActionCable.server => '/cable'
+
   get '/profile', to: 'pages#profile'
+  get '/notifications', to: 'pages#notifications'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -10,13 +13,22 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
 
+
+
   resources :owned_mangas do
     resources :exchanges
   end
 
+  resources :chats, only: [:show] do
+  resources :messages, only: [:create]
+  end
 
-  resources :chats do
-    resources :messages, only: [:create]
+  resources :messages
+
+  resources :exchanges do
+    member do
+    post :start_chat
+    end
   end
 
   resources :db_mangas, only: [:index, :show] do

@@ -5,12 +5,14 @@ class User < ApplicationRecord
   has_many :owned_mangas, through: :user_collections
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
   has_many :chats, dependent: :destroy
   has_many :chatbots, dependent: :destroy
 
   has_many :initiated_exchanges, class_name: "Exchange", foreign_key: :initiator_id
   has_many :received_exchanges, class_name: "Exchange", foreign_key: :recipient_id
 
+  has_many :notifications, as: :recipient, dependent: :destroy
 
   def can_request_exchange_for?(owned_manga)
     return false if owned_manga.user_collection.user == self

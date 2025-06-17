@@ -1,0 +1,7 @@
+<turbo-stream action="replace" target="new_message">
+  <template>
+    <%= turbo_frame_tag "new_message" do %>
+      <%= render partial: "messages/form", locals: { chat: @chat, message: Message.new } %>
+    <% end %>
+  </template>
+</turbo-stream>

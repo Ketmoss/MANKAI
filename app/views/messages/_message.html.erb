@@ -1,0 +1,11 @@
+<div class="message <%= message.user == current_user ? 'sent' : 'received' %>" data-user-id="<%= message.user.id %>">
+  <div class="message-bubble">
+    <div class="message-content">
+      <%= simple_format(message.content) %>
+    </div>
+    <div class="message-info">
+      <span class="message-author"><%= message.user.username %></span>
+      <span class="message-time"><%= message.created_at.strftime("%H:%M") %></span>
+    </div>
+  </div>
+</div>

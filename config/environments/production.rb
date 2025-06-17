@@ -88,6 +88,17 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+   # Action Cable configuration
+  config.action_cable.url = "wss://#{ENV.fetch('HEROKU_APP_NAME', 'votre-app')}.herokuapp.com/cable"
+  config.action_cable.allowed_request_origins = [
+    "https://#{ENV.fetch('HEROKU_APP_NAME', 'votre-app')}.herokuapp.com"
+  ]
+
+  # Assets configuration
+  config.assets.compile = true
+  config.public_file_server.enabled = true
+  config.assets.digest = true
+
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com

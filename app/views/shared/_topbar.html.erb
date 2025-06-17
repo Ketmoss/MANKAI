@@ -1,9 +1,31 @@
 <div class="topbar container">
   <div class="navbar-nav d-flex flex-row align-items-center justify-content-between mt-4">
-    <%= link_to root_path, class: "btn btn-secondary" do%>
-      <i class="fas fa-chevron-left"></i>
-    <% end %>
-    <h3 class="">ManKai</h3>
-    <i class="fa-solid fa-bell btn btn-secondary"></i>
+    <!-- Section gauche : back -->
+    <div class="d-flex flex-row align-items-center">
+      <%= link_to root_path, class: "btn btn-secondary" do%>
+        <i class="fas fa-chevron-left"></i>
+      <% end %>
+    </div>
+    <div class="d-flex flex-row align-items-center">
+      <h4><%= @page_title || "ManKai" %></h4>
+    </div>
+    <!-- Section droite : notifications -->
+    <div class="d-flex flex-row align-items-center">
+      <% if user_signed_in? %>
+        <!-- Compteur de notifications -->
+        <%= turbo_stream_from "notifications_#{current_user.id}_counter", id: "notification_counter_stream" %>
+        <div id="notification-counter">
+          <%= render "notifications/notification_counter", user: current_user %>
+        </div>
+        <div class="relative group">
+          <div class="">
+            <!-- Icône de notifications -->
+            <%= link_to '/notifications', class: "btn btn-secondary" do%>
+            <i class="fa-solid fa-bell btn btn-secondary px-0"></i>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
