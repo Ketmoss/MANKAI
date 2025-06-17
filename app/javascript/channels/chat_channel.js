@@ -1,5 +1,6 @@
 import consumer from "channels/consumer"
 
+
 class ChatManager {
   constructor() {
     this.chatSubscription = null;
@@ -105,6 +106,7 @@ class ChatManager {
           if (this.chatContainer && data.message) {
             this.chatContainer.insertAdjacentHTML('beforeend', data.message);
 
+
             // Appliquer les styles au nouveau message
             const messages = this.chatContainer.querySelectorAll('.message');
             const newMessage = messages[messages.length - 1];
@@ -116,6 +118,7 @@ class ChatManager {
             }
 
             this.scrollToBottom();
+
           }
         }
       }
@@ -123,6 +126,7 @@ class ChatManager {
 
     // Initialiser les styles des messages existants
     setTimeout(() => {
+
       this.initializeMessageStyles();
       this.scrollToBottom();
     }, 100);
@@ -148,6 +152,7 @@ class ChatManager {
 // Instance globale du gestionnaire de chat
 const chatManager = new ChatManager();
 
+
 // Événements d'initialisation - un seul point d'entrée
 document.addEventListener('turbo:load', () => {
   console.log("🔄 turbo:load - initializing chat");
@@ -166,6 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Petit délai pour s'assurer que tout est chargé
   setTimeout(() => chatManager.initializeChat(), 100);
 });
+
 
 // Réappliquer les styles si la page est restaurée depuis le cache
 window.addEventListener('pageshow', (event) => {
