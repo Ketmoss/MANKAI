@@ -24,8 +24,7 @@ class ChatManager {
     } else {
       messageElement.classList.add('message-received');
     }
-} 
-
+  } // ← ACCOLADE MANQUANTE AJOUTÉE ICI
 
   // Fonction pour initialiser tous les messages existants
   initializeMessageStyles() {
@@ -106,8 +105,6 @@ class ChatManager {
           if (this.chatContainer && data.message) {
             this.chatContainer.insertAdjacentHTML('beforeend', data.message);
 
-
-
             // Appliquer les styles au nouveau message
             const messages = this.chatContainer.querySelectorAll('.message');
             const newMessage = messages[messages.length - 1];
@@ -126,8 +123,6 @@ class ChatManager {
 
     // Initialiser les styles des messages existants
     setTimeout(() => {
-
-
       this.initializeMessageStyles();
       this.scrollToBottom();
     }, 100);
@@ -153,24 +148,15 @@ class ChatManager {
 // Instance globale du gestionnaire de chat
 const chatManager = new ChatManager();
 
-
-// Événements d'initialisation - un seul point d'entrée
+// Utiliser uniquement les événements Turbo (Rails 7)
 document.addEventListener('turbo:load', () => {
   console.log("🔄 turbo:load - initializing chat");
   chatManager.initializeChat();
 });
 
-// Nettoyage avant cache
 document.addEventListener('turbo:before-cache', () => {
   console.log("🧹 turbo:before-cache - cleaning up");
   chatManager.cleanup();
-});
-
-// Fallback pour les pages sans Turbo
-document.addEventListener('DOMContentLoaded', () => {
-  console.log("🔄 DOMContentLoaded - initializing chat");
-  // Petit délai pour s'assurer que tout est chargé
-  setTimeout(() => chatManager.initializeChat(), 100);
 });
 
 // Réappliquer les styles si la page est restaurée depuis le cache
@@ -182,4 +168,4 @@ window.addEventListener('pageshow', (event) => {
 });
 
 // Export pour debugging si nécessaire
-window.chatManager = chatManager;
+window.chatManager = chatManager
