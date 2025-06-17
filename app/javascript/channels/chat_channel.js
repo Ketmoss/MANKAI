@@ -7,6 +7,8 @@ class ChatManager {
     this.chatContainer = null;
     this.chatId = null;
     this.isInitialized = false;
+    this.messageForm = null;
+    this.messageInput = null;
   }
 
   // Récupérer l'ID de l'utilisateur actuel
@@ -24,7 +26,7 @@ class ChatManager {
     } else {
       messageElement.classList.add('message-received');
     }
-  } // ← ACCOLADE MANQUANTE AJOUTÉE ICI
+  }
 
   // Fonction pour initialiser tous les messages existants
   initializeMessageStyles() {
@@ -46,16 +48,53 @@ class ChatManager {
     }
   }
 
+  // Vider le formulaire de saisie
+  clearMessageForm() {
+    if (this.messageInput) {
+      this.messageInput.value = '';
+      this.messageInput.focus(); // Remettre le focus sur le champ
+    }
+  }
+
+  // Gérer la soumission du formulaire
+  handleFormSubmission() {
+    if (this.messageForm) {
+      this.messageForm.addEventListener('submit', (event) => {
+        // Ne pas empêcher la soumission, mais vider le champ après
+        setTimeout(() => {
+          this.clearMessageForm();
+        }, 50); // Petit délai pour s'assurer que la soumission est traitée
+      });
+
+      // Alternative : écouter les événements AJAX si vous utilisez des requêtes AJAX
+      this.messageForm.addEventListener('ajax:success', () => {
+        this.clearMessageForm();
+      });
+
+      // Pour les requêtes Turbo (Rails 7)
+      this.messageForm.addEventListener('turbo:submit-end', (event) => {
+        if (event.detail.success) {
+          this.clearMessageForm();
+        }
+      });
+    }
+  }
+
   // Vérifier si tous les éléments sont prêts
   checkElementsReady() {
     this.chatContainer = document.getElementById('chat-messages');
     this.chatId = this.chatContainer?.dataset.chatId;
     this.currentUserId = this.getCurrentUserId();
 
+    // Récupérer le formulaire et le champ de saisie
+    this.messageForm = document.querySelector('#new_message, form[data-chat-form], .message-form');
+    this.messageInput = document.querySelector('#message_content, input[name="message[content]"], textarea[name="message[content]"]');
+
     const isReady = this.chatContainer && this.chatId && this.currentUserId !== null;
 
     if (isReady) {
       console.log("✅ All elements ready - chatId:", this.chatId, "userId:", this.currentUserId);
+      console.log("📝 Form elements - form:", !!this.messageForm, "input:", !!this.messageInput);
     } else {
       console.log("⏳ Elements not ready - container:", !!this.chatContainer, "chatId:", this.chatId, "userId:", this.currentUserId);
     }
@@ -81,6 +120,9 @@ class ChatManager {
 
     // Nettoyer l'ancienne subscription si elle existe
     this.cleanup();
+
+    // Initialiser la gestion du formulaire
+    this.handleFormSubmission();
 
     // Créer la nouvelle subscription
     this.chatSubscription = consumer.subscriptions.create(
@@ -113,6 +155,11 @@ class ChatManager {
               const messageUserId = parseInt(newMessage.dataset.messageUserId);
               const isCurrentUser = messageUserId === this.currentUserId;
               this.applyMessageStyles(newMessage, isCurrentUser);
+
+              // Si c'est notre propre message, vider le formulaire
+              if (isCurrentUser) {
+                this.clearMessageForm();
+              }
             }
 
             this.scrollToBottom();
@@ -135,12 +182,20 @@ class ChatManager {
       this.chatSubscription = null;
     }
     this.isInitialized = false;
+
+    // Nettoyer les event listeners du formulaire
+    if (this.messageForm) {
+      // Cloner et remplacer pour supprimer tous les event listeners
+      const newForm = this.messageForm.cloneNode(true);
+      this.messageForm.parentNode.replaceChild(newForm, this.messageForm);
+    }
   }
 
   // Réappliquer les styles (pour les pages restaurées depuis le cache)
   refreshStyles() {
     if (this.checkElementsReady()) {
       this.initializeMessageStyles();
+      this.handleFormSubmission(); // Réinitialiser la gestion du formulaire
     }
   }
 }
@@ -168,4 +223,4 @@ window.addEventListener('pageshow', (event) => {
 });
 
 // Export pour debugging si nécessaire
-window.chatManager = chatManager
+window.chatManager = chatManager;
