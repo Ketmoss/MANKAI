@@ -14,12 +14,19 @@
 }
 
 .general-style-image {
+  position: relative;
   width: 100%;
-  max-width: 420px;
   height: auto;
   max-height: 595px;
-  object-fit: cover;
-  border-radius: 8px; // optionnel pour un effet plus doux
+  border-radius: 32px; // optionnel pour un effet plus doux
   display: block;
   margin: 0 auto; // centre l’image dans son conteneur
+  z-index: 0;
+  top: -100px;
+  object-fit: cover;
+}
+
+.general-style-details {
+  position: relative;
+  top: -100px;
 }

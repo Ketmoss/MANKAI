@@ -1,17 +1,35 @@
-<div class="container mt-5 mb-5 general-style p-4 rounded shadow text-center">
-  <h1> Echanges</h1>
-<% if @exchanges.any? %>
-  <% @exchanges.each do |exchange| %>
-  <div class="card mb-3">
-    <div class="border p-3 rounded mb-2">
-      <p><strong>Demandé par :</strong> <%= exchange.initiator.username %></p>
-      <p><strong>Manga demandé :</strong> <%= exchange.wanted_manga.db_manga.title %></p>
-      <p><strong>Status :</strong> <%= exchange.status %></p>
-      <%= link_to 'Voir', exchange_path(exchange), class: "btn btn-light" %>
-    </div>
-    </div>
-  <% end %>
-<% else %>
-  <p>Aucune demande d’échange.</p>
-<% end %>
+<div class="general-style">
+  <div class="container mt-4">
+    <% if @exchanges.any? %>
+      <% @exchanges.each do |exchange| %>
+      <div class="card shadow-sm d-flex flex-row align-items-center justify-content-between gap-3 mb-4">
+        <div class="d-flex flex-row align-items-center">
+          <% if exchange.wanted_manga.db_manga.image_url.present? %>
+            <%= image_tag exchange.wanted_manga.db_manga.image_url, class: "img-cover-fixed", alt: exchange.wanted_manga.db_manga.title %>
+          <% else %>
+            <div class="manga-thumb d-flex align-items-center justify-content-center bg-light">
+              <i class="fas fa-book fa-2x text-muted"></i>
+            </div>
+          <% end %>
+          <div class="p-3 rounded">
+            <h5><%= exchange.wanted_manga.db_manga.title %></h5>
+            <p><i class="fa-solid fa-user"></i> <%= exchange.initiator.username %></p>
+            <% if exchange.status == 'accepted'%>
+              <p class="badge rounded-pill bg-success"><%= exchange.status %></p>
+            <% elsif exchange.status == 'refused'%>
+              <p class="badge rounded-pill bg-danger"><%= exchange.status %></p>
+            <% else %>
+              <p class="badge rounded-pill bg-secondary"><%= exchange.status %></p>
+            <% end %>
+          </div>
+        </div>
+        <div>
+          <%= link_to raw('<i class="fa-solid fa-chevron-right"></i>'), exchange_path(exchange), class: "btn btn-secondary-mankai" %>
+        </div>
+      </div>
+      <% end %>
+    <% else %>
+      <p>Aucune demande d’échange.</p>
+    <% end %>
+  </div>
 </div>
