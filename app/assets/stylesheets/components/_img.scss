@@ -11,3 +11,28 @@
   width: 100%;
   object-fit: cover;
 }
+
+.manga-bot-img {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  width: 100%;
+  height: auto;
+}
+
+/* Pour séparer un peu chaque message */
+.message {
+  padding: 1rem;
+  border-radius: 1rem;
+  background: $hover;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+  color: $surface;
+  overflow-y: auto;
+}
+
+.user-msg {
+  background: $hover;
+}
+
+.bot-msg {
+  background: $hover;
+}
