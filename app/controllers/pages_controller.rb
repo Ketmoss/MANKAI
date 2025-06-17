@@ -7,9 +7,11 @@ class PagesController < ApplicationController
 
   def profile
     @user = current_user
+    @page_title = "Mon Profil"
   end
 
   def notifications
     current_user.notifications.mark_as_read!
+    @page_title = "Mes Notifs"
   end
 end

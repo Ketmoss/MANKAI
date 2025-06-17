@@ -8,11 +8,15 @@ class ExchangesController < ApplicationController
       .where("initiator_id = ? OR recipient_id = ?", current_user.id, current_user.id)
       .includes(:wanted_manga, :offered_manga)
 
+
       start_date = params.fetch(:start_date, Date.today).to_date
       end_date = start_date.end_of_month
 
       @scheduled_exchanges = @exchanges
       .where(scheduled_at: start_date..end_date)
+    
+      @page_title = "Mes Échanges"
+
   end
 
   # NEW
@@ -21,6 +25,7 @@ class ExchangesController < ApplicationController
     @wanted_manga = OwnedManga.find(params[:wanted_manga_id])
     @available_mangas = current_user.owned_mangas.where(available_for_exchange: true)
     @exchange = Exchange.new
+    @page_title = "Ma demande"
   end
 
 

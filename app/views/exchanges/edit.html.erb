@@ -1,14 +1,16 @@
-<div class="container">
-<h2>Choisir un manga à recevoir en retour</h2>
+<div class="general-style">
+  <div class="container">
+    <h2>Choisir un manga à recevoir en retour</h2>
 
-<p><strong>Manga que vous possédez :</strong> <%= @exchange.wanted_manga.db_manga.title %></p>
-<p><strong>Message de <%= @exchange.initiator.username %> :</strong> <%= @exchange.initial_message %></p>
+    <p><strong>Manga que vous possédez :</strong> <%= @exchange.wanted_manga.db_manga.title %></p>
+    <p><strong>Message de <%= @exchange.initiator.username %> :</strong> <%= @exchange.initial_message %></p>
 
-<%= form_with model: @exchange, url: exchange_path(@exchange), method: :patch, local: true do |form| %>
-  <div class="mb-3">
-    <%= form.label :offered_manga_id, "Quel manga souhaitez-vous recevoir de #{ @exchange.initiator.username } ?" %>
-    <%= form.collection_select :offered_manga_id, @available_mangas, :id, ->(m) { m.db_manga.title }, prompt: "Choisir un manga", class: "w-full border rounded p-2" %>
-  </div>
+    <%= form_with model: @exchange, url: exchange_path(@exchange), method: :patch, local: true do |form| %>
+      <div class="mb-3">
+        <%= form.label :offered_manga_id, "Quel manga souhaitez-vous recevoir de #{ @exchange.initiator.username } ?" %>
+        <%= form.collection_select :offered_manga_id, @available_mangas, :id, ->(m) { m.db_manga.title }, prompt: "Choisir un manga", class: "w-full border rounded p-2" %>
+      </div>
+
 
   <%= form.label :scheduled_at, "Date et heure prévue de l’échange" %>
 <%= form.datetime_local_field :scheduled_at, class: "form-control mb-3" %>
@@ -17,5 +19,6 @@
   <%= form.submit "Soumettre l'échange retour", class: "btn btn-success" %>
 <% end %>
 
-<%= link_to "retour", :back %>
+    <%= link_to "retour", :back %>
+  </div>
 </div>

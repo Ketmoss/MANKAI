@@ -7,7 +7,7 @@ class MessagesController < ApplicationController
     @message.user = current_user
 
     if @message.save
-      # Broadcast du message
+      # Broadcast du message via ActionCable
       ChatChannel.broadcast_to(@chat, {
         message: render_to_string(
           partial: 'messages/message_broadcast',
@@ -21,18 +21,20 @@ class MessagesController < ApplicationController
       })
 
       respond_to do |format|
-        format.turbo_stream {
-          render turbo_stream: [
-            turbo_stream.replace("message-form", partial: "messages/form", locals: { chat: @chat, message: Message.new }),
-            turbo_stream.append("chat-messages", "")  # Vide, car le message sera ajouté via Action Cable
-          ]
-        }
+        # Le ChatManager se charge de vider le formulaire via JavaScript
+        # Pas besoin de remplacer le formulaire côté serveur
+        format.turbo_stream { head :ok }
         format.html { redirect_to chat_path(@chat) }
       end
     else
+      # En cas d'erreur, on remplace le formulaire avec les erreurs
       respond_to do |format|
         format.turbo_stream {
-          render turbo_stream: turbo_stream.replace("message-form", partial: "messages/form", locals: { chat: @chat, message: @message })
+          render turbo_stream: turbo_stream.replace(
+            "message-form",
+            partial: "messages/form",
+            locals: { chat: @chat, message: @message }
+          )
         }
         format.html { render 'chats/show' }
       end

@@ -1,10 +1,9 @@
-
 <div class="general-style">
   <div class="container py-5">
     <h2 class="text-center py-4">Nouvelle demande d’échange</h2>
       <div class="d-flex justify-content-center">
         <div class="col-md-8">
-       
+
 <%= form_with model: @exchange, url: exchanges_path, local: true do |form| %>
   <%= form.hidden_field :wanted_manga_id, value: @wanted_manga.id %>
 
@@ -15,8 +14,7 @@
 
   <%= form.submit "Envoyer la demande", class: "btn btn-primary" %>
 <% end %>
-
-</div>
- </div>
+      </div>
+    </div>
   </div>
-   </div>
+</div>
