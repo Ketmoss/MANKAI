@@ -25,4 +25,19 @@ class User < ApplicationRecord
       status: [:pending_recipient_response, :awaiting_approval]
     ) == false
   end
+  after_save :geocode_postal_code, if: :saved_change_to_zip_code?
+  private
+
+  def geocode_postal_code
+    return unless zip_code.present?
+
+    geocoding_result = FrenchGeocoderService.geocode_postal_code(zip_code)
+
+    if geocoding_result
+      update_columns(
+        latitude: geocoding_result[:latitude],
+        longitude: geocoding_result[:longitude]
+      )
+    end
+  end
 end
