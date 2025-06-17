@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :owned_mangas, through: :user_collections
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
   has_many :chats, dependent: :destroy
   has_many :chatbots, dependent: :destroy
 

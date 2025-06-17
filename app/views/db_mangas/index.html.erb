@@ -1,9 +1,8 @@
 
 <div class="container general-style">
     <!-- Search bar-->
-    <h1 class="text-center pt-5">Chercher un manga</h1>
     <div class="row justify-content-center">
-      <div class="col-sm-8 my-3 w-50">
+      <div class="col-sm-8 my-3">
         <%= form_with url: db_mangas_path, method: :get, class: "d-flex" do %>
           <%= text_field_tag :query,
                 params[:query],
