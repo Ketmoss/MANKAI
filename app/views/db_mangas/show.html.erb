@@ -1,107 +1,109 @@
-<%# Colone de l'image %>
-<div class="img-full">
-  <img src="<%= @db_manga.image_url%>" alt="<%= @db_manga.title %>" class="general-style-image py-3">
-</div>
+<div class="general-style">
+  <%# Colone de l'image %>
+  <div>
+    <img src="<%= @db_manga.image_url%>" alt="<%= @db_manga.title %>" class="general-style-image py-3">
+  </div>
 
-<div class="container pt-5 general-style">
-  <div class="row">
+  <div class="general-style-details container">
+    <div class="row">
 
-    <%# Carte infos du manga %>
-    <h1 class="text-center mb-4"><%= @db_manga.title%></h1>
-    <div class="mx-2 mb-4">
-      <div class="card mx-4 mb-4">
-        <p><strong>Author:</strong> <%= @db_manga.author %></p>
-        <p><strong>Genre:</strong> <%= @db_manga.genre %></p>
-        <p><strong>Status:</strong> <%= @db_manga.status %></p>
-        <p><strong>Chapters:</strong> <%= @db_manga.chapter %></p>
-        <p><strong>Volumes:</strong> <%= @db_manga.volume %></p>
-      </div>
-    </div>
-
-    <%# Boutons %>
-    <div class="text-center mb-4">
-      <%# Choisir une collection %>
-      <div class="add-to-collection-section">
-        <% if user_signed_in? %>
-          <% if current_user.user_collections.any? %>
-            <div class="dropdown">
-              <button class="btn btn-red dropdown-toggle mb-4"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false">
-                Ajouter à une collection
-              </button>
-
-              <ul class="dropdown-menu">
-                <% current_user.user_collections.each do |collection| %>
-                  <li>
-                    <%= form_with url: "#", method: :post,
-                        data: { controller: "collections", action: "submit->collections#submit" },
-                        class: "dropdown-item p-0" do |f| %>
-                      <%= hidden_field_tag :db_manga_id, @db_manga.id %>
-                      <input type="submit"
-                            name="coucou"
-                            value="<%= collection.name %>"
-                            data-id-collections-value="<%= collection.id %>"
-                            class="collection-select w-100">
-                    <% end %>
-                  </li>
-                <% end %>
-              </ul>
-            </div>
-          <% else %>
-            <div class="text-muted py-4">
-              <%= link_to new_user_collection_path, class: "btn btn-red" do %>
-                <i class="fas fa-bookmark"></i>
-                <span>Je possède ce manga</span>
-              <% end %>
-            </div>
-          <% end %>
-        <% else %>
-          <%= link_to "Connectez-vous pour ajouter", new_user_session_path,
-              class: "btn btn-secondary" %>
-        <% end %>
-      </div>
-
-      <%# Demande d'échange %>
-      <div>
-    <%= link_to "Faire une demande d'échange", exchange_candidates_db_manga_path(@db_manga), class: "btn btn-red" %>
-      </div>
-    </div>
-
-    <%# Synopsis %>
-    <div class="mx-2 mb-4">
-      <div class="card mx-4 my-4">
-          <h4><strong>Synopsis</strong></h4>
-          <p><%= @db_manga.synopsis %></p>
-      </div>
-    </div>
-
-    <%# Avis %>
-    <div class="mx-2 mb-4">
+      <%# Carte infos du manga %>
+      <h1 class="text-center mb-4"><%= @db_manga.title%></h1>
+      <div class="mx-2 mb-4">
         <div class="card mx-4 mb-4">
-          <h4><strong>Avis</strong></h4>
-          <ul class="list-group list-group-flush">
-            <% @db_manga.reviews.each do |review| %>
-            <li class="bg-color-surface list-group-item  d-flex justify-content-between align-items-start">
-              <div class="ms-2 me-auto">
-                <div class="fw-bold"><%= review.user.username%></div>
-                <p><%= review.content %></p>
-              </div>
-              <span><i class="fas fa-star"></i> <%= review.score %></span>
-            </li>
-            <% end %>
-          </ul>
-          <div class="text-center p-3">
-            <%= link_to raw('<i class="fa-solid fa-pen-to-square"></i> Je donne mon avis'), "/reviews/new", class: "btn btn-red" %>
-          </div>
+          <p><strong>Author:</strong> <%= @db_manga.author %></p>
+          <p><strong>Genre:</strong> <%= @db_manga.genre %></p>
+          <p><strong>Status:</strong> <%= @db_manga.status %></p>
+          <p><strong>Chapters:</strong> <%= @db_manga.chapter %></p>
+          <p><strong>Volumes:</strong> <%= @db_manga.volume %></p>
         </div>
+      </div>
+
+      <%# Boutons %>
+      <div class="text-center mb-4">
+        <%# Choisir une collection %>
+        <div class="add-to-collection-section">
+          <% if user_signed_in? %>
+            <% if current_user.user_collections.any? %>
+              <div class="dropdown">
+                <button class="btn btn-red dropdown-toggle mb-4"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                  Ajouter à une collection
+                </button>
+
+                <ul class="dropdown-menu">
+                  <% current_user.user_collections.each do |collection| %>
+                    <li>
+                      <%= form_with url: "#", method: :post,
+                          data: { controller: "collections", action: "submit->collections#submit" },
+                          class: "dropdown-item p-0" do |f| %>
+                        <%= hidden_field_tag :db_manga_id, @db_manga.id %>
+                        <input type="submit"
+                              name="coucou"
+                              value="<%= collection.name %>"
+                              data-id-collections-value="<%= collection.id %>"
+                              class="collection-select w-100">
+                      <% end %>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            <% else %>
+              <div class="text-muted py-4">
+                <%= link_to new_user_collection_path, class: "btn btn-red" do %>
+                  <i class="fas fa-bookmark"></i>
+                  <span>Je possède ce manga</span>
+                <% end %>
+              </div>
+            <% end %>
+          <% else %>
+            <%= link_to "Connectez-vous pour ajouter", new_user_session_path,
+                class: "btn btn-secondary-mankai" %>
+          <% end %>
+        </div>
+
+        <%# Demande d'échange %>
+        <div>
+      <%= link_to "Faire une demande d'échange", exchange_candidates_db_manga_path(@db_manga), class: "btn btn-red" %>
+        </div>
+      </div>
+
+      <%# Synopsis %>
+      <div class="mx-2 mb-4">
+        <div class="card mx-4 my-4">
+            <h4><strong>Synopsis</strong></h4>
+            <p><%= @db_manga.synopsis %></p>
+        </div>
+      </div>
+
+      <%# Avis %>
+      <div class="mx-2 mb-4">
+          <div class="card mx-4 mb-4">
+            <h4><strong>Avis</strong></h4>
+            <ul class="list-group list-group-flush">
+              <% @db_manga.reviews.each do |review| %>
+              <li class="bg-color-surface list-group-item  d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold"><%= review.user.username%></div>
+                  <p><%= review.content %></p>
+                </div>
+                <span><i class="fas fa-star"></i> <%= review.score %></span>
+              </li>
+              <% end %>
+            </ul>
+            <div class="text-center p-3">
+              <%= link_to raw('<i class="fa-solid fa-pen-to-square"></i> Je donne mon avis'), "/reviews/new", class: "btn btn-red" %>
+            </div>
+          </div>
+      </div>
     </div>
-  </div>
 
-  <div class="mb-5">
-    <br>
-    <br>
-  </div>
+    <div class="mb-5">
+      <br>
+      <br>
+    </div>
 
+  </div>
 </div>

@@ -1,37 +1,39 @@
 <div class="container">
-<h1>Détail de l'échange</h1>
+  <div class="general-style">
+    <h1>Détail de l'échange</h1>
 
-<p><strong>Demandeur :</strong> <%= @exchange.initiator.username %></p>
-<p><strong>Destinataire :</strong> <%= @exchange.recipient.username %></p>
-<p><strong>Manga souhaité :</strong> <%= @exchange.wanted_manga.db_manga.title %></p>
+    <p><strong>Demandeur :</strong> <%= @exchange.initiator.username %></p>
+    <p><strong>Destinataire :</strong> <%= @exchange.recipient.username %></p>
+    <p><strong>Manga souhaité :</strong> <%= @exchange.wanted_manga.db_manga.title %></p>
 
-<% if @exchange.offered_manga %>
-  <p><strong>Manga proposé :</strong> <%= @exchange.offered_manga.db_manga.title %></p>
-<% end %>
+    <% if @exchange.offered_manga %>
+      <p><strong>Manga proposé :</strong> <%= @exchange.offered_manga.db_manga.title %></p>
+    <% end %>
 
-<p><strong>Message initial :</strong> <%= @exchange.initial_message %></p>
-<p><strong>Status :</strong> <%= @exchange.status.humanize %></p>
-
-
-<% if @exchange.recipient == current_user %>
-
-  <p>
-    <%= button_to "Accepter", update_status_exchange_path(@exchange, status: "accepted"), method: :patch, class: "btn btn-success" %>
-  </p>
-  <p>
-    <%= button_to "Refuser", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-danger" %>
-  </p>
-  <% end %>
-
-<% if @exchange.status == "accepted" %>
-  <% if @exchange.chat.present? %>
-    <%= link_to "💬 Ouvrir le chat", chat_path(@exchange.chat), class: "btn btn-info" %>
-  <% else %>
-    <%= button_to "💬 Démarrer un chat", start_chat_exchange_path(@exchange), method: :post, class: "btn btn-primary" %>
-  <% end %>
-<% end %>
+    <p><strong>Message initial :</strong> <%= @exchange.initial_message %></p>
+    <p><strong>Status :</strong> <%= @exchange.status.humanize %></p>
 
 
-<%= link_to "Choisir un manga en échange", edit_exchange_path(@exchange), class: "btn btn-primary" %>
-<%= link_to "Retour aux échanges", exchanges_path, class: "btn btn-secondary" %>
+    <% if @exchange.recipient == current_user %>
+
+      <p>
+        <%= button_to "Accepter", update_status_exchange_path(@exchange, status: "accepted"), method: :patch, class: "btn btn-success" %>
+      </p>
+      <p>
+        <%= button_to "Refuser", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-danger" %>
+      </p>
+      <% end %>
+
+    <% if @exchange.status == "accepted" %>
+      <% if @exchange.chat.present? %>
+        <%= link_to "Ouvrir le chat", chat_path(@exchange.chat), class: "btn btn-info" %>
+      <% else %>
+        <%= button_to "Démarrer un chat", start_chat_exchange_path(@exchange), method: :post, class: "btn btn-primary" %>
+      <% end %>
+    <% end %>
+
+
+    <%= link_to "Choisir un manga en échange", edit_exchange_path(@exchange), class: "btn btn-primary" %>
+    <%= link_to "Retour aux échanges", exchanges_path, class: "btn btn-secondary-mankai" %>
+  </div>
 </div>

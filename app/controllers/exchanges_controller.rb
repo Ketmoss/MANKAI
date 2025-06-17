@@ -7,6 +7,7 @@ class ExchangesController < ApplicationController
     @exchanges = Exchange
       .where("initiator_id = ? OR recipient_id = ?", current_user.id, current_user.id)
       .includes(:wanted_manga, :offered_manga)
+    @page_title = "Mes Échanges"
   end
 
   # NEW
@@ -15,6 +16,7 @@ class ExchangesController < ApplicationController
     @wanted_manga = OwnedManga.find(params[:wanted_manga_id])
     @available_mangas = current_user.owned_mangas.where(available_for_exchange: true)
     @exchange = Exchange.new
+    @page_title = "Ma demande"
   end
 
 

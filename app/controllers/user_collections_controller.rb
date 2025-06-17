@@ -6,6 +6,7 @@ class UserCollectionsController < ApplicationController
     @usercollections = current_user.user_collections
     @owned_mangas = current_user.owned_mangas
     @db_mangas = DbManga.all
+    @page_title = "Ma Mangathèque"
   end
 
   def show
