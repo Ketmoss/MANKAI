@@ -24,7 +24,8 @@ class ChatManager {
     } else {
       messageElement.classList.add('message-received');
     }
-  } // ← ACCOLADE MANQUANTE AJOUTÉE
+} 
+
 
   // Fonction pour initialiser tous les messages existants
   initializeMessageStyles() {
@@ -105,6 +106,8 @@ class ChatManager {
           if (this.chatContainer && data.message) {
             this.chatContainer.insertAdjacentHTML('beforeend', data.message);
 
+
+
             // Appliquer les styles au nouveau message
             const messages = this.chatContainer.querySelectorAll('.message');
             const newMessage = messages[messages.length - 1];
@@ -123,6 +126,8 @@ class ChatManager {
 
     // Initialiser les styles des messages existants
     setTimeout(() => {
+
+
       this.initializeMessageStyles();
       this.scrollToBottom();
     }, 100);
@@ -147,6 +152,7 @@ class ChatManager {
 
 // Instance globale du gestionnaire de chat
 const chatManager = new ChatManager();
+
 
 // Événements d'initialisation - un seul point d'entrée
 document.addEventListener('turbo:load', () => {
