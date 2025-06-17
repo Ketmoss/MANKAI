@@ -2,9 +2,9 @@
   <h1 class="py-4">Welcome to your new favorite app</h1>
     <div class="container chat-bot-card h-100">
       <div class="d-flex justify-content-start align-items-center">
-        <a href="#" class="avatar-chat-bot me-3">
-          <%= image_tag "https://ik.imagekit.io/oc2ow6e7b/f3bb2be2649c409a247f0a6d866281e8bb44aae0_hq.jpg", class: "avatar-chat-bot", alt: "chat-bot" %>
-        </a>
+        <%= link_to chatbots_path, class: "avatar-chat-bot me-3" do %>
+        <%= image_tag "https://ik.imagekit.io/oc2ow6e7b/f3bb2be2649c409a247f0a6d866281e8bb44aae0_hq.jpg", class: "avatar-chat-bot", alt: "chat-bot" %>
+        <% end %>
         <div class="d-flex flex-column align-items-start">
           <h2> Discute avec Light </h2>
           <p> Ton meilleur ami expert en manga est là pour t’inspirer </p>

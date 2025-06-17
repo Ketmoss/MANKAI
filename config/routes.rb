@@ -36,7 +36,7 @@ Rails.application.routes.draw do
 
   resources :user_collections
 
-  resources :chatbots, only: [:show, :index, :create] do
+  resources :chatbots, only: [:show, :index, :create, :destroy] do
     resources :messagebots, only: [:create]
   end
 
