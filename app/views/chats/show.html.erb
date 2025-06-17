@@ -1,15 +1,24 @@
-<div class="container  bg-light p-4 rounded shadow-sm text-dark text-center">
-<h1>Discussion de l'échange</h1>
-<hr>
-  <div>
-    <%= turbo_stream_from @chat %>
-      <div id="messages">
-        <%  @chat.messages.each do |message| %>
-            <%= render "messages/message", message: message, current_user: current_user %>
-        <% end %>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-12">
+      <div class="card shadow">
+        <div class="card-header bg-warning text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><%= @chat.title %></h5>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <div id="chat-messages" data-chat-id="<%= @chat.id %>" style="height: 500px; overflow-y: auto;">
+            <%= render partial: 'messages/message', collection: @chat.messages.includes(:user), as: :message %>
+          </div>
+
+          <div class="border-top p-3 bg-white">
+            <div id="message-form">
+              <%= render partial: 'messages/form', locals: { chat: @chat, message: Message.new } %>
+            </div>
+          </div>
+        </div>
       </div>
-  <div id="new_message">
-    <%= render partial: "messages/form", locals: { chat: @chat, message: Message.new } %>
+    </div>
   </div>
-</div>
 </div>

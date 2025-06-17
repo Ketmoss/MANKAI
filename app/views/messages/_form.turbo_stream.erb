@@ -1,6 +1,6 @@
-<!-- app/views/messages/_form.turbo_stream.erb -->
+
 <%= form_with model: [chat, message], local: false do |form| %>
-  <!-- Your form fields here -->
+
   <%= form.text_area :content, placeholder: "Type your message..." %>
   <%= form.submit "Send" %>
 <% end %>
