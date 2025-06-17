@@ -40,6 +40,10 @@ class Exchange < ApplicationRecord
     end
   end
 
+  def start_time
+    scheduled_at
+  end
+
   private
 
   def validate_different_users

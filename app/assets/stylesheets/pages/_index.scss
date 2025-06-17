@@ -2,3 +2,30 @@
 @import "home";
 @import "general-style";
 @import "landing";
+
+.simple-calendar td {
+  vertical-align: top;
+  padding: 10px;
+  border: 1px solid #b0afad;
+}
+
+.simple-calendar .event {
+  background-color: #f0f8ff;
+  margin-top: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 0.85rem;
+}
+
+.simple-calendar .day {
+  position: relative;
+  min-height: 100px;
+}
+
+.simple-calendar .day .day_number {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-weight: bold;
+  color: #cb771d;
+}

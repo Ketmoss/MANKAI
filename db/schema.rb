@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_17_080534) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_17_132630) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_080534) do
     t.datetime "cancelled_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "scheduled_at"
     t.index ["initiator_id", "recipient_id", "wanted_manga_id"], name: "idx_unique_exchange_request", unique: true
     t.index ["initiator_id", "status"], name: "idx_exchanges_initiator_status"
     t.index ["initiator_id"], name: "index_exchanges_on_initiator_id"
@@ -97,12 +98,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_080534) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.string "model_id"
-    t.integer "input_tokens"
-    t.integer "output_tokens"
-    t.bigint "tool_call_id"
+    t.boolean "read"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
-    t.index ["tool_call_id"], name: "index_messages_on_tool_call_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
