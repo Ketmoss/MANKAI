@@ -12,6 +12,13 @@
 <p><strong>Message initial :</strong> <%= @exchange.initial_message %></p>
 <p><strong>Status :</strong> <%= @exchange.status.humanize %></p>
 
+<% if @exchange.scheduled_at.present? %>
+  <p><strong>📅 Échange prévu le :</strong> <%= l(@exchange.scheduled_at, format: :long) %></p>
+<% else %>
+  <p><em>Aucune date d’échange prévue pour le moment.</em></p>
+<% end %>
+
+
 
 <% if @exchange.recipient == current_user %>
 

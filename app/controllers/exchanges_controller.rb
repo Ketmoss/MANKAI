@@ -7,6 +7,12 @@ class ExchangesController < ApplicationController
     @exchanges = Exchange
       .where("initiator_id = ? OR recipient_id = ?", current_user.id, current_user.id)
       .includes(:wanted_manga, :offered_manga)
+
+      start_date = params.fetch(:start_date, Date.today).to_date
+      end_date = start_date.end_of_month
+
+      @scheduled_exchanges = @exchanges
+      .where(scheduled_at: start_date..end_date)
   end
 
   # NEW
@@ -140,7 +146,7 @@ class ExchangesController < ApplicationController
   end
 
   def exchange_params
-    params.require(:exchange).permit(:status, :meeting_date, :meeting_location, :meeting_notes)
+    params.require(:exchange).permit(:status, :meeting_date, :meeting_location, :meeting_notes, :scheduled_at)
   end
 
   def authorize_exchange!

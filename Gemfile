@@ -58,6 +58,7 @@ gem "kramdown-parser-gfm"
 gem "solid_cable"
 gem "noticed", "~> 1.6"
 gem 'redis', '~> 5.0'
+gem 'simple_calendar'
 
 group :development, :test do
   gem "dotenv-rails"
