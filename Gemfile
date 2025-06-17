@@ -60,6 +60,7 @@ gem "noticed", "~> 1.6"
 gem 'redis', '~> 5.0'
 gem "geocoder", "~> 1.7"
 gem 'httparty'
+gem 'simple_calendar'
 
 group :development, :test do
   gem "dotenv-rails"

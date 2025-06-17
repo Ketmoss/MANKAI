@@ -40,6 +40,10 @@ class Exchange < ApplicationRecord
     end
   end
 
+  def start_time
+    scheduled_at
+  end
+
   private
 
   def validate_different_users
@@ -56,7 +60,7 @@ class Exchange < ApplicationRecord
 
    # Notification lors de la création d'un échange
   def notify_exchange_request
-    return if initiator == recipient # Double vérification
+    return if initiator != recipient # Double vérification
 
     ExchangeNotification.with(
       exchange: self,
