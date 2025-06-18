@@ -24,7 +24,7 @@ Quand tu reçois une question, commence toujours par rechercher en priorité dan
 Si tu trouves des mangas correspondants dans la base, présente-les en premier à l'utilisateur, en donnant 2 à 3 mangas adaptés à sa demande ou à son profil.
 Si aucun manga n'est trouvé dans la base, alors propose une réponse générale ou des suggestions externes.
 
-Si l'utilisateur pose une question précise sur un manga, donne-lui une description personnalisée et adaptée à sa demande, en valorisant le titre, l’auteur, le genre et le résumé.
+Si l'utilisateur pose une question précise sur un manga, donne-lui une description personnalisée et adaptée à sa demande en priorisant les données de la base de données, en valorisant le titre, l’auteur, le genre et le résumé.
 
 Rédige toujours des informations claires et pertinentes, en français.
 N’utilise jamais de listes ni de markdown : écris toujours en texte fluide et engageant, en sautant des lignes entre les paragraphes.
@@ -39,102 +39,106 @@ Termine ta réponse par une petite question pour inviter à la discussion.
     return nil if user_input.blank?
 
     # 0. Normalisation et traduction du genre si besoin
-    raw   = user_input.strip
-    down  = raw.downcase
-    query = GENRE_TRANSLATIONS.fetch(down, raw)
+    raw  = user_input.strip
+    down = raw.downcase
+
+    # Extraire et traduire tout genre français présent dans la question
+    translated_genres = GENRE_TRANSLATIONS.keys.select { |fr| down.include?(fr) }
+    translated        = translated_genres.map { |fr| GENRE_TRANSLATIONS[fr] }
+
+    # Préparer les mots-clés initiaux et ajouter en priorité les traductions
+    base_keywords = down.scan(/\w+/)
+    keywords      = (translated + base_keywords).uniq
 
     # 1. Enregistrement du message utilisateur
     messagebots.create!(
-      role: "user",
+      role:    "user",
       content: raw,
       db_manga: db_manga.presence
     )
 
-    # --- Extraction mots-clés (avec fallback LLM si vide) ---
-    stopwords = %w[
-      et un une de du des le la les au aux avec pour par sur dans ce cette cet tu vous as as-tu ton ta tes son sa ses ma mon mes nos votre vos leur leurs on y en a d' l' j' n' s' c'
-      aussi mais donc or ni car si quand comme où que quoi qui dont lequel laquelle lesquels lesquelles leur leurs notre votre vos mon ma mes ton ta tes son sa ses notre nos leur leurs
-      ici là là-bas maintenant toujours déjà encore tous toutes tout toute alors ainsi après avant depuis depuis peu bientôt tôt tard parfois souvent jamais moins plus mieux
-    ]
-    keywords = raw.downcase.scan(/\w+/).reject { |w| stopwords.include?(w) || w.length < 3 }
+    # --- Recherche prioritaire par genre (colonne `genre`) ---
+    found_manga = nil
+    if translated.any?
+      ilike   = translated.each_with_index.map { |g, i| "LOWER(genre) LIKE :g#{i}" }.join(" OR ")
+      params  = translated.each_with_index.map { |g, i| ["g#{i}".to_sym, "%#{g.downcase}%"] }.to_h
+      matches = DbManga.where(ilike, **params)
+      found_manga = matches.order(Arel.sql('RANDOM()')).first if matches.exists?
+    end
 
-    # -- NOUVEAU : si aucun mot-clé utile, on demande au LLM --
-    if keywords.empty?
-      keyword_prompt = <<~PROMPT
-        Réécris la question suivante en un ou deux mots-clés (genre, thème ou titre de manga), les plus utiles possibles pour une recherche dans une base de données de mangas. Réponds uniquement par les mots-clés séparés par une virgule, sans phrase.
-        Question : "#{raw}"
+    # --- Fallback : recherche “classique” sur titre/auteur/synopsis ---
+    if found_manga.nil?
+      keywords.each do |w|
+        next unless w.length > 2
+        match = DbManga.where("LOWER(title) LIKE ?", "%#{w}%").first
+        if match
+          found_manga = match
+          break
+        end
+      end
+    end
+
+    # --- Si toujours rien, recherche large avec troncature intelligente ---
+    if found_manga.nil?
+      keywords_truncated = keywords.map { |w| w.length <= 4 ? w : w[0..3] }
+      q_fragments = keywords_truncated.map.with_index do |kw, i|
+        "(LOWER(title) LIKE :kw#{i} OR LOWER(author) LIKE :kw#{i} OR LOWER(genre) LIKE :kw#{i} OR LOWER(synopsis) LIKE :kw#{i})"
+      end.join(" OR ")
+      q_params = keywords_truncated.each_with_index.map { |kw, i| ["kw#{i}".to_sym, "%#{kw}%"] }.to_h
+      matches = DbManga.where(q_fragments, **q_params)
+      found_manga = matches.order(Arel.sql('RANDOM()')).first
+    end
+
+    # --- Synonymes via LLM si toujours rien ---
+    if found_manga.nil? && keywords.any?
+      syn_prompt = <<~PROMPT
+        Propose un à trois synonymes ou mots proches pour chaque mot-clé suivant, séparés par des virgules. Uniquement les mots, pas de phrase.
+        Mots-clés : #{keywords.join(', ')}
       PROMPT
 
       llm_resp = RubyLLM.chat(model: model_id || "gpt-4o")
-        .with_instructions(keyword_prompt)
-        .ask("Quels mots-clés utiliser ?")
+                       .with_instructions(syn_prompt)
+                       .ask("Donne les synonymes ou mots associés.")
 
-      keywords = llm_resp.to_s.downcase.scan(/\w+/)
-      # On remet un fallback ultra-safe si vraiment rien n'est remonté
-      keywords = [query.downcase] if keywords.empty?
+      new_keywords = llm_resp.to_s.downcase.scan(/\w+/).uniq - stopwords
+      keywords_syn = new_keywords.map { |w| w.length <= 4 ? w : w[0..3] }
+
+      unless keywords_syn.empty?
+        syn_fragments = keywords_syn.map.with_index do |kw, i|
+          "(LOWER(title) LIKE :skw#{i} OR LOWER(author) LIKE :skw#{i} OR LOWER(genre) LIKE :skw#{i} OR LOWER(synopsis) LIKE :skw#{i})"
+        end.join(" OR ")
+        syn_params = keywords_syn.each_with_index.map { |kw, i| ["skw#{i}".to_sym, "%#{kw}%"] }.to_h
+        matches = DbManga.where(syn_fragments, **syn_params)
+        found_manga = matches.order(Arel.sql('RANDOM()')).first
+      end
     end
-
-    # Construction dynamique de la requête pour chaque mot-clé
-    query_fragments = keywords.map.with_index do |kw, i|
-      "(LOWER(title) LIKE :kw#{i} OR LOWER(author) LIKE :kw#{i} OR LOWER(genre) LIKE :kw#{i} OR LOWER(synopsis) LIKE :kw#{i})"
-    end.join(" OR ")
-
-    query_params = keywords.each_with_index.map { |kw, i| ["kw#{i}".to_sym, "%#{kw}%"] }.to_h
-
-    matches = DbManga.where(query_fragments, **query_params)
-    found_manga = matches.order(Arel.sql('RANDOM()')).first
 
     if found_manga
       summary = found_manga.synopsis.to_s.strip
 
-      # 2a. Appel LLM pour la présentation
-      response_content = begin
-        presentation_prompt = <<~PROMPT
-          Tu es un spécialiste des mangas.
-          Rédige une fiche de présentation claire et engageante en français pour ce manga.
-          • Texte brut, sans balises HTML ni Markdown.
-          • Organise-le en paragraphes séparés par une ligne vide.
-          • Mets en valeur le titre, l’auteur, le genre et le résumé ci-dessous.
-          • Termine par une petite question pour inviter à la discussion.
+      # Présentation via LLM
+      presentation_prompt = <<~PROMPT
+        Tu es un spécialiste des mangas.
+        Rédige une fiche de présentation claire et engageante en français pour ce manga.
+        • Texte brut, sans balises HTML ni Markdown.
+        • Organise-le en paragraphes séparés par une ligne vide.
+        • Mets en valeur le titre, l’auteur, le genre et le résumé ci-dessous.
+        • Termine par une petite question pour inviter à la discussion.
 
-          - Titre  : #{found_manga.title}
-          - Auteur : #{found_manga.author}
-          - Genre  : #{found_manga.genre}
-          - Résumé : #{summary}
-        PROMPT
+        - Titre  : #{found_manga.title}
+        - Auteur : #{found_manga.author}
+        - Genre  : #{found_manga.genre}
+        - Résumé : #{summary}
+      PROMPT
 
-        llm_resp = RubyLLM.chat(model: model_id || "gpt-4o")
-                        .with_instructions(presentation_prompt)
-                        .ask("Rédige-moi cette fiche.")
+      llm_resp = RubyLLM.chat(model: model_id || "gpt-4o")
+                       .with_instructions(presentation_prompt)
+                       .ask("Rédige-moi cette fiche.")
 
-        if llm_resp.is_a?(String)
-          llm_resp
-        elsif llm_resp.respond_to?(:content)
-          llm_resp.content
-        elsif llm_resp.is_a?(Hash)
-          llm_resp['content'] || llm_resp[:content]
-        else
-          llm_resp.to_s
-        end
+      response_content = llm_resp.respond_to?(:content) ? llm_resp.content : llm_resp.to_s
 
-      rescue StandardError => e
-        if e.message =~ /Rate limit/i
-          Rails.logger.warn("[Chatbot] Rate limit hit, using manual fallback for #{found_manga.title}")
-          <<~TEXT
-            #{found_manga.title}, écrit par #{found_manga.author}, est un manga de genre #{found_manga.genre}.
-
-            #{summary}
-
-            Qu'en pensez-vous ?
-          TEXT
-        else
-          raise
-        end
-      end
-
-      # 2c. Sauvegarde et retour
       messagebots.create!(
-        role: "assistant",
+        role:    "assistant",
         content: response_content,
         db_manga: found_manga
       )
@@ -153,14 +157,10 @@ Termine ta réponse par une petite question pour inviter à la discussion.
     end
 
     response = chat.ask(query)
-    response_content = case response
-                       when String then response
-                       when Hash   then response['content'] || response[:content]
-                       else            response.respond_to?(:content) ? response.content : response.to_s
-                       end
+    response_content = response.respond_to?(:content) ? response.content : response.to_s
 
     messagebots.create!(
-      role: "assistant",
+      role:    "assistant",
       content: response_content,
       db_manga: db_manga
     )
@@ -172,8 +172,6 @@ Termine ta réponse par une petite question pour inviter à la discussion.
     Rails.logger.error("Backtrace: #{e.backtrace.join("\n")}")
     nil
   end
-
-
 
   def generate_title_from_first_message
     first_user_message = messagebots.where(role: "user").order(:created_at).first
