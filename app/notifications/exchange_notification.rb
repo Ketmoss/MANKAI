@@ -22,13 +22,6 @@ class ExchangeNotification < Noticed::Base
   private
 
   def broadcast_notification
-    recipient.broadcast_prepend_later_to(
-      "notifications_#{recipient.id}_dropdown_list",
-      target: "notification-dropdown-list",
-      partial: "notifications/notification",
-      locals: { notification: self.record }
-    )
-
     recipient.broadcast_replace_later_to(
       "notifications_#{recipient.id}_counter",
       target: "notification-counter",

@@ -14,11 +14,14 @@ class Message < ApplicationRecord
 
   private
 
-  def notify_post_user
-    return if chat.user == user
+def notify_post_user
+  # Trouver l'autre utilisateur dans le chat via les messages
+  other_user = chat.messages.where.not(user_id: user.id).last&.user || chat.user
 
-    CommentNotification.with(
-      message: "#{user.username} t'a envoyé un message"
-    ).deliver_later(chat.user)
-  end
+  return if other_user == user
+
+  CommentNotification.with(
+    message: "#{user.username} t'a envoyé un message"
+  ).deliver_later(other_user)
+end
 end
