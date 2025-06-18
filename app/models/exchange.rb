@@ -60,8 +60,6 @@ class Exchange < ApplicationRecord
 
    # Notification lors de la création d'un échange
   def notify_exchange_request
-    return if initiator != recipient # Double vérification
-
     ExchangeNotification.with(
       exchange: self,
       recipient: recipient,

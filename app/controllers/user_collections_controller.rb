@@ -34,8 +34,8 @@ class UserCollectionsController < ApplicationController
     @user_collection = current_user.user_collections.build(user_collection_params)
 
     if @user_collection.save
-      redirect_to @user_collection, notice: 'Collection créée avec succès.'
-    else
+      redirect_to user_collection_path(@user_collection), notice: 'Collection créée avec succès.'
+        else
       @owned_mangas = current_user.owned_mangas
       @db_mangas = DbManga.all
       render :new, status: :unprocessable_entity
@@ -54,8 +54,8 @@ class UserCollectionsController < ApplicationController
 
   def update
     if @user_collection.update(user_collection_params)
-      redirect_to @user_collection, notice: 'Collection mise à jour avec succès.'
-    else
+      redirect_to user_collection_path(@user_collection), notice: 'Collection mise à jour avec succès.'
+        else
       @owned_mangas = @user_collection.owned_mangas
       @db_mangas = DbManga.all
       render :edit, status: :unprocessable_entity
