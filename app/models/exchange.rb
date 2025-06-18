@@ -24,13 +24,13 @@ class Exchange < ApplicationRecord
   def message(action)
     case action
     when 'request_created'
-      "#{initiator.username} souhaite échanger contre votre manga \"#{wanted_manga.db_manga.title}\""
+      "#{initiator.username} souhaite échanger un de ses mangas contre \"#{wanted_manga.db_manga.title}\""
 
     when 'request_accepted'
-      "#{recipient.username} a accepté votre demande d'échange pour \"#{wanted_manga.db_manga.title}\""
+      "#{recipient.username} a accepté ta demande d'échange pour \"#{wanted_manga.db_manga.title}\""
 
     when 'request_refused'
-      "#{recipient.username} a refusé votre demande d'échange pour \"#{wanted_manga.db_manga.title}\""
+      "#{recipient.username} a refusé ta demande d'échange pour \"#{wanted_manga.db_manga.title}\""
 
     when 'exchange_completed'
       "L'échange pour \"#{wanted_manga.db_manga.title}\" a été complété avec succès !"

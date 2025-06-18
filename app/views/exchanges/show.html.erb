@@ -1,13 +1,18 @@
 <div class="general-style">
   <div class="container mt-4">
-    <div class="card d-flex flex-row align-items-center justify-content-between gap-3 mb-4">
+    <div class="card d-flex flex-row align-items-center justify-content-evenly gap-3 mb-4">
         <div class="d-flex flex-row align-items-center">
           <%= image_tag @exchange.wanted_manga.db_manga.image_url, class: "img-cover-fixed", alt: @exchange.wanted_manga.db_manga.title %>
         </div>
-        <h1> VS </h1>
       <% if @exchange.offered_manga %>
+        <h1> VS </h1>
         <div class="d-flex flex-row align-items-center">
           <%= image_tag @exchange.offered_manga.db_manga.image_url, class: "img-cover-fixed", alt: @exchange.offered_manga.db_manga.title  %>
+        </div>
+      <% else %>
+        <div>
+        <div class="mb-4"><%= link_to "Choisir un manga", edit_exchange_path(@exchange), class: "btn btn-manga-primary" %></div>
+        <%= button_to "Refuser l'échange", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-manga btn-danger" %>
         </div>
       <% end %>
     </div>
@@ -28,43 +33,54 @@
       <div class="my-0">
       <% if @exchange.status == 'accepted' %>
         <p class="badge rounded-pill bg-success"><%= @exchange.status.humanize %></p>
+      <% elsif @exchange.status == 'pending' %>
+        <p class="badge rounded-pill bg-secondary"><%= @exchange.status.humanize %></p>
       <% elsif @exchange.status == 'refused' %>
         <p class="badge rounded-pill bg-danger"><%= @exchange.status.humanize %></p>
       <% else %>
-        <p class="badge rounded-pill bg-secondary"><%= @exchange.status.humanize %></p>
+        <p class="badge rounded-pill bg-dark"><%= @exchange.status.humanize %></p>
       <% end %>
       </div>
     </div>
 
-    <div class="card">
-    <% if @exchange.status == "accepted" && (@exchange.initiator == current_user || @exchange.recipient == current_user) %>
-      <div class="">
-        <% if @exchange.scheduled_at.present?%>
-          <h5>Modifie la date d’échange</h5>
-        <% else %>
-          <h5>Choisis la date d’échange</h5>
-        <% end %>
-        <%= form_with model: @exchange, url: set_date_exchange_path(@exchange), method: :patch, local: true do |f| %>
-          <div class="mb-2">
-            <%= f.date_field :scheduled_at, class: "form-control", value: @exchange.scheduled_at %>
-          </div>
-          <%= f.submit "Enregistrer la date", class: "btn btn-manga-primary" %>
-        <% end %>
+      <!-- Date -->
+      <% if @exchange.status == "accepted" && (@exchange.initiator == current_user || @exchange.recipient == current_user) %>
+        <div class="card">
+          <% if @exchange.scheduled_at.present?%>
+            <h5>Modifie la date d’échange</h5>
+          <% else %>
+            <h5>Choisis la date d’échange</h5>
+          <% end %>
+          <%= form_with model: @exchange, url: set_date_exchange_path(@exchange), method: :patch, local: true do |f| %>
+            <div class="mb-2">
+              <%= f.date_field :scheduled_at, class: "form-control", value: @exchange.scheduled_at %>
+            </div>
+            <%= f.submit "Enregistrer la date", class: "btn btn-manga-primary" %>
+          <% end %>
+        </div>
+      <% end %>
+
+    <!-- Boutons -->
+    <div class="text-center my-4">
+      <% if @exchange.status == "pending" && @exchange.recipient != current_user%>
+        <%= link_to "Discuter de l'échange", chat_path(@exchange.chat), class: "btn btn-manga btn-info" %>
+      <% elsif @exchange.status == "pending" && @exchange.recipient == current_user%>
+        <%= link_to "Discuter de l'échange", chat_path(@exchange.chat), class: "btn btn-manga btn-info" %>
+      <% end %>
+
+      <% if @exchange.status == "accepted" && @exchange.scheduled_at.present? && @exchange.scheduled_at < Date.today %>
+      <div class= "text-center mt-4">
+          <%= button_to "Valider l'échange", update_status_exchange_path(@exchange, status: "completed"), method: :patch, class: "btn btn-manga btn-success" %>
       </div>
-    <% end %>
+      <% end %>
+      <div class="mt-2">
+        <%= link_to "Supprimer l'échange", exchange_path(@exchange), method: :delete, class: "btn btn-manga-secondary", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet échange ?" } %>
+      </div>
     </div>
-
-    <% if @exchange.status == "pending" && @exchange.recipient != current_user%>
-      <%= link_to "Ouvrir le chat", chat_path(@exchange.chat), class: "btn btn-info" %>
-    <% elsif @exchange.status == "pending" && @exchange.recipient == current_user%>
-      <%= link_to "Choisir un manga en échange", edit_exchange_path(@exchange), class: "btn btn-primary" %>
-      <%= button_to "Refuser l'échange", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-danger" %>
-      <%= link_to "Ouvrir le chat", chat_path(@exchange.chat), class: "btn btn-info" %>
-    <% end %>
-
-    <%= link_to "Supprimer l'échange", exchange_path(@exchange), method: :delete, class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet échange ?" } %>
   </div>
 </div>
+
+
 
 <!-- si le user propose l'échange et c'est pending -- pas de boutons -->
 <!-- si l'autre user recoit l'échange, il doit choisir un manga -- bouton choisir ou bouton refuser -->

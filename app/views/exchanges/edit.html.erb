@@ -1,24 +1,24 @@
 <div class="general-style">
   <div class="container mt-4">
-    <div class="mx-4">
+    <div class="card mb-4">
       <p><i class="fas fa-book fa"></i> <strong>Manga échangé :  </strong><%= @exchange.wanted_manga.db_manga.title %></p>
-      <p><i class="fa-solid fa-message"></i> <strong>Message de  </strong><%= @exchange.initiator.username %> : <%= @exchange.initial_message %></p>
 
       <%= form_with model: @exchange, url: exchange_path(@exchange), method: :patch, local: true do |form| %>
         <div class="mb-3">
           <%= form.label :offered_manga_id, "Quel manga souhaites-tu recevoir ?" %>
           <%= form.collection_select :offered_manga_id, @available_mangas, :id, ->(m) { m.db_manga.title }, prompt: "Choisir un manga", class: "w-full border rounded p-2" %>
         </div>
-
-
+    </div>
+    <div class="card">
         <%= form.label :scheduled_at, "Date et heure prévue de l’échange" %>
         <%= form.datetime_local_field :scheduled_at, class: "form-control mb-3" %>
 
         <%= form_with model: @exchange, local: true do |form| %>
           <%= form.hidden_field :status, value: "accepted" %>
-
-          <%= form.submit "Accepter l'échange", class: "btn btn-success" %>
-          <%= button_to "Refuser l'échange", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-danger" %>
+          <div class="text-center">
+          <%= form.submit "Accepter l'échange", class: "btn btn-manga btn-success mb-3" %>
+          <%= button_to "Refuser l'échange", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-manga btn-danger" %>
+          </div>
         <% end %>
       <% end %>
     </div>
