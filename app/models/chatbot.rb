@@ -6,15 +6,30 @@ class Chatbot < ApplicationRecord
 
   # Traduction des genres FR → EN pour les requêtes API
   GENRE_TRANSLATIONS = {
-    "aventure"        => "adventure",
-    "fantaisie"       => "fantasy",
-    "action"          => "action",
-    "drame"           => "drama",
-    "comédie"         => "comedy",
-    "science-fiction" => "science fiction",
-    "sf"              => "science fiction",
-    "romance"         => "romance",
-    "shonen"          => "shonen"
+  "aventure"        => "adventure",
+  "fantaisie"       => "fantasy",
+  "action"          => "action",
+  "drame"           => "drama",
+  "comédie"         => "comedy",
+  "science-fiction" => "science fiction",
+  "sf"              => "science fiction",
+  "romance"         => "romance",
+  "shonen"          => "shonen",
+  "ninja"           => "ninja",
+  "pirate"          => "pirate",
+  "samurai"         => "samurai",
+  "yokai"           => "yokai",
+  "démon"           => "demon",
+  "magie"           => "magic",
+  "espace"          => "space",
+  "robot"           => "robot",
+  "école"           => "school",
+  "sports"          => "sports",
+  "enquête"         => "mystery",
+  "apocalypse"      => "apocalypse",
+  "voyage"          => "journey",
+  "fantôme"         => "ghost",
+  "arts martiaux"   => "martial arts"
   }.freeze
 
   SYSTEM_PROMPT = <<~PROMPT
@@ -128,12 +143,14 @@ class Chatbot < ApplicationRecord
     if found_manga
       summary = found_manga.synopsis.to_s.strip
       presentation_prompt = <<~PROMPT
-        Tu es un spécialiste des mangas. Rédige une fiche en français :
-        - Titre: #{found_manga.title}
-        - Auteur: #{found_manga.author}
-        - Genre: #{found_manga.genre}
-        - Résumé: #{summary}
-        Termine par une question.
+        Tu es un véritable expert en mangas. Rédige une fiche de présentation en français, en texte fluide (pas de listes ni de markdown), avec :
+
+  🎬 Titre  : #{found_manga.title}
+  ✍️ Auteur : #{found_manga.author}
+  🏷️ Genre : #{found_manga.genre}
+  📖 Résumé : #{summary}
+
+  Intègre un émoji pertinent au début de chaque paragraphe pour renforcer l’émotion ou l’ambiance. Termine ta fiche par une question engageante pour inviter à la discussion.
       PROMPT
       llm = RubyLLM.chat(model: model_id || "gpt-4o")
                     .with_instructions(presentation_prompt)
