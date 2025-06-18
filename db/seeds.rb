@@ -56,7 +56,7 @@ end
 total_created = 0
 total_errors = 0
 page = 1
-max_manga = 100
+max_manga = 50
 
 puts "📚 Récupération de #{max_manga} mangas..."
 

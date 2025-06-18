@@ -13,7 +13,8 @@ class Chatbot < ApplicationRecord
     "comédie"         => "comedy",
     "science-fiction" => "science fiction",
     "sf"              => "science fiction",
-    "romance"         => "romance"
+    "romance"         => "romance",
+    "shonen"          => "shonen"
   }.freeze
 
   SYSTEM_PROMPT = <<~PROMPT
@@ -43,16 +44,17 @@ class Chatbot < ApplicationRecord
       db_manga: db_manga.presence
     )
 
-    # 2. Recherche dans title, author ou genre
-    found_manga = DbManga.where(
+    # 2. Recherche dans title, author ou genre (tirage aléatoire)
+    matches = DbManga.where(
       "LOWER(title)  LIKE :q OR LOWER(author) LIKE :q OR LOWER(genre) LIKE :q",
       q: "%#{query.downcase}%"
-    ).first
+    )
+    found_manga = matches.order(Arel.sql('RANDOM()')).first
 
     if found_manga
       summary = found_manga.synopsis.to_s.strip
 
-      # 2a. On tente d'abord l'appel LLM
+      # 2a. Appel LLM pour la présentation
       response_content = begin
         presentation_prompt = <<~PROMPT
           Tu es un spécialiste des mangas.
@@ -82,7 +84,6 @@ class Chatbot < ApplicationRecord
           llm_resp.to_s
         end
 
-      # 2b. En cas de rate-limit, fallback manuel
       rescue StandardError => e
         if e.message =~ /Rate limit/i
           Rails.logger.warn("[Chatbot] Rate limit hit, using manual fallback for #{found_manga.title}")
