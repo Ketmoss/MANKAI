@@ -19,10 +19,16 @@ class Chatbot < ApplicationRecord
 
   SYSTEM_PROMPT = <<~PROMPT
     Tu es un spécialiste des mangas.
-    Tu réponds aux questions d'un fan de manga novice.
-    Pour aider l'utilisateur à découvrir de nouveaux ouvrages, présente-lui 2 à 3 mangas adaptés à son profil.
-    Si l'utilisateur pose une question précise sur un manga, donne-lui une description personnalisée et adaptée à sa demande.
-    Donne-lui des informations claires et pertinentes, et réponds toujours en français.
+
+Quand tu reçois une question, commence toujours par rechercher en priorité dans la base de données disponible, en te basant sur les mots-clés tapés par l'utilisateur (titre, auteur, genre, etc.).
+Si tu trouves des mangas correspondants dans la base, présente-les en premier à l'utilisateur, en donnant 2 à 3 mangas adaptés à sa demande ou à son profil.
+Si aucun manga n'est trouvé dans la base, alors propose une réponse générale ou des suggestions externes.
+
+Si l'utilisateur pose une question précise sur un manga, donne-lui une description personnalisée et adaptée à sa demande, en valorisant le titre, l’auteur, le genre et le résumé.
+
+Rédige toujours des informations claires et pertinentes, en français.
+N’utilise jamais de listes ni de markdown : écris toujours en texte fluide et engageant, en sautant des lignes entre les paragraphes.
+Termine ta réponse par une petite question pour inviter à la discussion.
   PROMPT
 
   TITLE_PROMPT = <<~PROMPT
@@ -44,11 +50,38 @@ class Chatbot < ApplicationRecord
       db_manga: db_manga.presence
     )
 
-    # 2. Recherche dans title, author ou genre (tirage aléatoire)
-    matches = DbManga.where(
-      "LOWER(title)  LIKE :q OR LOWER(author) LIKE :q OR LOWER(genre) LIKE :q",
-      q: "%#{query.downcase}%"
-    )
+    # --- Extraction mots-clés (avec fallback LLM si vide) ---
+    stopwords = %w[
+      et un une de du des le la les au aux avec pour par sur dans ce cette cet tu vous as as-tu ton ta tes son sa ses ma mon mes nos votre vos leur leurs on y en a d' l' j' n' s' c'
+      aussi mais donc or ni car si quand comme où que quoi qui dont lequel laquelle lesquels lesquelles leur leurs notre votre vos mon ma mes ton ta tes son sa ses notre nos leur leurs
+      ici là là-bas maintenant toujours déjà encore tous toutes tout toute alors ainsi après avant depuis depuis peu bientôt tôt tard parfois souvent jamais moins plus mieux
+    ]
+    keywords = raw.downcase.scan(/\w+/).reject { |w| stopwords.include?(w) || w.length < 3 }
+
+    # -- NOUVEAU : si aucun mot-clé utile, on demande au LLM --
+    if keywords.empty?
+      keyword_prompt = <<~PROMPT
+        Réécris la question suivante en un ou deux mots-clés (genre, thème ou titre de manga), les plus utiles possibles pour une recherche dans une base de données de mangas. Réponds uniquement par les mots-clés séparés par une virgule, sans phrase.
+        Question : "#{raw}"
+      PROMPT
+
+      llm_resp = RubyLLM.chat(model: model_id || "gpt-4o")
+        .with_instructions(keyword_prompt)
+        .ask("Quels mots-clés utiliser ?")
+
+      keywords = llm_resp.to_s.downcase.scan(/\w+/)
+      # On remet un fallback ultra-safe si vraiment rien n'est remonté
+      keywords = [query.downcase] if keywords.empty?
+    end
+
+    # Construction dynamique de la requête pour chaque mot-clé
+    query_fragments = keywords.map.with_index do |kw, i|
+      "(LOWER(title) LIKE :kw#{i} OR LOWER(author) LIKE :kw#{i} OR LOWER(genre) LIKE :kw#{i} OR LOWER(synopsis) LIKE :kw#{i})"
+    end.join(" OR ")
+
+    query_params = keywords.each_with_index.map { |kw, i| ["kw#{i}".to_sym, "%#{kw}%"] }.to_h
+
+    matches = DbManga.where(query_fragments, **query_params)
     found_manga = matches.order(Arel.sql('RANDOM()')).first
 
     if found_manga
@@ -139,6 +172,8 @@ class Chatbot < ApplicationRecord
     Rails.logger.error("Backtrace: #{e.backtrace.join("\n")}")
     nil
   end
+
+
 
   def generate_title_from_first_message
     first_user_message = messagebots.where(role: "user").order(:created_at).first
