@@ -1,7 +1,7 @@
 <div class="general-style">
-  <div class="container d-flex justify-content-center flex-column">
-    <h2 class="text-center py-5">Utilisateurs possédant le manga <%= @db_manga.title %></h2>
+  <div class="container d-flex justify-content-center flex-column mt-4">
       <% if @available_owned_mangas.any? %>
+      <p class="text-center">Liste des utilisateurs possédant le manga <strong><%= @db_manga.title %></strong></p>
       <% @available_owned_mangas.each do |owned| %>
         <div class="card">
           <p><strong><%= owned.user_collection.user.username %></strong></p>
@@ -24,10 +24,5 @@
         <% else %>
         <p class="text-center">Aucun utilisateur ne propose ce manga actuellement.</p>
       <% end %>
-      <div class="container text-center w-50 py-4">
-        <%= link_to db_manga_path(@db_manga), class: "btn btn-red" do%>
-        <i class="fas fa-chevron-left"></i>
-        <% end %>
-
   </div>
 </div>
