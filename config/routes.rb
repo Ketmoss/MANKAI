@@ -28,7 +28,9 @@ Rails.application.routes.draw do
   resources :exchanges do
     member do
     post :start_chat
-    end
+    patch :update_status
+    patch :set_date
+end
   end
 
   resources :db_mangas, only: [:index, :show] do
