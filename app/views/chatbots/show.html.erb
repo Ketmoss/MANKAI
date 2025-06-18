@@ -1,5 +1,9 @@
 <div class="container">
   <div class="messages mt-4 mb-5" data-controller="chatbot-scroll">
+    <div class="container-loader" data-chatbot-scroll-target="loader">
+      <div class="loader-chatbot">
+      </div>
+    </div>
     <% @messages.each do |message| %>
       <div class="message mb-3 <%= message.role == "user" ? 'user-msg' : 'bot-msg' %>">
         <% if message.role == "user" %>
@@ -36,18 +40,14 @@
       </div>
     <% end %>
     <div data-chatbot-scroll-target="end"></div>
+    <div class="container">
+      <%= form_with(model: [@chatbot, @messagebot], local: true, html: { data: { chatbot_scroll_target: "form", action: "submit->chatbot-scroll#revealLoader" } }) do |form| %>
+        <div class="mb-3">
+          <%= form.label :content, "Ta question :", class: "form-label" %>
+          <%= form.text_area :content, rows: 3, class: "form-control", placeholder: "Pose ta question..." %>
+        </div>
+        <%= form.submit "Envoyer", class: "btn btn-red" %>
+      <% end %>
+    </div>
   </div>
 </div>
-
-
-
-  <div class="container">
-    <%= form_with(model: [@chatbot, @messagebot], local: true) do |form| %>
-      <div class="mb-3">
-        <%= form.label :content, "Ta question :", class: "form-label" %>
-        <%= form.text_area :content, rows: 3, class: "form-control", placeholder: "Pose ta question..." %>
-      </div>
-
-      <%= form.submit "Envoyer", class: "btn btn-red" %>
-    <% end %>
-  </div>

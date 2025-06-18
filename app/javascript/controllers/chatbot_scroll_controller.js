@@ -2,7 +2,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["end"];
+  static targets = ["end", "loader", "form"];
 
   connect() {
     this.scrollToBottom();
@@ -16,5 +16,11 @@ export default class extends Controller {
 
   scrollToBottom() {
     this.endTarget.scrollIntoView({ behavior: "smooth" });
+  }
+
+  revealLoader(event) {
+    event.preventDefault();
+    this.loaderTarget.style.display = "block";
+    this.formTarget.submit();
   }
 }

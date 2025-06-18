@@ -1,0 +1,21 @@
+.container-loader {
+  margin: 2em auto;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+.loader-chatbot {
+  border: 1em solid lightgrey;
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  border-top: 1em solid purple;
+  animation: spin 1.5s linear infinite;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

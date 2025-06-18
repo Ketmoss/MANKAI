@@ -9,7 +9,7 @@ class MessagebotsController < ApplicationController
   def create
     @chatbot = Chatbot.find(params[:chatbot_id])
     if @chatbot.ask(params[:messagebot][:content])
-      redirect_to chat_path(@chatbot)
+      redirect_to chatbot_path(@chatbot)
     else
       @messagebot = Messagebot.new
       @messages = @chatbot.messagebots.order(:created_at)
