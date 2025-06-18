@@ -11,6 +11,7 @@ class ExchangesController < ApplicationController
       start_date = params.fetch(:start_date, Date.today).to_date
       end_date = start_date.end_of_month
 
+
       @scheduled_exchanges = @exchanges.where(scheduled_at: start_date..end_date)
       @page_title = "Mes Échanges"
   end
@@ -121,25 +122,25 @@ class ExchangesController < ApplicationController
     end
 
     def set_date
-  @exchange = Exchange.find(params[:id])
+      @exchange = Exchange.find(params[:id])
 
-  unless @exchange.initiator == current_user || @exchange.recipient == current_user
-    redirect_to exchange_path(@exchange), alert: "Non autorisé." and return
-  end
+      unless @exchange.initiator == current_user || @exchange.recipient == current_user
+        redirect_to exchange_path(@exchange), alert: "Non autorisé." and return
+      end
 
-  if @exchange.update(scheduled_at: params[:exchange][:scheduled_at])
-    redirect_to exchange_path(@exchange), notice: "Date enregistrée avec succès."
-  else
-    redirect_to exchange_path(@exchange), alert: "Erreur lors de l'enregistrement de la date."
-  end
-end
+      if @exchange.update(scheduled_at: params[:exchange][:scheduled_at])
+        redirect_to exchange_path(@exchange), notice: "Date enregistrée avec succès."
+      else
+        redirect_to exchange_path(@exchange), alert: "Erreur lors de l'enregistrement de la date."
+      end
+    end
 
 
   # DELETE
   def destroy
     authorize_exchange!
     @exchange.destroy
-    head :no_content
+    redirect_to exchanges_path, notice: "Échange supprimé avec succès."
   end
 
   # START CHAT

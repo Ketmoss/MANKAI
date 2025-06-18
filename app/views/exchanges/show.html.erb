@@ -62,7 +62,7 @@
       <%= link_to "Ouvrir le chat", chat_path(@exchange.chat), class: "btn btn-info" %>
     <% end %>
 
-    <% %>
+    <%= link_to "Supprimer l'échange", exchange_path(@exchange), method: :delete, class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet échange ?" } %>
   </div>
 </div>
 
