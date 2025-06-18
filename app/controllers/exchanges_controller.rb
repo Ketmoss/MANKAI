@@ -14,7 +14,7 @@ class ExchangesController < ApplicationController
 
       @scheduled_exchanges = @exchanges
       .where(scheduled_at: start_date..end_date)
-    
+
       @page_title = "Mes Échanges"
 
   end
@@ -127,7 +127,7 @@ class ExchangesController < ApplicationController
   def destroy
     authorize_exchange!
     @exchange.destroy
-    head :no_content
+    redirect_to exchanges_path, notice: "Échange supprimé avec succès."
   end
 
   # START CHAT

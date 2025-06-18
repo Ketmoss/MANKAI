@@ -3,9 +3,7 @@
     <div class="text-center">
       <%= link_to new_user_collection_path, class: "btn btn-red" do %>
       <i class="fas fa-plus"></i>
-      <span>New collection</span>
       <% end %>
-      <h2 class="py-4">Mes collections</h2>
       <% @usercollections.each do |collection| %>
       <%= link_to collection.name, user_collection_path(collection), class: "btn btn-red mx-2" %>
       <% end %>

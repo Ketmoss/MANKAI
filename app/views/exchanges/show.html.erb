@@ -39,6 +39,8 @@
       <% end %>
     <% end %>
 
+    <%= link_to "Supprimer l'échange", exchange_path(@exchange), method: :delete, class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet échange ?" } %>
+
 
     <%= link_to "Choisir un manga en échange", edit_exchange_path(@exchange), class: "btn btn-primary" %>
     <%= link_to "Retour aux échanges", exchanges_path, class: "btn btn-secondary-mankai" %>
