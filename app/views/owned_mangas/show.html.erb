@@ -1,4 +1,3 @@
-
 <div class="container pt-5 general-style">
   <div class="row">
     <!-- Colonne image -->
@@ -16,32 +15,100 @@
         <p><strong>Chapters:</strong> <%= @owned_manga.db_manga.chapter %></p>
         <p><strong>Volumes:</strong> <%= @owned_manga.db_manga.volume %></p>
       </div>
-    <div class="container text-center py-3">
 
-      <%= link_to user_collection_path(@user_collection), class: "btn btn-red ms-4" do%>
-      <i class="fas fa-chevron-left"></i>
-      <span>Back to mangas</span>
-        <% end %>
+      <!-- Section Précisions avec édition inline -->
+      <div class="card mx-4 my-4">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-edit"></i> Mes précisions</h5>
 
-    </div>
-    <div class="card mx-4 mb-4">
-      <h4><strong>Synopsis</strong></h4>
-      <p><%= @owned_manga.db_manga.synopsis %></p>
-    </div>
-    <div class="card mx-4 mb-4">
-      <h4><strong>Avis</strong></h4>
-      <ul class="list-group list-group-flush">
-        <% @owned_manga.db_manga.reviews.each do |review| %>
-        <li class="bg-color-surface list-group-item  d-flex justify-content-between align-items-start">
-          <div class="ms-2 me-auto">
-            <div class="fw-bold"><%= review.user.username%></div>
-            <p><%= review.content %></p>
+          <!-- Affichage des notes -->
+          <div id="notes-display">
+            <% if @owned_manga.notes.present? %>
+              <div class="p-3 bg-light rounded mb-3">
+                <p class="mb-0"><%= @owned_manga.notes %></p>
+              </div>
+            <% else %>
+              <p class="text-muted mb-3">Aucune précision ajoutée</p>
+            <% end %>
+            <button type="button" class="btn btn-outline-warning btn-sm" onclick="toggleEditMode()">
+              <i class="fas fa-edit"></i> Modifier
+            </button>
           </div>
-          <span><i class="fas fa-star"></i> <%= review.score %></span>
-        </li>
+
+          <!-- Formulaire d'édition (caché par défaut) -->
+          <div id="notes-edit" style="display: none;">
+            <%= form_with model: [@user_collection, @owned_manga], method: :patch, local: true do |form| %>
+              <div class="form-group mb-3">
+                <%= form.text_area :notes,
+                    placeholder: "Ex: J'ai les volumes 1-5 et 8-12, manque le 6-7...",
+                    class: "form-control",
+                    rows: 3,
+                    value: @owned_manga.notes %>
+              </div>
+              <div class="d-flex gap-2">
+                <%= form.submit "Sauvegarder", class: "btn btn-success btn-sm" %>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEditMode()">
+                  Annuler
+                </button>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function toggleEditMode() {
+          const displayDiv = document.getElementById('notes-display');
+          const editDiv = document.getElementById('notes-edit');
+
+          if (displayDiv.style.display === 'none') {
+            // Revenir à l'affichage
+            displayDiv.style.display = 'block';
+            editDiv.style.display = 'none';
+          } else {
+            // Passer en mode édition
+            displayDiv.style.display = 'none';
+            editDiv.style.display = 'block';
+            // Focus sur le textarea
+            editDiv.querySelector('textarea').focus();
+          }
+        }
+      </script>
+
+      <div class="container text-center py-3">
+        <%= link_to user_collection_path(@user_collection), class: "btn btn-red ms-4" do%>
+        <i class="fas fa-chevron-left"></i>
+        <span>Back to mangas</span>
         <% end %>
-      </ul>
-    </div>
+      </div>
+
+      <div class="card mx-4 mb-4">
+        <h4><strong>Synopsis</strong></h4>
+        <p><%= @owned_manga.db_manga.synopsis %></p>
+      </div>
+
+      <div class="card mx-4 mb-4">
+        <h4><strong>Avis</strong></h4>
+        <ul class="list-group list-group-flush">
+          <% @owned_manga.db_manga.reviews.each do |review| %>
+          <li class="bg-color-surface list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">
+                <%= review.user.username%>
+                <!-- Affichage des précisions de l'utilisateur dans les avis -->
+                <% if review.user.owned_mangas.find_by(db_manga: @owned_manga.db_manga)&.notes.present? %>
+                  <small class="text-muted ms-2">
+                    (<%= truncate(review.user.owned_mangas.find_by(db_manga: @owned_manga.db_manga).notes, length: 30) %>)
+                  </small>
+                <% end %>
+              </div>
+              <p><%= review.content %></p>
+            </div>
+            <span><i class="fas fa-star"></i> <%= review.score %></span>
+          </li>
+          <% end %>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

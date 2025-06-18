@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_17_163113) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_18_091859) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -127,6 +127,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_163113) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "condition_notes"
+    t.text "notes"
     t.index ["db_manga_id"], name: "index_owned_mangas_on_db_manga_id"
     t.index ["user_collection_id"], name: "index_owned_mangas_on_user_collection_id"
   end

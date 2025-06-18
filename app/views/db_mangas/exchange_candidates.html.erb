@@ -13,8 +13,8 @@
             <div class="d-flex justify-content-between align-items-start mb-3">
               <div class="user-info">
                 <p class="mb-1"><strong><%= owned.user_collection.user.username %></strong></p>
-                <% if owned.condition_notes.present? %>
-                  <p class="mb-0 small">Note : <%= owned.condition_notes %></p>
+                <% if owned.notes.present? %>
+                  <p class="mb-0 small">Précisions : <%= owned.notes %></p>
                 <% end %>
               </div>
 
