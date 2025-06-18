@@ -34,10 +34,18 @@ end
 
 # Fonction pour créer un manga en base
 def create_manga(manga_data)
+  # ⚠️ CONDITION: Ne créer le manga que s'il a un titre en anglais
+  english_title = manga_data['title_english']
+
+  if english_title.nil? || english_title.strip.empty?
+    puts "⏭️  Manga ignoré (pas de titre anglais): #{manga_data['title']}"
+    return nil
+  end
+
   # Adaptation selon votre modèle Manga
   # Ajustez les attributs selon votre schema
   DbManga.find_or_create_by(jikan_id: manga_data['mal_id']) do |manga|
-    manga.title = manga_data['title_english']
+    manga.title = english_title
     manga.genre = manga_data['genres'].map { |g| g['name'] }.join(', ')
     manga.synopsis = manga_data['synopsis']&.truncate(1000) # Limiter la taille
     manga.status = manga_data['status']
@@ -45,7 +53,6 @@ def create_manga(manga_data)
     manga.chapter = manga_data['chapters']
     manga.volume = manga_data['volumes']
     manga.image_url = manga_data.dig('images', 'jpg', 'large_image_url')
-
   end
 rescue => e
   puts "❌ Erreur lors de la création du manga #{manga_data['title']}: #{e.message}"
@@ -54,11 +61,12 @@ end
 
 # Variables pour le tracking
 total_created = 0
+total_skipped = 0 # Nouveau compteur pour les mangas ignorés
 total_errors = 0
 page = 1
-max_manga = 50
+max_manga = 1000
 
-puts "📚 Récupération de #{max_manga} mangas..."
+puts "📚 Récupération de #{max_manga} mangas avec titre anglais..."
 
 while total_created < max_manga
   puts "📄 Traitement de la page #{page}..."
@@ -95,7 +103,10 @@ while total_created < max_manga
 
     manga = create_manga(manga_data)
 
-    if manga&.persisted?
+    if manga.nil?
+      # Le manga a été ignoré (pas de titre anglais)
+      total_skipped += 1
+    elsif manga.persisted?
       total_created += 1
       puts "✅ Manga créé: #{manga.title} (#{total_created}/#{max_manga})"
     end
@@ -113,6 +124,7 @@ end
 puts "🎉 Seeding terminé!"
 puts "📊 Statistiques:"
 puts "   - Mangas créés: #{total_created}"
+puts "   - Mangas ignorés (sans titre anglais): #{total_skipped}"
 puts "   - Pages traitées: #{page - 1}"
 
 # Afficher quelques stats
@@ -121,8 +133,6 @@ if DbManga.count > 0
   puts "   - Total mangas en base: #{DbManga.count}"
   puts "   - Dernier manga ajouté: #{DbManga.last&.title}"
 end
-
-
 
 # user1 = User.create!(email: "test@gmail.com", password: "azerty")
 # user_collection_test = UserCollection.create!(name: "Shonen",user_id: user1.id)
