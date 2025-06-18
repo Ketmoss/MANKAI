@@ -1,33 +1,47 @@
-<div class="general-style">
-  <div class="container">
-    <h1><%= @chatbot.title.presence || "Chat sans titre" %></h1>
-
-    <div class="messages mt-4 mb-5">
-      <% @messages.each do |message| %>
-        <div class="message mb-3 <%= message.role == "user" ? 'user-msg' : 'bot-msg' %>">
-       <strong>
-  <% if message.role == "Light" %>
-    <img src="https://ik.imagekit.io/oc2ow6e7b/f3bb2be2649c409a247f0a6d866281e8bb44aae0_hq.jpg"
-         alt="Light"
-         class="avatar py-4">
-    <span class="text-orange">Light :</span>
-  <% else %>
-    <% if current_user.respond_to?(:avatar) && current_user.avatar.present? %>
-      <img src="<%= current_user.avatar %>"
-           alt="<%= current_user.username %>"
-           class="avatar py-4">
+<div class="container">
+  <div class="messages mt-4 mb-5" data-controller="chatbot-scroll">
+    <% @messages.each do |message| %>
+      <div class="message mb-3 <%= message.role == "user" ? 'user-msg' : 'bot-msg' %>">
+        <% if message.role == "user" %>
+          <strong>
+            <span class="text-orange me-2">
+              <%= current_user.username.present? ? current_user.username : "Moi" %> :
+            </span>
+          </strong>
+          <%= simple_format(message.content) %>
+        <% else %>
+          <div class="row align-items-center">
+            <% if message.db_manga&.image_url.present? %>
+              <!-- Passe la colonne à 4 parts sur 12, pour plus d’espace -->
+              <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
+                <%= link_to db_manga_path(message.db_manga) do %>
+                  <img src="<%= message.db_manga.image_url %>"
+                       alt="<%= message.db_manga.title %>"
+                       class="manga-bot-img img-fluid w-100 rounded shadow">
+                <% end %>
+              </div>
+            <% end %>
+            <div class="<%= message.db_manga&.image_url.present? ? 'col-12 col-md-8' : 'col-12' %>">
+              <%= simple_format(message.content, {}, sanitize: false) %>
+              <% if message.db_manga %>
+                <p class="mt-2">
+                  <%= link_to "Échanger ou ajouter « #{message.db_manga.title} » à ma liste",
+                              db_manga_path(message.db_manga),
+                              class: "text-decoration-none text-primary" %>
+                </p>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
     <% end %>
-    <span class="text-orange">
-      <%= current_user.username.present? ? current_user.username : "Moi" %>
-      :
-    </span>
-  <% end %>
-</strong>
-          <p><%= raw(message.content) %></p>
-        </div>
-      <% end %>
-    </div>
+    <div data-chatbot-scroll-target="end"></div>
+  </div>
+</div>
 
+
+
+  <div class="container">
     <%= form_with(model: [@chatbot, @messagebot], local: true) do |form| %>
       <div class="mb-3">
         <%= form.label :content, "Ta question :", class: "form-label" %>
@@ -37,4 +51,3 @@
       <%= form.submit "Envoyer", class: "btn btn-red" %>
     <% end %>
   </div>
-</div>
