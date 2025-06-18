@@ -14,7 +14,6 @@ class ExchangesController < ApplicationController
 
       @scheduled_exchanges = @exchanges.where(scheduled_at: start_date..end_date)
       @page_title = "Mes Échanges"
-
   end
 
   # NEW
@@ -66,6 +65,7 @@ class ExchangesController < ApplicationController
   # SHOW
   def show
     @chat = @exchange.chat
+    @page_title = "Détail de l'échange"
 
   end
 
@@ -79,6 +79,7 @@ class ExchangesController < ApplicationController
       end
       # On affiche la bibliothèque de l'initiateur
       @available_mangas = @exchange.initiator.owned_mangas.where(available_for_exchange: true)
+      @page_title = "Choisis un Manga"
     end
 
 
@@ -92,7 +93,7 @@ class ExchangesController < ApplicationController
         return
       end
 
-      if @exchange.update(offered_manga_id: params[:exchange][:offered_manga_id])
+      if @exchange.update(offered_manga_id: params[:exchange][:offered_manga_id], status: params[:exchange][:status])
         redirect_to exchange_path(@exchange), notice: "Vous avez proposé un manga en retour."
       else
         flash.now[:alert] = "Erreur : #{@exchange.errors.full_messages.join(', ')}"

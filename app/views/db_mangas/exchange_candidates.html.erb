@@ -33,7 +33,7 @@
 
             <div class="text-center">
               <% if current_user.can_request_exchange_for?(owned) %>
-                <%= link_to new_exchange_path(wanted_manga_id: owned.id), class: "btn btn-red" do %>
+                <%= link_to new_exchange_path(wanted_manga_id: owned.id), class: "btn btn-manga-primary" do %>
                   <i class="fas fa-sync me-2"></i>
                   <span>Proposer un échange</span>
                 <% end %>

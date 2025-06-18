@@ -17,6 +17,7 @@ class UserCollectionsController < ApplicationController
       format.html
       format.json { render json: @user_collection }
     end
+    @page_title = @user_collection.name
   end
 
   def new

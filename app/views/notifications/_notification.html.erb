@@ -1,11 +1,15 @@
 <div id="notification-<%= notification.id %>" class="">
+  <% if notification.params[:message].present? %>
   <div class="">
     <p class="">
       <%= notification.params[:message] %>
     </p>
     <p class="">
-      <%= time_ago_in_words(notification.created_at) %>
+      <em><%= time_ago_in_words(notification.created_at) %></em>
     </p>
     <hr>
   </div>
+  <% else %>
+    <div></div>
+  <% end %>
 </div>
