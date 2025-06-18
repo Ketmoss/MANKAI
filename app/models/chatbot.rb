@@ -6,30 +6,30 @@ class Chatbot < ApplicationRecord
 
   # Traduction des genres FR → EN pour les requêtes API
   GENRE_TRANSLATIONS = {
-  "aventure"        => "adventure",
-  "fantaisie"       => "fantasy",
-  "action"          => "action",
-  "drame"           => "drama",
-  "comédie"         => "comedy",
-  "science-fiction" => "science fiction",
-  "sf"              => "science fiction",
-  "romance"         => "romance",
-  "shonen"          => "shonen",
-  "ninja"           => "ninja",
-  "pirate"          => "pirate",
-  "samurai"         => "samurai",
-  "yokai"           => "yokai",
-  "démon"           => "demon",
-  "magie"           => "magic",
-  "espace"          => "space",
-  "robot"           => "robot",
-  "école"           => "school",
-  "sports"          => "sports",
-  "enquête"         => "mystery",
-  "apocalypse"      => "apocalypse",
-  "voyage"          => "journey",
-  "fantôme"         => "ghost",
-  "arts martiaux"   => "martial arts"
+    "aventure"        => "adventure",
+    "fantaisie"       => "fantasy",
+    "action"          => "action",
+    "drame"           => "drama",
+    "comédie"         => "comedy",
+    "science-fiction" => "science fiction",
+    "sf"              => "science fiction",
+    "romance"         => "romance",
+    "shonen"          => "shonen",
+    "ninja"           => "ninja",
+    "pirate"          => "pirate",
+    "samurai"         => "samurai",
+    "yokai"           => "yokai",
+    "démon"           => "demon",
+    "magie"           => "magic",
+    "espace"          => "space",
+    "robot"           => "robot",
+    "école"           => "school",
+    "sports"          => "sports",
+    "enquête"         => "mystery",
+    "apocalypse"      => "apocalypse",
+    "voyage"          => "journey",
+    "fantôme"         => "ghost",
+    "arts martiaux"   => "martial arts"
   }.freeze
 
   SYSTEM_PROMPT = <<~PROMPT
@@ -53,73 +53,38 @@ class Chatbot < ApplicationRecord
   def ask(user_input)
     return nil if user_input.blank?
 
-    # 0. Normalisation et traduction du genre si besoin
-    raw  = user_input.strip
-    down = raw.downcase
+    raw    = user_input.strip
+    down   = raw.downcase
 
-    # Extraire les genres FR et traduire
-    translated_genres = GENRE_TRANSLATIONS.keys.select { |fr| down.include?(fr) }
-    translated        = translated_genres.map { |fr| GENRE_TRANSLATIONS[fr] }
+    # Traduction des genres FR
+    detected_fr = GENRE_TRANSLATIONS.keys.select { |fr| down.include?(fr) }
+    translated  = detected_fr.map { |fr| GENRE_TRANSLATIONS[fr] }
 
-    # Préparer les mots-clés initiaux et ajouter en priorité les traductions
+    # Index des mots-clés initiaux
     base_keywords = down.scan(/\w+/)
     keywords      = (translated + base_keywords).uniq
 
-    # Stopwords pour filtrage LLM
-    stopwords = %w[
-      et un une de du des le la les au aux avec pour par sur dans ce cette cet tu vous
-      as as-tu ton ta tes son sa ses ma mon mes nos votre vos leur leurs on y en a
-      d' l' j' n' s' c' aussi mais donc or ni car si quand comme où que quoi qui
-      dont lequel laquelle lesquels lesquelles leur leurs notre votre vos mon ma mes
-      ton ta tes son sa ses notre nos leur leurs ici là là-bas maintenant toujours
-      déjà encore tous toutes tout toute alors ainsi après avant depuis peu bientôt tôt
-      tard parfois souvent jamais moins plus mieux manga mangas salut bonjour bonsoir
-      merci stp svp donne cherche chercher trouve trouver suggère propose propose-moi
-      peux-tu pourrais-tu quel quelle quels quelles que qu’est-ce est-ce où comment
-      pourquoi quand qui anime please give find
-    ]
-
-    # 1. Enregistrement du message utilisateur
+    # Enregistrement du message utilisateur
     messagebots.create!(role: "user", content: raw, db_manga: db_manga.presence)
 
-    # 2. Recherche prioritaire par genre (colonne `genre` ou `synopsis`)
+    # 1. Recherche full-text + trigram via pg_search
     found_manga = nil
-    if translated.any?
-      clause = translated.each_with_index.map { |g, i|
+    if defined?(DbManga) && DbManga.respond_to?(:search_manga)
+      candidate = DbManga.search_manga(raw).first
+      found_manga = candidate if candidate.present?
+    end
+
+    # 2. En cas d’échec, recherche par genre/synopsis
+    if found_manga.nil? && translated.any?
+      clauses = translated.each_with_index.map { |g, i|
         "(LOWER(genre) LIKE :g#{i} OR LOWER(synopsis) LIKE :g#{i})"
       }.join(" OR ")
       params = translated.each_with_index.map { |g, i| ["g#{i}".to_sym, "%#{g.downcase}%"] }.to_h
-      matches = DbManga.where(clause, **params)
+      matches = DbManga.where(clauses, **params)
       found_manga = matches.order(Arel.sql('RANDOM()')).first if matches.exists?
     end
 
-    # 3. Fallback : recherche classique sur titre/auteur/synopsis
-    if found_manga.nil?
-      keywords.each do |w|
-        next unless w.length > 2
-        match = DbManga.where(
-          "LOWER(title) LIKE :kw OR LOWER(author) LIKE :kw OR LOWER(synopsis) LIKE :kw",
-          kw: "%#{w}%"
-        ).first
-        if match
-          found_manga = match
-          break
-        end
-      end
-    end
-
-    # 4. Recherche large avec troncature intelligente
-    if found_manga.nil?
-      trunc = keywords.map { |w| w.length <= 4 ? w : w[0..3] }
-      frag = trunc.map.with_index do |kw, i|
-        "(LOWER(title) LIKE :k#{i} OR LOWER(author) LIKE :k#{i} OR LOWER(genre) LIKE :k#{i} OR LOWER(synopsis) LIKE :k#{i})"
-      end.join(" OR ")
-      params = trunc.each_with_index.map { |kw, i| ["k#{i}".to_sym, "%#{kw}%"] }.to_h
-      matches = DbManga.where(frag, **params)
-      found_manga = matches.order(Arel.sql('RANDOM()')).first
-    end
-
-    # 5. Synonymes via LLM si rien
+    # 3. Synonymes via LLM si toujours rien
     if found_manga.nil? && keywords.any?
       syn_prompt = <<~PROMPT
         Propose 1 à 3 synonymes pour chaque mot : #{keywords.join(', ')} (séparés par virgule)
@@ -127,33 +92,32 @@ class Chatbot < ApplicationRecord
       llm = RubyLLM.chat(model: model_id || "gpt-4o")
                     .with_instructions(syn_prompt)
       resp = llm.ask("Synonymes ?").to_s.downcase.scan(/\w+/)
-      new_keys = resp.uniq - stopwords
-      syn_keys = new_keys.map { |w| w.length <= 4 ? w : w[0..3] }
-
-      unless syn_keys.empty?
-        frag = syn_keys.map.with_index do |kw, i|
+      syns = resp.uniq - %w[et un une de du des le la les au aux avec pour par sur dans ce cette cet tu vous as as-tu ton ta tes son sa ses ma mon mes nos votre vos leur leurs on y en a d' l' j' n' s' c' aussi mais donc or ni car si quand comme où que quoi qui dont lequel laquelle lesquels lesquelles leur leurs notre votre vos mon ma mes ton ta tes son sa ses notre nos leur leurs ici là là-bas maintenant toujours déjà encore tous toutes tout toute alors ainsi après avant depuis peu bientôt tôt tard parfois souvent jamais moins plus mieux manga mangas salut bonjour bonsoir merci stp svp donne cherche chercher trouve trouver suggère propose propose-moi peux-tu pourrais-tu quel quelle quels quelles que qu’est-ce est-ce où comment pourquoi quand qui anime please give find]
+      unless syns.empty?
+        clause_syn = syns.map.with_index { |kw,i|
           "(LOWER(title) LIKE :s#{i} OR LOWER(author) LIKE :s#{i} OR LOWER(genre) LIKE :s#{i} OR LOWER(synopsis) LIKE :s#{i})"
-        end.join(" OR ")
-        params = syn_keys.each_with_index.map { |kw, i| ["s#{i}".to_sym, "%#{kw}%"] }.to_h
-        matches = DbManga.where(frag, **params)
-        found_manga = matches.order(Arel.sql('RANDOM()')).first
+        }.join(" OR ")
+        params_syn = syns.each_with_index.map { |kw,i| ["s#{i}".to_sym, "%#{kw}%"] }.to_h
+        matches   = DbManga.where(clause_syn, **params_syn)
+        found_manga = matches.order(Arel.sql('RANDOM()')).first if matches.exists?
       end
     end
 
     if found_manga
+      # Présentation du manga trouvé
       summary = found_manga.synopsis.to_s.strip
-      presentation_prompt = <<~PROMPT
+      pres_prompt = <<~PROMPT
         Tu es un véritable expert en mangas. Rédige une fiche de présentation en français, en texte fluide (pas de listes ni de markdown), avec :
 
-  🎬 Titre  : #{found_manga.title}
-  ✍️ Auteur : #{found_manga.author}
-  🏷️ Genre : #{found_manga.genre}
-  📖 Résumé : #{summary}
+        🎬 Titre  : #{found_manga.title}
+        ✍️ Auteur : #{found_manga.author}
+        🏷️ Genre : #{found_manga.genre}
+        📖 Résumé : #{summary}
 
-  Intègre un émoji pertinent au début de chaque paragraphe pour renforcer l’émotion ou l’ambiance. Termine ta fiche par une question engageante pour inviter à la discussion.
+        Intègre un émoji pertinent au début de chaque paragraphe pour renforcer l’émotion ou l’ambiance. Termine ta fiche par une question engageante pour inviter à la discussion.
       PROMPT
       llm = RubyLLM.chat(model: model_id || "gpt-4o")
-                    .with_instructions(presentation_prompt)
+                    .with_instructions(pres_prompt)
       resp = llm.ask("Fiche ?")
       content = resp.respond_to?(:content) ? resp.content : resp.to_s
       messagebots.create!(role: "assistant", content: content, db_manga: found_manga)
@@ -161,9 +125,9 @@ class Chatbot < ApplicationRecord
       return content
     end
 
-    # 6. Flux normal LLM pour les autres requêtes
-    manga_context = db_manga.present? ? "Voici le contexte : #{db_manga.synopsis}" : nil
-    full = [SYSTEM_PROMPT, manga_context].compact.join("\n\n")
+    # 4. Flux normal LLM pour le reste
+    manga_ctx = db_manga.present? ? "Voici le contexte : #{db_manga.synopsis}" : nil
+    full = [SYSTEM_PROMPT, manga_ctx].compact.join("\n\n")
     chat = RubyLLM.chat(model: model_id || "gpt-4o")
                   .with_instructions(full)
     messagebots.order(:created_at)[0...-1].each do |m|
@@ -179,38 +143,6 @@ class Chatbot < ApplicationRecord
     Rails.logger.error("Chatbot#ask failed: #{e.message}")
     Rails.logger.error("Backtrace: #{e.backtrace.join("\n")}")
     nil
-  end
-
-  def generate_title_from_first_message
-    # inchangé
-  end
-end
-
-
-  def generate_title_from_first_message
-    first_user_message = messagebots.where(role: "user").order(:created_at).first
-    return if first_user_message.nil? || first_user_message.content.blank?
-    return unless title.blank?
-
-    response = RubyLLM.chat
-                      .with_instructions(TITLE_PROMPT)
-                      .ask(first_user_message.content.strip)
-
-    title_content =
-      if response.is_a?(String)
-        response
-      elsif response.is_a?(Hash)
-        response['content'] || response[:content] || response.to_s
-      elsif response.respond_to?(:content)
-        response.content
-      else
-        response.to_s
-      end
-
-    title_content = title_content.strip.truncate(60, omission: "...") if title_content.present?
-    update(title: title_content) if title_content.present?
-  rescue => e
-    Rails.logger.error("Title generation failed: #{e.message}")
   end
 
   def generate_title_from_first_message
@@ -237,3 +169,4 @@ end
   rescue => e
     Rails.logger.error("Title generation failed: #{e.message}")
   end
+end
