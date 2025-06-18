@@ -3,7 +3,7 @@
     <h1 class="mb-4">Mes chats</h1>
 
     <!-- Bouton création rapide façon ChatGPT -->
-    <%= button_to "Nouveau chat", chatbots_path, method: :post, class: "btn btn-red mb-4" %>
+    <%= button_to "Nouveau chat", chatbots_path, method: :post, class: "btn btn-manga-primary mb-4" %>
 
     <% if @chatbots.any? %>
       <ul class="list-group mb-4">
@@ -12,7 +12,7 @@
             <%= link_to (chatbot.title.presence || "Chat sans titre"), chatbot_path(chatbot), class: "text-decoration-none" %>
 
             <%= form_with url: chatbot_path(chatbot), method: :delete, data: { confirm: "Tu es sûr de vouloir supprimer cette discussion ?" }, class: "d-inline" do %>
-              <%= button_tag type: "submit", class: "btn btn-red btn-sm ms-2" do %>
+              <%= button_tag type: "submit", class: "btn btn-manga-primary btn-sm ms-2" do %>
                 <i class="fas fa-trash-alt"></i>
               <% end %>
             <% end %>
