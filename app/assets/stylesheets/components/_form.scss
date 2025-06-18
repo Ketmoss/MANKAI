@@ -1,9 +1,9 @@
 .input-on-surface {
   background-color: $surface;
   color: $on_surface;
-  border: 1px solid transparent;
+  border-color: $surface-variant;
   transition: border 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-
+  border-radius: 4px;
 
   &:hover {
     color: $on_surface
@@ -11,8 +11,13 @@
 
   &:focus {
     background-color: $surface !important;
-    color: $on_surface;
+    color: $on_background;
     border: $secondary;
     box-shadow: 0 0 0 0.2rem rgba($secondary, 0.35);
   }
+
+  &::placeholder {
+  color: $on_surface !important;
+  opacity: 0.8;
+}
 }

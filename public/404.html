@@ -16,9 +16,9 @@
   .default-error-page div.dialog {
     display: flex;
     margin: 4em auto;
-    max-width : 60%;
     background-color: #606060;
     border-radius: 32px;
+    width: 70%;
   }
 
   .default-error-page h1 {
@@ -36,7 +36,7 @@
     color: #FDFDFD;
   }
 
-    .default-error-page .btn-red {
+  .default-error-page .btn-red {
     text-decoration: none;
     background-color: #FF6F00 !important;
     color: #FDFDFD;
@@ -48,13 +48,51 @@
   }
 
     .default-error-page img {
-      width : 300px;
+      width: 70%;
       margin : 40px;
       border-radius : 16px;
     }
 
     .default-error-page .error-message {
-      margin : 40px;
+        margin : 40px 0;
+        margin-top: 80px;
+    }
+
+    @media (max-width: 960px) {
+      /* For a screen < 960px, this CSS will be read */
+      .default-error-page div.dialog{
+        width: 700px;
+      }
+
+      .default-error-page .error-message {
+        margin : 40px 0;
+        margin-bottom: 60px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      /* For a screen < 720px, this CSS will be read */
+      .default-error-page div.dialog {
+        width: 500px;
+      }
+
+      .default-error-page .error-message {
+        margin : 0 40px;
+        margin-bottom: 60px;
+      }
+    }
+
+    @media (max-width: 540px) {
+      /* For a screen < 540px, this CSS will be read */
+      .default-error-page div.dialog {
+        width: 300px;
+        flex-wrap: wrap;
+      }
+
+      .default-error-page .error-message {
+        margin : 0 40px;
+        margin-bottom: 60px;
+      }
     }
   </style>
 </head>

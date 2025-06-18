@@ -2,9 +2,10 @@
   .card {
     background-color: $surface;
     border-radius: 8px;
-    padding: 16px;
+    padding: 12px;
     color: $on_surface;
     border-top: 0px;
+    margin: 0 16px
   }
 
   .bg-color-surface {
@@ -19,6 +20,7 @@
     padding: 16px;
     color: $on_background;
     border-top: 0px;
+    margin: 0 16px
   }
 
   // Style : Overlay sur les cards avec animation scale

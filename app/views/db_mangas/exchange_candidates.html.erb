@@ -1,33 +1,51 @@
 <div class="general-style">
-  <div class="container d-flex justify-content-center flex-column">
-    <h2 class="text-center py-5">Utilisateurs possédant le manga <%= @db_manga.title %></h2>
+  <div class="container d-flex justify-content-center flex-column mt-4">
       <% if @available_owned_mangas.any? %>
+      <p class="text-center">Liste des utilisateurs possédant le manga <strong><%= @db_manga.title %></strong></p>
+      <% if current_user&.zip_code.present? %>
+      <% end %>
       <% @available_owned_mangas.each do |owned| %>
-        <div class="card">
-          <p><strong><%= owned.user_collection.user.username %></strong></p>
-          <p>État : <%= owned.state %></p>
-          <p>Note : <%= owned.condition_notes %></p>
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div class="user-info">
+                <p class="mb-1"><strong><%= owned.user_collection.user.username %></strong></p>
+                <% if owned.notes.present? %>
+                  <p class="mb-0 small">Précisions : <%= owned.notes %></p>
+                <% end %>
+              </div>
 
-          <div class="container text-center">
-          <% if current_user.can_request_exchange_for?(owned) %>
-            <%= link_to new_exchange_path(wanted_manga_id: owned.id), class: "btn btn-red" do%>
-            <i class="fas fa-sync"></i>
-            <span>Proposer un échange</span>
-            <% end %>
+              <!-- Badge de distance Bootstrap 5 -->
+              <div class="distance-badge">
+                <% if current_user&.latitude.present? && owned.user_collection.user.latitude.present? %>
+                  <span class="badge <%= real_distance_badge_class(current_user, owned.user_collection.user) %>">
+                    <i class="fas fa-map-marker-alt me-1"></i>
+                    <%= format_real_distance(current_user, owned.user_collection.user) %>
+                  </span>
+                <% elsif current_user&.zip_code.present? %>
+                  <span class="badge text-bg-light">
+                    <i class="fas fa-question-circle me-1"></i>
+                    Distance inconnue
+                  </span>
+                <% end %>
+              </div>
+            </div>
 
-          <% else %>
-          <p><em>Échange non disponible</em></p>
-          <% end %>
+            <div class="text-center">
+              <% if current_user.can_request_exchange_for?(owned) %>
+                <%= link_to new_exchange_path(wanted_manga_id: owned.id), class: "btn btn-red" do %>
+                  <i class="fas fa-sync me-2"></i>
+                  <span>Proposer un échange</span>
+                <% end %>
+              <% else %>
+                <p class="mb-0"><em class="text-muted">Échange non disponible</em></p>
+              <% end %>
+            </div>
           </div>
-      </div>
+        </div>
       <% end %>
         <% else %>
         <p class="text-center">Aucun utilisateur ne propose ce manga actuellement.</p>
       <% end %>
-      <div class="container text-center w-50 py-4">
-        <%= link_to db_manga_path(@db_manga), class: "btn btn-red" do%>
-        <i class="fas fa-chevron-left"></i>
-        <% end %>
-
   </div>
 </div>

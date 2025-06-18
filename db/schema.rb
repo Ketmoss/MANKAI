@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_17_080534) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_18_091859) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_080534) do
     t.datetime "cancelled_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "scheduled_at"
     t.index ["initiator_id", "recipient_id", "wanted_manga_id"], name: "idx_unique_exchange_request", unique: true
     t.index ["initiator_id", "status"], name: "idx_exchanges_initiator_status"
     t.index ["initiator_id"], name: "index_exchanges_on_initiator_id"
@@ -99,7 +100,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_080534) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.string "model_id"
+    t.integer "input_tokens"
+    t.integer "output_tokens"
+    t.bigint "tool_call_id"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
+    t.index ["tool_call_id"], name: "index_messages_on_tool_call_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
@@ -123,6 +129,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_080534) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "condition_notes"
+    t.text "notes"
     t.index ["db_manga_id"], name: "index_owned_mangas_on_db_manga_id"
     t.index ["user_collection_id"], name: "index_owned_mangas_on_user_collection_id"
   end
@@ -180,7 +187,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_080534) do
     t.float "rating"
     t.integer "collection_visibility", default: 0
     t.boolean "allow_exchange_requests", default: true
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["latitude", "longitude"], name: "index_users_on_latitude_and_longitude"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

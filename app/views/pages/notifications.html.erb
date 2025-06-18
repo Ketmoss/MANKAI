@@ -1,14 +1,10 @@
 <!-- Liste des notifications -->
-<div class="container general-style">
-
-  <%= turbo_stream_from "notifications_#{current_user.id}_dropdown_list", id: "notification_dropdown_stream" %>
-  <div id="notification-dropdown-list" class="container">
-    <div class="p-4">
-      <% if @notifications.any? %>
-        <%= render @notifications.order(created_at: :desc) %>
-      <% else %>
-        <p class="text-center">Aucune notification pour le moment.</p>
-      <% end %>
+<div class="container mt-4">
+    <div class="card">
+        <% if @notifications.any? %>
+            <%= render @notifications.order(created_at: :desc) %>
+        <% else %>
+          <p class="text-center">Aucune notification pour le moment.</p>
+        <% end %>
     </div>
-  </div>
 </div>
