@@ -11,8 +11,13 @@
         <%= form.collection_select :offered_manga_id, @available_mangas, :id, ->(m) { m.db_manga.title }, prompt: "Choisir un manga", class: "w-full border rounded p-2" %>
       </div>
 
-      <%= form.submit "Soumettre l'échange retour", class: "btn btn-success" %>
-    <% end %>
+
+  <%= form.label :scheduled_at, "Date et heure prévue de l’échange" %>
+<%= form.datetime_local_field :scheduled_at, class: "form-control mb-3" %>
+
+
+  <%= form.submit "Soumettre l'échange retour", class: "btn btn-success" %>
+<% end %>
 
     <%= link_to "retour", :back %>
   </div>

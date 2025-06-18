@@ -46,10 +46,28 @@ class DbMangasController < ApplicationController
 
   def exchange_candidates
     @db_manga = DbManga.find(params[:id])
-    @available_owned_mangas = OwnedManga
+
+    available_mangas = OwnedManga
       .includes(user_collection: :user)
       .where(db_manga: @db_manga, available_for_exchange: true)
       .where.not(user_collections: { user_id: current_user.id })
+
+    # Tri par distance géographique réelle
+    if current_user&.latitude.present? && current_user&.longitude.present?
+      @available_owned_mangas = available_mangas.sort_by do |owned|
+        user = owned.user_collection.user
+        if user.latitude.present? && user.longitude.present?
+          FrenchGeocoderService.distance_between_coordinates(
+            current_user.latitude, current_user.longitude,
+            user.latitude, user.longitude
+          )
+        else
+          Float::INFINITY
+        end
+      end
+    else
+      @available_owned_mangas = available_mangas
+    end
   end
 
 end
