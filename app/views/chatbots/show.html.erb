@@ -1,9 +1,13 @@
-<div class="container">
-  <div class="messages mt-4 mb-5" data-controller="chatbot-scroll">
-    <div class="d-flex justify-content-center container-loader" data-chatbot-scroll-target="loader">
-      <div class="loader-chatbot">
-      </div>
-    </div>
+<div class="container" data-controller="chatbot-scroll">
+  <!-- loader (caché par défaut via d-none) -->
+  <div class="d-flex justify-content-center container-loader d-none"
+       data-chatbot-scroll-target="loader">
+    <div class="loader-chatbot"></div>
+  </div>
+
+  <!-- messages + form (affichés par défaut) -->
+  <div class="messages mt-4 mb-5"
+       data-chatbot-scroll-target="content">
     <% @messages.each do |message| %>
       <div class="message mb-3 <%= message.role == "user" ? 'user-msg' : 'bot-msg' %>">
         <% if message.role == "user" %>
@@ -16,7 +20,6 @@
         <% else %>
           <div class="row align-items-center">
             <% if message.db_manga&.image_url.present? %>
-              <!-- Passe la colonne à 4 parts sur 12, pour plus d’espace -->
               <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
                 <%= link_to db_manga_path(message.db_manga) do %>
                   <img src="<%= message.db_manga.image_url %>"
@@ -39,12 +42,24 @@
         <% end %>
       </div>
     <% end %>
+
+    <!-- target de scroll existant -->
     <div data-chatbot-scroll-target="end"></div>
+
     <div class="container">
-      <%= form_with(model: [@chatbot, @messagebot], local: true, html: { data: { chatbot_scroll_target: "form", action: "submit->chatbot-scroll#revealLoader" } }) do |form| %>
+      <%= form_with(model: [@chatbot, @messagebot],
+                    local: true,
+                    html: {
+                      data: {
+                        chatbot_scroll_target: "form",
+                        action: "submit->chatbot-scroll#revealLoader"
+                      }
+                    }) do |form| %>
         <div class="mb-3">
           <%= form.label :content, "Ta question :", class: "form-label" %>
-          <%= form.text_area :content, rows: 3, class: "form-control", placeholder: "Pose ta question..." %>
+          <%= form.text_area :content, rows: 3,
+                class: "form-control",
+                placeholder: "Pose ta question..." %>
         </div>
         <%= form.submit "Envoyer", class: "btn btn-red" %>
       <% end %>
