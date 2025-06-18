@@ -1,47 +1,52 @@
+<div class="general-style">
+  <%# Colone de l'image %>
+  <div>
+    <img src="<%= @owned_manga.db_manga.image_url%>" alt="<%= @owned_manga.db_manga.title %>" class="general-style-image py-3">
+  </div>
 
-<div class="container pt-5 general-style">
-  <div class="row">
-    <!-- Colonne image -->
-    <div class="col-md-5 d-flex justify-content-center">
-      <img src="<%= @owned_manga.db_manga.image_url %>" alt="<%= @owned_manga.db_manga.title %>" class="img-fluid rounded-lg py-3">
-    </div>
+  <div class="general-style-details container">
+    <div class="row">
 
-    <div class="col-md-7">
-      <h1 class="text-center"><%= @owned_manga.db_manga.title%></h1>
-      <div class="card mx-4">
-        <p><strong>Title:</strong> <%= @owned_manga.db_manga.title %></p>
-        <p><strong>Author:</strong> <%= @owned_manga.db_manga.author %></p>
-        <p><strong>Genre:</strong> <%= @owned_manga.db_manga.genre %></p>
-        <p><strong>Status:</strong> <%= @owned_manga.db_manga.status %></p>
-        <p><strong>Chapters:</strong> <%= @owned_manga.db_manga.chapter %></p>
-        <p><strong>Volumes:</strong> <%= @owned_manga.db_manga.volume %></p>
+      <%# Carte infos du manga %>
+      <h1 class="text-center mb-4"><%= @owned_manga.db_manga.title%></h1>
+      <div class="container">
+        <div class="card mb-4">
+          <p><strong>Author:</strong> <%= @owned_manga.db_manga.author %></p>
+          <p><strong>Genre:</strong> <%= @owned_manga.db_manga.genre %></p>
+          <p><strong>Status:</strong> <%= @owned_manga.db_manga.status %></p>
+          <p><strong>Chapters:</strong> <%= @owned_manga.db_manga.chapter %></p>
+          <p><strong>Volumes:</strong> <%= @owned_manga.db_manga.volume %></p>
+        </div>
       </div>
-    <div class="container text-center py-3">
 
-      <%= link_to user_collection_path(@user_collection), class: "btn btn-red ms-4" do%>
-      <i class="fas fa-chevron-left"></i>
-      <span>Back to mangas</span>
-        <% end %>
+      <%# Synopsis %>
+      <div class="container">
+        <div class="card my-4">
+            <h4><strong>Synopsis</strong></h4>
+            <p><%= @owned_manga.db_manga.synopsis %></p>
+        </div>
+      </div>
 
-    </div>
-    <div class="card mx-4 mb-4">
-      <h4><strong>Synopsis</strong></h4>
-      <p><%= @owned_manga.db_manga.synopsis %></p>
-    </div>
-    <div class="card mx-4 mb-4">
-      <h4><strong>Avis</strong></h4>
-      <ul class="list-group list-group-flush">
-        <% @owned_manga.db_manga.reviews.each do |review| %>
-        <li class="bg-color-surface list-group-item  d-flex justify-content-between align-items-start">
-          <div class="ms-2 me-auto">
-            <div class="fw-bold"><%= review.user.username%></div>
-            <p><%= review.content %></p>
+      <%# Avis %>
+      <div class="container">
+          <div class="card mb-4">
+            <h4><strong>Avis</strong></h4>
+            <ul class="list-group list-group-flush">
+              <% @owned_manga.db_manga.reviews.each do |review| %>
+              <li class="bg-color-surface list-group-item  d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold"><%= review.user.username%></div>
+                  <p><%= review.content %></p>
+                </div>
+                <span><i class="fas fa-star"></i> <%= review.score %></span>
+              </li>
+              <% end %>
+            </ul>
+            <div class="text-center p-3">
+              <%= link_to raw('<i class="fa-solid fa-pen-to-square"></i> Je donne mon avis'), "/reviews/new", class: "btn btn-red" %>
+            </div>
           </div>
-          <span><i class="fas fa-star"></i> <%= review.score %></span>
-        </li>
-        <% end %>
-      </ul>
-    </div>
+      </div>
     </div>
   </div>
 </div>
