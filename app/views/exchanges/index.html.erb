@@ -24,8 +24,8 @@
                 <p class="mb-1"><i class="fa-solid fa-user"></i>  <%= exchange.initiator.username %></p>
 
                 <!-- Afficher la date -->
-                <% if exchange.scheduled_at.present? %>
-                  <p class="mb-1"><i class="fa-solid fa-calendar"></i>  <%= l(exchange.scheduled_at.to_date)%></p>
+                <% if exchange.meeting_date.present? %>
+                  <p class="mb-1"><i class="fa-solid fa-calendar"></i>  <%= l(exchange.meeting_date.to_date)%></p>
                 <% else %>
                   <p class="mb-1"><i class="fa-solid fa-calendar"></i> Sélectionne une date</p>
                 <% end %>

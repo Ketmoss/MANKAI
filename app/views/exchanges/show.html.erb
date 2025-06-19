@@ -31,8 +31,8 @@
       <p class="mb-1"><i class="fa-solid fa-user"></i>  <%= @exchange.initiator.username %></p>
       <p class="mb-1"><i class="fa-solid fa-message"></i> <%= @exchange.initial_message %></p>
 
-      <% if @exchange.scheduled_at.present? %>
-        <p class="mb-1"><strong>Échange prévu le :</strong> <%= l(@exchange.scheduled_at, format: :long) %></p>
+      <% if @exchange.meeting_date.present? %>
+        <p class="mb-1"><strong>Échange prévu le :</strong> <%= l(@exchange.meeting_date, format: :long) %></p>
       <% else %>
         <p class="mb-1"><i class="fa-solid fa-calendar"></i> Aucune date prévue !</p>
       <% end %>
@@ -54,14 +54,18 @@
       <!-- Date -->
       <% if @exchange.status == "accepted" && (@exchange.initiator == current_user || @exchange.recipient == current_user) %>
         <div class="card">
-          <% if @exchange.scheduled_at.present?%>
-            <h5>Modifie la date d’échange</h5>
+          <% if @exchange.meeting_date.present?%>
+            <h5>Modifie la date d'échange</h5>
           <% else %>
-            <h5>Choisis la date d’échange</h5>
+            <h5>Choisis la date d'échange</h5>
           <% end %>
+
           <%= form_with model: @exchange, url: set_date_exchange_path(@exchange), method: :patch, local: true do |f| %>
             <div class="mb-2">
-              <%= f.date_field :scheduled_at, class: "form-control input-on-surface", value: @exchange.scheduled_at %>
+              <%= f.datetime_local_field :meeting_date,
+                    class: "form-control input-on-surface",
+                    value: (@exchange.meeting_date&.strftime("%Y-%m-%dT%H:%M") if @exchange.meeting_date.present?),
+                    min: Date.current.strftime("%Y-%m-%dT00:00") %>
             </div>
             <%= f.submit "Enregistrer la date", class: "btn btn-manga-primary btn-sm" %>
           <% end %>
@@ -74,7 +78,7 @@
         <%= link_to "Discuter de l'échange", chat_path(@exchange.chat), class: "btn btn-manga-primary" %>
       <% end %>
 
-      <% if @exchange.status == "accepted" && @exchange.scheduled_at.present? && @exchange.scheduled_at < Date.today %>
+      <% if @exchange.status == "accepted" && @exchange.meeting_date.present? && @exchange.meeting_date.to_date < Date.today %>
       <div class= "text-center mt-4">
           <%= button_to "Valider l'échange", update_status_exchange_path(@exchange, status: "completed"), method: :patch, class: "btn btn-manga btn-success" %>
       </div>
@@ -85,8 +89,6 @@
     </div>
   </div>
 </div>
-
-
 
 <!-- si le user propose l'échange et c'est pending -- pas de boutons -->
 <!-- si l'autre user recoit l'échange, il doit choisir un manga -- bouton choisir ou bouton refuser -->

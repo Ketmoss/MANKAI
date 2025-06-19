@@ -41,7 +41,7 @@ class Exchange < ApplicationRecord
   end
 
   def start_time
-    scheduled_at
+    meeting_date
   end
 
   private

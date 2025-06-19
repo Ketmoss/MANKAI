@@ -28,6 +28,16 @@
               <div class="day_number"><%= day.day %></div>
 
               <% calendar.sorted_events_for(day).each do |event| %>
+                <div class="exchange-event">
+                  <small>
+                    <%= link_to exchange_path(event), class: "text-decoration-none" do %>
+                      📚 <%= truncate(event.wanted_manga.db_manga.title, length: 15) %>
+                      <% if event.offered_manga %>
+                        ↔️ <%= truncate(event.offered_manga.db_manga.title, length: 15) %>
+                      <% end %>
+                    <% end %>
+                  </small>
+                </div>
                 <%= capture(event, &passed_block) if passed_block %>
               <% end %>
             </td>
