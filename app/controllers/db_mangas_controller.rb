@@ -23,25 +23,25 @@ class DbMangasController < ApplicationController
 	end
 
   def add_to_collection
-      @db_manga = DbManga.find(params[:id])
-      @user_collection = current_user.user_collections.find(params[:user_collection_id])
+    @db_manga = DbManga.find(params[:id])
+    @user_collection = current_user.user_collections.find(params[:user_collection_id])
 
-      # Vérifier si ce manga n'est pas déjà dans la collection
-      existing_manga = @user_collection.owned_mangas.find_by(db_manga: @db_manga)
+    # Vérifier si ce manga n'est pas déjà dans la collection
+    existing_manga = @user_collection.owned_mangas.find_by(db_manga: @db_manga)
 
-      if existing_manga
-        redirect_back(fallback_location: @db_manga,
-                    alert: 'Ce manga est déjà dans cette collection.')
-      else
-        @owned_manga = @user_collection.owned_mangas.create!(
-          db_manga: @db_manga,
-          state: params[:state] || 'good',  # Utiliser 'state' au lieu de 'condition'
-          available: true  # Par défaut disponible
-        )
+    if existing_manga
+      redirect_back(fallback_location: @db_manga,
+                  alert: "Ce manga est déjà dans la collection #{@user_collection.name}.")
+    else
+      @owned_manga = @user_collection.owned_mangas.create!(
+        db_manga: @db_manga,
+        state: params[:state] || 'good',
+        available_for_exchange: true
+      )
 
-        redirect_back(fallback_location: @db_manga,
-                    notice: "#{@db_manga.title} ajouté à #{@user_collection.name}.")
-      end
+      redirect_to user_collection_owned_manga_path(@user_collection, @owned_manga),
+                notice: "#{@db_manga.title} ajouté à #{@user_collection.name}."
+    end
   end
 
   def exchange_candidates

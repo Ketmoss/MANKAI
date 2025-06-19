@@ -8,7 +8,7 @@
     <div class="container">
 
       <%# Carte infos du manga %>
-      <h1 class="text-center mb-4"><%= @db_manga.title%></h1>
+      <h1 class="text-center mx-4 Zmb-4"><%= @db_manga.title%></h1>
         <div class="card mx-4 mb-4">
           <div class="card-body">
             <p><strong>Author:</strong> <%= @db_manga.author %></p>
@@ -20,35 +20,26 @@
         </div>
 
       <%# Boutons %>
-      <div class="text-center mb-4">
-        <%# Choisir une collection %>
+        <%# Boutons de collections dynamiques %>
         <div class="add-to-collection-section">
           <% if user_signed_in? %>
             <% if current_user.user_collections.any? %>
-              <div class="dropdown">
-                <button class="btn btn-manga-primary dropdown-toggle mb-4"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                  Ajouter à une collection
-                </button>
-
-                <ul class="dropdown-menu">
-                  <% current_user.user_collections.each do |collection| %>
-                    <li>
-                      <%= form_with url: "#", method: :post,
-                          data: { controller: "collections", action: "submit->collections#submit" },
-                          class: "dropdown-item p-0" do |f| %>
-                        <%= hidden_field_tag :db_manga_id, @db_manga.id %>
-                        <input type="submit"
-                              name="coucou"
-                              value="<%= collection.name %>"
-                              data-id-collections-value="<%= collection.id %>"
-                              class="collection-select w-100">
-                      <% end %>
-                    </li>
+              <div class="card mx-4 mb-4">
+                <div class="card-body">
+                <h4>Ajouter à ma collection </h4>
+                <% current_user.user_collections.each do |collection| %>
+                  <%= form_with url: add_to_collection_db_manga_path(@db_manga), method: :post,
+                      local: true,
+                      data: { turbo: false },
+                      class: "d-inline-block me-2 mb-2" do |f| %>
+                    <%= hidden_field_tag :user_collection_id, collection.id %>
+                    <%= f.button type: "submit", class: "btn btn-manga-primary btn-sm" do %>
+                      <i class="fa-solid fa-plus me-1"></i>
+                      <%= collection.name %>
+                    <% end %>
                   <% end %>
-                </ul>
+                <% end %>
+                </div>
               </div>
             <% else %>
               <div class="text-muted py-4">
@@ -63,7 +54,7 @@
                 class: "btn btn-secondary-mankai" %>
           <% end %>
         </div>
-
+      <div class="text-center mb-4">
         <%# Demande d'échange %>
         <div>
       <%= link_to "Faire une demande d'échange", exchange_candidates_db_manga_path(@db_manga), class: "btn btn-manga-primary" %>
@@ -73,7 +64,7 @@
       <%# Synopsis %>
       <div class="card mx-4 my-4">
         <div class="card-body">
-          <h4><strong>Synopsis</strong></h4>
+          <h4>Synopsis</h4>
           <p><%= @db_manga.synopsis %></p>
         </div>
       </div>
@@ -81,7 +72,7 @@
       <%# Avis %>
       <div class="card mx-4">
         <div class="card-body">
-          <h4><strong>Avis</strong></h4>
+          <h4>Avis</h4>
           <% if @db_manga.reviews.present?%>
             <ul class="list-group list-group-flush">
               <% @db_manga.reviews.each do |review| %>
@@ -95,7 +86,7 @@
               <% end %>
             </ul>
           <% end %>
-            <%= link_to "Je donne mon avis", "/reviews/new", class: "btn btn-manga-primary btn-sm" %>
+            <%= link_to "Je donne mon avis", "/reviews/new", class: "btn btn-manga-primary btn-sm mt-2" %>
         </div>
       </div>
     </div>

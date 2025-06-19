@@ -1,28 +1,33 @@
 <div class="general-style">
   <div class="container mt-4">
+    <% if @exchange.status != "refused"%>
     <div class="card  mb-4">
       <h5>Mangas en jeu</h5>
         <div class="d-flex flex-row align-items-center justify-content-evenly gap-3">
-        <div class="d-flex flex-row align-items-center">
+          <div class="d-flex flex-row align-items-center">
           <%= image_tag @exchange.wanted_manga.db_manga.image_url, class: "img-cover-fixed", alt: @exchange.wanted_manga.db_manga.title %>
-        </div>
-      <% if @exchange.offered_manga %>
-        <h1> VS </h1>
-        <div class="d-flex flex-row align-items-center">
-          <%= image_tag @exchange.offered_manga.db_manga.image_url, class: "img-cover-fixed", alt: @exchange.offered_manga.db_manga.title  %>
-        </div>
-      <% else %>
-        <div>
-        <div class="mb-4"><%= link_to "Choisir un manga", edit_exchange_path(@exchange), class: "btn btn-manga-primary" %></div>
-        <%= button_to "Refuser l'échange", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-manga btn-danger" %>
-        </div>
-      <% end %>
+          </div>
+          <% if @exchange.offered_manga %>
+            <h1> VS </h1>
+            <div class="d-flex flex-row align-items-center">
+              <%= image_tag @exchange.offered_manga.db_manga.image_url, class: "img-cover-fixed", alt: @exchange.offered_manga.db_manga.title  %>
+            </div>
+          <% else %>
+            <div>
+            <div class="mb-4"><%= link_to "Choisir un manga", edit_exchange_path(@exchange), class: "btn btn-manga-primary" %></div>
+            <%= button_to "Refuser l'échange", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-manga btn-danger" %>
+            </div>
+          <% end %>
+      </div>
     </div>
-    </div>
+    <% end %>
 
     <div class="card mb-4">
       <!-- Nom et message -->
       <h5>Détails</h5>
+      <% if @exchange.status == "refused"%>
+        <p class="mb-1"><i class="fas fa-book fa"></i>  <%= @exchange.wanted_manga.db_manga.title %></p>
+      <% end %>
       <p class="mb-1"><i class="fa-solid fa-user"></i>  <%= @exchange.initiator.username %></p>
       <p class="mb-1"><i class="fa-solid fa-message"></i> <%= @exchange.initial_message %></p>
 
@@ -56,7 +61,7 @@
           <% end %>
           <%= form_with model: @exchange, url: set_date_exchange_path(@exchange), method: :patch, local: true do |f| %>
             <div class="mb-2">
-              <%= f.date_field :scheduled_at, class: "form-control", value: @exchange.scheduled_at %>
+              <%= f.date_field :scheduled_at, class: "form-control input-on-surface", value: @exchange.scheduled_at %>
             </div>
             <%= f.submit "Enregistrer la date", class: "btn btn-manga-primary" %>
           <% end %>

@@ -1,12 +1,74 @@
 <div class="general-style">
-    <div class="container py-4">
+  <div class="container py-4">
     <div class="text-center">
       <%= link_to new_user_collection_path, class: "btn btn-manga-primary" do %>
-      <i class="fas fa-plus"></i>
+        <i class="fas fa-plus"></i> Ajouter une collection
       <% end %>
+    </div>
+  </div>
+
+  <!-- Grid container pour les cards des collections -->
+  <div class="container">
+    <div class="row g-4 mb-4">
       <% @usercollections.each do |collection| %>
-      <%= link_to collection.name, user_collection_path(collection), class: "btn btn-manga-primary mx-2" %>
+        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <h5 class="card-title text-center"><%= collection.name %></h5>
+
+              <!-- Affichage du nombre de mangas dans la collection -->
+              <% if collection.owned_mangas.any? %>
+                <div class="text-center mb-1">
+                  <p><strong>Nombre de mangas :</strong> <%= collection.owned_mangas.count %></p>
+                </div>
+              <% end %>
+
+              <!-- Section des images de mangas -->
+              <% if collection.owned_mangas.any? %>
+                <div class="manga-images-preview mb-2">
+                  <div class="row g-2 justify-content-center">
+                    <% collection.owned_mangas.limit(3).each do |owned_manga| %>
+                      <div class="col-4">
+                        <div class="image-container position-relative" style="height: 140px; overflow: hidden; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                          <%= image_tag owned_manga.db_manga.image_url,
+                              alt: "Couverture manga",
+                              class: "img-fluid w-100 h-100",
+                              style: "object-fit: cover; transition: transform 0.3s ease;",
+                              onmouseover: "this.style.transform='scale(1.05)'",
+                              onmouseout: "this.style.transform='scale(1)'" %>
+                        </div>
+                      </div>
+                    <% end %>
+
+                <!-- Indicateur s'il y a plus de 3 mangas -->
+                  <% if collection.owned_mangas.count > 3 %>
+                    <div class="text-center mt-2">
+                      <small>
+                        + <%= collection.owned_mangas.count - 3 %> autre<%= 's' if collection.owned_mangas.count - 3 > 1 %>
+                      </small>
+                    </div>
+                  <% end %>
+                </div>
+
+                <!-- Bouton de lien vers les détails de la collection -->
+                <div class="text-center">
+                  <%= link_to "Voir les mangas", user_collection_path(collection), class: "btn btn-sm btn-manga-secondary btn-text-secondary" %>
+                </div>
+                  </div>
+              <% else %>
+                  <p class="">Aucun manga dans cette collection</p>
+              <% end %>
+
+              <!-- Bouton de lien vers les détails de la collection -->
+              <div class="text-center">
+                <%= link_to "Ajouter un manga", db_mangas_path, class: "btn btn-sm btn-manga-primary" %>
+              </div>
+            </div>
+          </div>
+        </div>
       <% end %>
+      <div class="mb-5">
+      </div>
     </div>
   </div>
 </div>

@@ -60,12 +60,11 @@
         <% else %>
           <div class="text-center my-5">
             <p>Aucun manga dans cette collection pour le moment.</p>
-            <%= link_to "Parcourir les mangas", db_mangas_path, class: "btn btn-primary" %>
           </div>
         <% end %>
       </div>
 
-      <div class="collection-actions d-flex flex-column flex-md-row justify-content-between gap-3 my-4">
+      <div class="collection-actions d-flex flex-column flex-md-row justify-content-center gap-3 my-4">
         <div class="text-center">
           <%= link_to db_mangas_path, class: "btn-sm btn btn-manga-primary" do%>
           <i class="fas fa-plus"></i>
@@ -76,21 +75,15 @@
         <div class="text-center">
           <%= form_with url: user_collection_path(@user_collection), method: :delete, data: { turbo_confirm: "Êtes-vous sûr ?" } do %>
           <%= button_tag type: "submit", class: "btn-sm btn-manga-primary px-4" do%>
-          <i class="fas fa-trash-alt"></i>
           <span>Supprimer la collection</span>
           <% end %>
           <% end %>
         </div>
-
-        <div class="text-center  mb-5">
-          <%= link_to user_collections_path, class: "btn-sm btn btn-manga-primary" do%>
-          <i class="fas fa-chevron-left"></i>
-          <span>Retour à mes collections</span>
-          <% end %>
-          <br>
-          <br>
-        </div>
       </div>
+    </div>
+    <div class="mb-5">
+      <br>
+      <br>
     </div>
   </div>
 </div>

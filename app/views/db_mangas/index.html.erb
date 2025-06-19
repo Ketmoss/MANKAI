@@ -1,8 +1,8 @@
 <div class="general-style">
   <div class="container mt-4">
     <!-- Search bar-->
-    <div class="row justify-content-center">
-      <div class=" mt-4">
+    <div class="row justify-content-center mx-2">
+      <div class="mt-4">
         <%= form_with url: db_mangas_path, method: :get, class: "d-flex" do %>
           <%= text_field_tag :query,
                 params[:query],
@@ -17,7 +17,7 @@
     </div>
 
     <!-- Grid container pour les cards -->
-    <div class="row g-4 my-4">
+    <div class="row g-4 mt-2">
       <% @dbmangas.each do |manga| %>
         <div class="col-12 col-sm-6 col-md-6 col-lg-4">
           <%= link_to db_manga_path(manga), class: "text-decoration-none" do %>
@@ -58,6 +58,11 @@
       <nav class="nav-page pb-2">
       <%== pagy_nav(@pagy) %>
     </nav>
+
+    <div class="mb-5">
+      <br>
+      <br>
+    </div>
     </div>
   </div>
 </div>
