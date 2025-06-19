@@ -21,34 +21,20 @@
 
       <%# Boutons %>
       <div class="text-center mb-4">
-        <%# Choisir une collection %>
+        <%# Boutons de collections dynamiques %>
         <div class="add-to-collection-section">
           <% if user_signed_in? %>
             <% if current_user.user_collections.any? %>
-              <div class="dropdown">
-                <button class="btn btn-manga-primary dropdown-toggle mb-4"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                  Ajouter à une collection
-                </button>
-
-                <ul class="dropdown-menu">
-                  <% current_user.user_collections.each do |collection| %>
-                    <li>
-                      <%= form_with url: "#", method: :post,
-                          data: { controller: "collections", action: "submit->collections#submit" },
-                          class: "dropdown-item p-0" do |f| %>
-                        <%= hidden_field_tag :db_manga_id, @db_manga.id %>
-                        <input type="submit"
-                              name="coucou"
-                              value="<%= collection.name %>"
-                              data-id-collections-value="<%= collection.id %>"
-                              class="collection-select w-100">
-                      <% end %>
-                    </li>
+              <div class="collection-buttons-container mb-4">
+                <% current_user.user_collections.each do |collection| %>
+                  <%= form_with url: add_to_collection_db_manga_path(@db_manga), method: :post,
+                      local: true,
+                      data: { turbo: false },
+                      class: "d-inline-block me-2 mb-2" do |f| %>
+                    <%= hidden_field_tag :user_collection_id, collection.id %>
+                    <%= f.submit "📚 #{collection.name}", class: "btn btn-manga-primary collection-button" %>
                   <% end %>
-                </ul>
+                <% end %>
               </div>
             <% else %>
               <div class="text-muted py-4">
