@@ -17,7 +17,7 @@
             <%= form.label :meeting_date, "Date et heure prévue de l'échange", class: "form-label" %>
             <%= form.datetime_local_field :meeting_date,
                 value: (@exchange.meeting_date&.strftime("%Y-%m-%dT%H:%M") || 1.day.from_now.strftime("%Y-%m-%dT%H:%M")),
-                class: "form-control  input-on-surface"",
+                class: "form-control  input-on-surface",
                 min: Date.current.strftime("%Y-%m-%dT00:00") %>
             <div class="form-text">Choisissez une date et heure pour votre échange</div>
           </div>
