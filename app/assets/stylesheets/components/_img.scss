@@ -37,3 +37,20 @@
   background: $hover;
 }
 
+.overlay-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 400px; // doit correspondre à la hauteur de l'image
+  background: linear-gradient(#454545e6, #45454533);
+  z-index: 1;
+}
+
+.topbar-show {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2; // au-dessus de l’overlay
+}
