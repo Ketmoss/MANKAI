@@ -16,6 +16,14 @@ class PagesController < ApplicationController
   end
 
   def calendar
+    @exchanges = Exchange
+      .where("initiator_id = ? OR recipient_id = ?", current_user.id, current_user.id)
+      .includes(:wanted_manga, :offered_manga)
+
+    start_date = params.fetch(:start_date, Date.today).to_date
+    end_date = start_date.end_of_month
+
+    @scheduled_exchanges = @exchanges.where(meeting_date: start_date..end_date)
     @page_title = "Mon Calendrier"
   end
 end

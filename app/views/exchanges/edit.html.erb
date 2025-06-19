@@ -13,8 +13,13 @@
           </div>
 
           <div class="mb-3">
-            <%= form.label :scheduled_at, "Date et heure prévue de l'échange", class: "form-label" %>
-            <%= form.datetime_local_field :scheduled_at, class: "form-control input-on-surface" %>
+
+            <%= form.label :meeting_date, "Date et heure prévue de l'échange", class: "form-label" %>
+            <%= form.datetime_local_field :meeting_date,
+                value: (@exchange.meeting_date&.strftime("%Y-%m-%dT%H:%M") || 1.day.from_now.strftime("%Y-%m-%dT%H:%M")),
+                class: "form-control  input-on-surface"",
+                min: Date.current.strftime("%Y-%m-%dT00:00") %>
+            <div class="form-text">Choisissez une date et heure pour votre échange</div>
           </div>
 
           <%= form.hidden_field :status, value: "accepted" %>
@@ -25,7 +30,8 @@
                 update_status_exchange_path(@exchange, status: "refused"),
                 method: :patch,
                 class: "btn btn-manga btn-danger btn-sm",
-                form: { style: "display: inline;" } %>
+                form: { style: "display: inline;" },
+                data: { confirm: "Êtes-vous sûr de vouloir refuser cet échange ?" } %>
           </div>
         <% end %>
       </div>

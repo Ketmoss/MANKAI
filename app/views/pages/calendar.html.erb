@@ -1,12 +1,15 @@
-<!-- Ancre invisible pour le scroll -->
-<div id="calendar-anchor" style="margin-top: -100px; padding-top: 100px;"></div>
+<div class="general-style">
+  <div class="container mt-4">
+    <h2>Mon Calendrier d'Échanges</h2>
 
-<!-- Calendrier des échanges -->
-<div class="container mt-4 mb-5 general-style p-4 rounded shadow">
-<%= month_calendar events: @scheduled_exchanges do |exchange| %>
-  <% if exchange.respond_to?(:recipient) %>
-    <%= link_to exchange_path(exchange), class: "calendar-badge", title: "Voir l’échange" do %>
-      • <span class="label">Échange</span>
+
+    <!-- Le calendrier Simple Calendar -->
+    <%= month_calendar(events: @scheduled_exchanges, attribute: :meeting_date) do |date, exchanges| %>
+      <!-- La partial _month_calendar.html.erb sera automatiquement utilisée -->
     <% end %>
-  <% end %>
-<% end %>
+
+    <div class="mt-4">
+      <%= link_to "← Retour aux échanges", exchanges_path, class: "btn btn-manga-secondary" %>
+    </div>
+  </div>
+</div>
