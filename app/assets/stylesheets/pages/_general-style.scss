@@ -6,6 +6,10 @@
   color: $on_background;
 }
 
+h1, h2, h3, h4, h5 {
+  color: $on_background !important;
+}
+
 .general-style .form-text {
   color: $on_surface;
 }
@@ -22,11 +26,11 @@
   display: block;
   margin: 0 auto; // centre l’image dans son conteneur
   z-index: 0;
-  top: -100px;
+  top: -200px;
   object-fit: cover;
 }
 
 .general-style-details {
   position: relative;
-  top: -100px;
+  top: -200px;
 }
