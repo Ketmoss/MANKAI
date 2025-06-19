@@ -16,8 +16,8 @@
         <%= form_with model: @exchange, local: true do |form| %>
           <%= form.hidden_field :status, value: "accepted" %>
           <div class="text-center">
-          <%= form.submit "Accepter l'échange", class: "btn btn-manga btn-success mb-3" %>
-          <%= button_to "Refuser l'échange", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-manga btn-danger" %>
+          <%= form.submit "Accepter l'échange", class: "btn btn-manga btn-success btn-sm" %>
+          <%= button_to "Refuser l'échange", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-manga btn-danger btn-sm" %>
           </div>
         <% end %>
       <% end %>
