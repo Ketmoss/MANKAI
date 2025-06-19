@@ -14,4 +14,8 @@ class PagesController < ApplicationController
     current_user.notifications.mark_as_read!
     @page_title = "Mes Notifs"
   end
+
+  def calendar
+    @page_title = "Mon Calendrier"
+  end
 end

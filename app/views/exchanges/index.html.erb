@@ -2,6 +2,9 @@
   <div class="container mt-4">
     <!-- Si il y a des échanges -->
     <% if @exchanges.any? %>
+      <div class="text-center my-2 mb-">
+        <%= link_to "Voir mon calendrier", "/calendar", class: "btn btn-manga-primary"%>
+      </div>
       <% @exchanges.sort_by(&:created_at).reverse.each do |exchange| %>
         <%= link_to exchange_path(exchange), class: "text-decoration-none text-light" do %>
           <div class="card shadow-sm d-flex flex-row align-items-center justify-content-between gap-3 mb-4">
@@ -48,17 +51,3 @@
     <% end %>
   </div>
 </div>
-
-<!-- Ancre invisible pour le scroll -->
-<div id="calendar-anchor" style="margin-top: -100px; padding-top: 100px;"></div>
-
-<!-- Calendrier des échanges -->
-<div class="container mt-4 mb-5 general-style p-4 rounded shadow">
-  <h2 class="text-center mb-4">Calendrier des échanges</h2>
-<%= month_calendar events: @scheduled_exchanges do |exchange| %>
-  <% if exchange.respond_to?(:recipient) %>
-    <%= link_to exchange_path(exchange), class: "calendar-badge", title: "Voir l’échange" do %>
-      • <span class="label">Échange</span>
-    <% end %>
-  <% end %>
-<% end %>
