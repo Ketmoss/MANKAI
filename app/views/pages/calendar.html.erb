@@ -3,7 +3,6 @@
 
 <!-- Calendrier des échanges -->
 <div class="container mt-4 mb-5 general-style p-4 rounded shadow">
-  <h2 class="text-center mb-4">Calendrier des échanges</h2>
 <%= month_calendar events: @scheduled_exchanges do |exchange| %>
   <% if exchange.respond_to?(:recipient) %>
     <%= link_to exchange_path(exchange), class: "calendar-badge", title: "Voir l’échange" do %>

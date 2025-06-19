@@ -70,10 +70,8 @@
 
     <!-- Boutons -->
     <div class="text-center my-4">
-      <% if @exchange.status == "pending" && @exchange.recipient != current_user%>
-        <%= link_to "Discuter de l'échange", chat_path(@exchange.chat), class: "btn btn-manga btn-info" %>
-      <% elsif @exchange.status == "pending" && @exchange.recipient == current_user%>
-        <%= link_to "Discuter de l'échange", chat_path(@exchange.chat), class: "btn btn-manga btn-info" %>
+      <% if @exchange.status != "refused"%>
+        <%= link_to "Discuter de l'échange", chat_path(@exchange.chat), class: "btn btn-manga-primary" %>
       <% end %>
 
       <% if @exchange.status == "accepted" && @exchange.scheduled_at.present? && @exchange.scheduled_at < Date.today %>
