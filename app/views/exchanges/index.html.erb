@@ -55,14 +55,10 @@
 <!-- Calendrier des échanges -->
 <div class="container mt-4 mb-5 general-style p-4 rounded shadow">
   <h2 class="text-center mb-4">Calendrier des échanges</h2>
-
-  <%= month_calendar events: @scheduled_exchanges do |exchange| %>
-    <% if exchange.respond_to?(:recipient) %>
-      <div class="event p-2 border rounded mb-1">
-        <strong>Avec :</strong> <%= exchange.recipient == current_user ? exchange.initiator.username : exchange.recipient.username %><br>
-        <strong>Manga :</strong> <%= exchange.wanted_manga.db_manga.title %><br>
-        <%= link_to "Voir l’échange", exchange_path(exchange), class: "btn btn-sm btn-outline-primary mt-1" %>
-      </div>
+<%= month_calendar events: @scheduled_exchanges do |exchange| %>
+  <% if exchange.respond_to?(:recipient) %>
+    <%= link_to exchange_path(exchange), class: "calendar-badge", title: "Voir l’échange" do %>
+      • <span class="label">Échange</span>
     <% end %>
   <% end %>
-</div>
+<% end %>
