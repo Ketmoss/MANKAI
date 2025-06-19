@@ -29,13 +29,13 @@
 
                 <!-- Afficher le status -->
                 <% if exchange.status == 'accepted' %>
-                  <p class="badge rounded-pill bg-success"><%= exchange.status.humanize %></p>
+                  <p class="badge bg-success"><%= exchange.status.humanize %></p>
                 <% elsif exchange.status == 'pending' %>
-                  <p class="badge rounded-pill bg-secondary"><%= exchange.status.humanize %></p>
+                  <p class="badge bg-secondary"><%= exchange.status.humanize %></p>
                 <% elsif exchange.status == 'refused' %>
-                  <p class="badge rounded-pill bg-danger"><%= exchange.status.humanize %></p>
+                  <p class="badge bg-danger"><%= exchange.status.humanize %></p>
                 <% else %>
-                  <p class="badge rounded-pill bg-dark"><%= exchange.status.humanize %></p>
+                  <p class="badge bg-dark"><%= exchange.status.humanize %></p>
                 <% end %>
               </div>
             </div>

@@ -1,25 +1,33 @@
-<div class="container text-center pt-4 general-style">
-  <a href="#" class="avatar-chat-bot" aria-haspopup="true" aria-expanded="false">
-    <%= image_tag "https://ik.imagekit.io/oc2ow6e7b/f3bb2be2649c409a247f0a6d866281e8bb44aae0_hq.jpg", class: "avatar-chat-bot", alt: "Profile photo" %>
-  </a>
+<div class="general-style">
+  <div class="container mt-4 text-center">
+    <a href="#" class="avatar-chat-bot" aria-haspopup="true" aria-expanded="false">
+      <%= image_tag "https://ik.imagekit.io/oc2ow6e7b/f3bb2be2649c409a247f0a6d866281e8bb44aae0_hq.jpg", class: "avatar-chat-bot", alt: "Profile photo" %>
+    </a>
 
-  <div class="p-3">
-    <i class="fa-solid fa-user"></i> <%= @user.username %>
-  </div>
+    <% if @user.username%>
+      <div class="p-2">
+        <i class="fa-solid fa-user"></i> <%= @user.username %>
+      </div>
+    <% end %>
 
-  <div class="p-3">
-    <i class="fa-solid fa-envelope"></i> <%= @user.email %>
-  </div>
+    <% if @user.email%>
+      <div class="p-2">
+        <i class="fa-solid fa-envelope"></i> <%= @user.email %>
+      </div>
+    <% end %>
 
-  <div class="p-3">
-    <i class="fa-solid fa-location-dot"></i> <%= @user.zip_code %>
-  </div>
+    <% if @user.zip_code.present?%>
+      <div class="p-2">
+        <i class="fa-solid fa-location-dot"></i> <%= @user.zip_code %>
+      </div>
+    <% end %>
 
-  <div class="p-3">
-    <%= link_to raw('<i class="fa-solid fa-pen-to-square"></i> Modifier mon Profil'), "/users/edit", class: "btn btn-manga-primary" %>
-  </div>
+    <div class="p-2">
+      <%= link_to "Modifier mon Profil", "/users/edit", class: "btn btn-manga-primary" %>
+    </div>
 
-  <div class="p-3">
-    <%= link_to "Se déconnecter", destroy_user_session_path, data: {turbo_method: :delete}, class: "btn btn-secondary-mankai" %>
+    <div >
+      <%= link_to "Se déconnecter", destroy_user_session_path, data: {turbo_method: :delete}, class: "btn btn-manga-secondary btn-text-danger" %>
+    </div>
   </div>
 </div>
