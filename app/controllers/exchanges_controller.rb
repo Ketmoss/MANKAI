@@ -65,7 +65,7 @@ class ExchangesController < ApplicationController
   # SHOW
   def show
     @chat = @exchange.chat
-    @page_title = "Détail de l'échange"
+    @page_title = "Échange ##{@exchange.id}"
 
   end
 
