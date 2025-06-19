@@ -13,6 +13,7 @@ class Chatbot < ApplicationRecord
     "science-fiction" => "science fiction",
     "sf"              => "science fiction",
     "romance"         => "romance",
+    "amour"           => "love",
     "shonen"          => "shonen",
     "ninja"           => "ninja",
     "pirate"          => "pirate",

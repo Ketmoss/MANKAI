@@ -2,9 +2,6 @@
   margin: 2em auto;
   height: 100vh;
   width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .loader-chatbot {
   border: 1em solid $on_background;
@@ -19,4 +16,3 @@
     transform: rotate(360deg);
   }
 }
-

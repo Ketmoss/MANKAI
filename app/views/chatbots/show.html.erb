@@ -1,6 +1,6 @@
-<div class="container" data-controller="chatbot-scroll">
+<div class="container d-flex justify-content-center align-items-center" data-controller="chatbot-scroll">
   <!-- loader (caché par défaut via d-none) -->
-  <div class="d-flex justify-content-center container-loader d-none"
+  <div class="container-loader d-none d-flex justify-content-center align-items-center"
        data-chatbot-scroll-target="loader">
     <div class="loader-chatbot"></div>
   </div>
@@ -32,9 +32,9 @@
               <%= simple_format(message.content, {}, sanitize: false) %>
               <% if message.db_manga %>
                 <p class="mt-2">
-                  <%= link_to "Échanger ou ajouter « #{message.db_manga.title} » à ma liste",
+                  <%= link_to "En savoir plus",
                               db_manga_path(message.db_manga),
-                              class: "text-decoration-none text-primary" %>
+                              class: "btn btn-manga-primary" %>
                 </p>
               <% end %>
             </div>
