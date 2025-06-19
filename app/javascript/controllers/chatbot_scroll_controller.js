@@ -24,9 +24,11 @@ export default class extends Controller {
 
   showContent() {
     // si tu reviens via JS/AJAX : repasse en affichage et scroll
-    this.loaderTarget.classList.add("d-none");
-    this.contentTarget.classList.remove("d-none");
-    this.scrollToEnd();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        this.scrollToEnd();
+      });
+    });
   }
 
   scrollToEnd() {
