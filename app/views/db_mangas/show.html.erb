@@ -4,20 +4,20 @@
     <img src="<%= @db_manga.image_url%>" alt="<%= @db_manga.title %>" class="general-style-image py-3">
   </div>
 
-  <div class="general-style-details container">
-    <div class="row">
+  <div class="general-style-details">
+    <div class="container">
 
       <%# Carte infos du manga %>
       <h1 class="text-center mb-4"><%= @db_manga.title%></h1>
-      <div class="mx-2 mb-4">
         <div class="card mx-4 mb-4">
-          <p><strong>Author:</strong> <%= @db_manga.author %></p>
-          <p><strong>Genre:</strong> <%= @db_manga.genre %></p>
-          <p><strong>Status:</strong> <%= @db_manga.status %></p>
-          <p><strong>Chapters:</strong> <%= @db_manga.chapter %></p>
-          <p><strong>Volumes:</strong> <%= @db_manga.volume %></p>
+          <div class="card-body">
+            <p><strong>Author:</strong> <%= @db_manga.author %></p>
+            <p><strong>Genre:</strong> <%= @db_manga.genre %></p>
+            <p><strong>Status:</strong> <%= @db_manga.status %></p>
+            <p><strong>Chapters:</strong> <%= @db_manga.chapter %></p>
+            <p><strong>Volumes:</strong> <%= @db_manga.volume %></p>
+          </div>
         </div>
-      </div>
 
       <%# Boutons %>
       <div class="text-center mb-4">
@@ -71,17 +71,18 @@
       </div>
 
       <%# Synopsis %>
-      <div class="mx-2 mb-4">
-        <div class="card mx-4 my-4">
-            <h4><strong>Synopsis</strong></h4>
-            <p><%= @db_manga.synopsis %></p>
+      <div class="card mx-4 my-4">
+        <div class="card-body">
+          <h4><strong>Synopsis</strong></h4>
+          <p><%= @db_manga.synopsis %></p>
         </div>
       </div>
 
       <%# Avis %>
-      <div class="mx-2 mb-4">
-          <div class="card mx-4 mb-4">
-            <h4><strong>Avis</strong></h4>
+      <div class="card mx-4">
+        <div class="card-body">
+          <h4><strong>Avis</strong></h4>
+          <% if @db_manga.reviews.present?%>
             <ul class="list-group list-group-flush">
               <% @db_manga.reviews.each do |review| %>
               <li class="bg-color-surface list-group-item  d-flex justify-content-between align-items-start">
@@ -93,10 +94,9 @@
               </li>
               <% end %>
             </ul>
-            <div class="text-center p-3">
-              <%= link_to raw('<i class="fa-solid fa-pen-to-square"></i> Je donne mon avis'), "/reviews/new", class: "btn btn-manga-primary" %>
-            </div>
-          </div>
+          <% end %>
+            <%= link_to "Je donne mon avis", "/reviews/new", class: "btn btn-manga-primary btn-sm" %>
+        </div>
       </div>
     </div>
   </div>
