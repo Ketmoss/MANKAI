@@ -5,7 +5,6 @@
 /* Container principal du chat */
 #chat-messages {
   padding: 20px;
-  background-color: #f8f9fa;
 }
 
 /* =============================================================================
@@ -17,6 +16,7 @@
   margin-bottom: 15px;
   display: flex;
   animation: messageSlideIn 0.3s ease-out;
+  background-color: $background !important;
 }
 
 .message-bubble {
@@ -57,8 +57,8 @@
 
 .message.sent .message-bubble,
 .message-sent .message-bubble {
-  background: linear-gradient(135deg, #FE6F00 0%, #fe6e00b6 100%);
-  color: white;
+  background: $manga-primary;
+  color: $on-background;
   border-radius: 20px 20px 5px 20px;
   margin-left: 20%;
   box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
@@ -66,7 +66,7 @@
 
 .message.sent .message-info,
 .message-sent .message-info {
-  color: rgba(255, 255, 255, 0.9);
+  color: $on-surface;
 }
 
 /* =============================================================================
@@ -80,17 +80,16 @@
 
 .message.received .message-bubble,
 .message-received .message-bubble {
-  background: linear-gradient(135deg, #f8f9fa 0%, #f8f9fa 100%);
-  color: #212529;
+  background: $surface;
+  color: $on-background;
   border-radius: 20px 20px 20px 5px;
   margin-right: 20%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #dee2e6;
 }
 
 .message.received .message-info,
 .message-received .message-info {
-  color: rgba(0, 0, 0, 0.6);
+  color: $on-surface;
 }
 
 /* =============================================================================

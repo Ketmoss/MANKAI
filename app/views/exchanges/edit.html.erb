@@ -9,14 +9,15 @@
             <%= form.label :offered_manga_id, "Quel manga souhaites-tu recevoir ?", class: "form-label" %>
             <%= form.collection_select :offered_manga_id, @available_mangas, :id, ->(m) { m.db_manga.title },
                 { prompt: "Choisir un manga" },
-                { class: "form-select" } %>
+                { class: "form-select  input-on-surface" } %>
           </div>
 
           <div class="mb-3">
+
             <%= form.label :meeting_date, "Date et heure prévue de l'échange", class: "form-label" %>
             <%= form.datetime_local_field :meeting_date,
                 value: (@exchange.meeting_date&.strftime("%Y-%m-%dT%H:%M") || 1.day.from_now.strftime("%Y-%m-%dT%H:%M")),
-                class: "form-control",
+                class: "form-control  input-on-surface"",
                 min: Date.current.strftime("%Y-%m-%dT00:00") %>
             <div class="form-text">Choisissez une date et heure pour votre échange</div>
           </div>

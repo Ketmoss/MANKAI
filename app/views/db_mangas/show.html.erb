@@ -1,7 +1,12 @@
 <div class="general-style">
   <%# Colone de l'image %>
   <div>
+  <div class="position-relative">
     <img src="<%= @db_manga.image_url%>" alt="<%= @db_manga.title %>" class="general-style-image py-3">
+  </div>
+
+  <!-- Overlay semi-transparent -->
+    <div class="overlay-background"></div>
   </div>
 
   <div class="general-style-details">
