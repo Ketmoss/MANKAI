@@ -1,17 +1,17 @@
 <div class="landing-general-style">
   <div class="container mt-4">
     <!-- Chat bot -->
+  <%= link_to chatbots_path, class: "avatar-chat-bot me-3 text-decoration-none" do %>
     <div class="chat-bot-card">
       <div class="d-flex justify-content-start align-items-center">
-        <%= link_to chatbots_path, class: "avatar-chat-bot me-3" do %>
         <%= image_tag "https://ik.imagekit.io/oc2ow6e7b/f3bb2be2649c409a247f0a6d866281e8bb44aae0_hq.jpg", class: "avatar-chat-bot", alt: "chat-bot" %>
-        <% end %>
-        <div class="d-flex flex-column align-items-start">
+        <div class="d-flex flex-column align-items-start px-4">
           <h5> Discute avec Light </h5>
           <p> Ton meilleur ami expert en manga est là pour t’inspirer </p>
         </div>
       </div>
     </div>
+  <% end %>
 
   <!-- Suggestions mangas en sample de 4 -->
   <div class="row g-4 my-4">
