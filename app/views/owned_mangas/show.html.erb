@@ -1,39 +1,40 @@
+<div class="general-style">
+  <%# Colone de l'image %>
+  <div>
+    <img src="<%= @owned_manga.db_manga.image_url%>" alt="<%= @owned_manga.db_manga.title %>" class="general-style-image py-3">
+  </div>
 
-<div class="container pt-5 general-style">
-  <div class="row">
-    <!-- Colonne image -->
-    <div class="col-md-5 d-flex justify-content-center">
-      <img src="<%= @owned_manga.db_manga.image_url %>" alt="<%= @owned_manga.db_manga.title %>" class="img-fluid rounded-lg py-3">
-    </div>
+  <div class="general-style-details">
+    <div class="container">
 
       <%# Carte infos du manga %>
       <h1 class="text-center mb-4"><%= @owned_manga.db_manga.title%></h1>
-      <div class="container">
-        <div class="card mb-4">
-          <p><strong>Author:</strong> <%= @owned_manga.db_manga.author %></p>
-          <p><strong>Genre:</strong> <%= @owned_manga.db_manga.genre %></p>
-          <p><strong>Status:</strong> <%= @owned_manga.db_manga.status %></p>
-          <p><strong>Chapters:</strong> <%= @owned_manga.db_manga.chapter %></p>
-          <p><strong>Volumes:</strong> <%= @owned_manga.db_manga.volume %></p>
+        <div class="card mx-4 mb-4">
+          <div class="card-body">
+            <p><strong>Author:</strong> <%= @owned_manga.db_manga.author %></p>
+            <p><strong>Genre:</strong> <%= @owned_manga.db_manga.genre %></p>
+            <p><strong>Status:</strong> <%= @owned_manga.db_manga.status %></p>
+            <p><strong>Chapters:</strong> <%= @owned_manga.db_manga.chapter %></p>
+            <p><strong>Volumes:</strong> <%= @owned_manga.db_manga.volume %></p>
+          </div>
         </div>
-      </div>
 
-      <!-- Section Précisions avec édition inline -->
+           <!-- Section Précisions avec édition inline -->
       <div class="card mx-4 my-4">
         <div class="card-body">
-          <h5 class="card-title"><i class="fas fa-edit"></i> Mes précisions</h5>
+          <h4>Mes précisions</h4>
 
           <!-- Affichage des notes -->
           <div id="notes-display">
             <% if @owned_manga.notes.present? %>
-              <div class="p-3 bg-light rounded mb-3">
+              <div class="p-3 rounded mb-3">
                 <p class="mb-0"><%= @owned_manga.notes %></p>
               </div>
             <% else %>
-              <p class="text-muted mb-3">Aucune précision ajoutée</p>
+              <p class="mb-3">Aucune précision ajoutée</p>
             <% end %>
-            <button type="button" class="btn btn-outline-warning btn-sm" onclick="toggleEditMode()">
-              <i class="fas fa-edit"></i> Modifier
+            <button type="button" class="btn btn-manga-primary btn-sm" onclick="toggleEditMode()">
+              Rajouter des précisions
             </button>
           </div>
 
@@ -77,39 +78,33 @@
         }
       </script>
 
-      <div class="container text-center py-3">
-        <%= link_to user_collection_path(@user_collection), class: "btn btn-red ms-4" do%>
-        <i class="fas fa-chevron-left"></i>
-        <span>Back to mangas</span>
-        <% end %>
+      <%# Synopsis %>
+      <div class="card mx-4 my-4">
+        <div class="card-body">
+          <h4>Synopsis</h4>
+          <p><%= @owned_manga.db_manga.synopsis %></p>
+        </div>
       </div>
 
-      <div class="card mx-4 mb-4">
-        <h4><strong>Synopsis</strong></h4>
-        <p><%= @owned_manga.db_manga.synopsis %></p>
-      </div>
-
-      <div class="card mx-4 mb-4">
-        <h4><strong>Avis</strong></h4>
-        <ul class="list-group list-group-flush">
-          <% @owned_manga.db_manga.reviews.each do |review| %>
-          <li class="bg-color-surface list-group-item d-flex justify-content-between align-items-start">
-            <div class="ms-2 me-auto">
-              <div class="fw-bold">
-                <%= review.user.username%>
-                <!-- Affichage des précisions de l'utilisateur dans les avis -->
-                <% if review.user.owned_mangas.find_by(db_manga: @owned_manga.db_manga)&.notes.present? %>
-                  <small class="text-muted ms-2">
-                    (<%= truncate(review.user.owned_mangas.find_by(db_manga: @owned_manga.db_manga).notes, length: 30) %>)
-                  </small>
-                <% end %>
+      <%# Avis %>
+      <div class="card mx-4">
+        <div class="card-body">
+        <h4>Avis</h4>
+        <% if @owned_manga.db_manga.reviews.present?%>
+          <ul class="list-group list-group-flush">
+            <% @owned_manga.db_manga.reviews.each do |review| %>
+            <li class="bg-color-surface list-group-item  d-flex justify-content-between align-items-start">
+              <div class="">
+                <div class="fw-bold"><%= review.user.username%></div>
+                <p><%= review.content %></p>
               </div>
-              <p><%= review.content %></p>
-            </div>
-            <span><i class="fas fa-star"></i> <%= review.score %></span>
-          </li>
-          <% end %>
-        </ul>
+              <span><i class="fas fa-star"></i> <%= review.score %></span>
+            </li>
+            <% end %>
+          </ul>
+        <% end %>
+          <%= link_to "Je donne mon avis", "/reviews/new", class: "btn btn-manga-primary btn-sm" %>
+        </div>
       </div>
     </div>
   </div>

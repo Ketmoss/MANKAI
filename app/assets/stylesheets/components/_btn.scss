@@ -1,4 +1,4 @@
-.btn-red {
+.btn-manga-primary {
   background-color: $manga-primary !important;
   color: $on_background !important;
   border: none;
@@ -17,13 +17,29 @@
   }
 }
 
-
-
-.btn-secondary-mankai {
-  background-color: rgba(#000, 0.0) !important;
-  color: $secondary !important;
+.btn-manga {
+  color: $on_background !important;
   border: none;
   border-radius: 0.5rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $background !important;
+    color: $on_background !important;
+    outline: $on_background solid 2px;
+  }
+
+  &:focus, &:active {
+    box-shadow: 0 0 0 0.2rem $on_background !important;
+  }
+}
+
+.btn-manga-secondary {
+  background-color: rgba(#000, 0.0) !important;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
 }
 
 .btn-orange {
@@ -62,4 +78,12 @@
   &:focus, &:active {
     box-shadow: 0 0 0 0.2rem $tertiary !important;
   }
+}
+
+.btn-text-secondary {
+  color : $secondary !important;
+}
+
+.btn-text-danger {
+  color : $red !important;
 }

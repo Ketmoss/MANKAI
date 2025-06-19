@@ -4,12 +4,60 @@ class Chatbot < ApplicationRecord
   belongs_to :user
   has_many :messagebots, dependent: :destroy
 
+  GENRE_TRANSLATIONS = {
+    # Aventure & Action
+  "aventure"         => "adventure",
+  "voyage"           => "journey",
+  "action"           => "action",
+  "arts martiaux"    => "martial arts",
+  "ninja"            => "ninja",
+  "pirate"           => "pirate",
+  "samurai"          => "samurai",
+  # Fantastique & Surnaturel
+  "fantaisie"        => "fantasy",
+  "magie"            => "magic",
+  "démon"            => "demon",
+  "fantôme"          => "ghost",
+  "yokai"            => "yokai",
+  # Science-fiction & Tech
+  "science-fiction"  => "science fiction",
+  "sf"               => "science fiction",
+  "espace"           => "space",
+  "robot"            => "robot",
+  "apocalypse"       => "apocalypse",
+  # Vie scolaire & Tranche de vie
+  "école"            => "school",
+  "slice of life"    => "slice of life",
+  # Romance & Drame
+  "romance"          => "romance",
+  "amour"            => "love",
+  "drame"            => "drama",
+  # Comédie
+  "comédie"          => "comedy",
+  "humour"           => "comedy",
+  # Sport
+  "sport"            => "sports",
+  "sports"           => "sports", # pour tolérance orthographique
+  # Enquête / Mystère / Thriller
+  "enquête"          => "mystery",
+  "mystère"          => "mystery",
+  "thriller"         => "thriller",
+  # Démographies manga
+  "shonen"           => "shonen",
+  "shojo"            => "shojo",
+  "seinen"           => "seinen",
+  "josei"            => "josei"
+  }.freeze
+
   SYSTEM_PROMPT = <<~PROMPT
-    Tu es un spécialiste des mangas.
-    Tu réponds aux questions d'un fan de manga novice.
-    Pour aider l'utilisateur à découvrir de nouveaux ouvrages, présente-lui 2 à 3 mangas adaptés à son profil.
-    Si l'utilisateur pose une question précise sur un manga, donne-lui une description personnalisée et adaptée à sa demande.
-    Donne-lui des informations claires et pertinentes, et réponds toujours en français.
+  Tu es un expert manga.
+  À chaque question, recherche d'abord dans la base (titre, auteur, genre, synopsis).
+  Si tu trouves un manga correspondant, présente-le en priorité.
+  Sinon, propose une réponse générale ou des ressources externes.
+  Pour une demande précise sur un manga, puise dans la base et valorise titre, auteur, genre et résumé.
+  Lors de la présentation, limite le résumé à 350 caractères maximum.
+  Toujours en français, texte fluide (pas de listes/markdown), avec un saut de ligne entre les paragraphes.
+  Termine par une question pour engager la discussion.
   PROMPT
 
   TITLE_PROMPT = <<~PROMPT
@@ -19,125 +67,60 @@ class Chatbot < ApplicationRecord
   def ask(user_input)
     return nil if user_input.blank?
 
-    # 1. Crée le message utilisateur
-    messagebots.create!(
-      role: "user",
-      content: user_input.strip,
-      db_manga: db_manga.presence
-    )
+    raw = user_input.strip
+    down = raw.downcase
 
-    # 2. Recherche dans la base de données
-    found_manga = DbManga.where("LOWER(title) LIKE ?", "%#{user_input.downcase}%").first
+    detected_fr = GENRE_TRANSLATIONS.keys.select { |fr| down.include?(fr) }
+    translated = detected_fr.map { |fr| GENRE_TRANSLATIONS[fr] }
+
+    base_keywords = down.scan(/\w+/)
+    keywords = (translated + base_keywords).uniq
+
+    messagebots.create!(role: "user", content: raw, db_manga: db_manga.presence)
+
+    found_manga = nil
+    if defined?(DbManga) && DbManga.respond_to?(:search_manga)
+      candidates = DbManga.search_manga(raw).with_pg_search_rank.order(pg_search_rank: :desc).limit(3)
+      found_manga = candidates.first if candidates.exists?
+    end
+
+    found_manga ||= DbManga.find_by("LOWER(title) = ?", raw.downcase)
+
+    if found_manga.nil? && translated.any?
+      clauses = translated.each_with_index.map { |g, i|
+        "(genre ILIKE :g#{i} OR synopsis ILIKE :g#{i})"
+      }.join(" OR ")
+      params = translated.each_with_index.map { |g, i| ["g#{i}".to_sym, "%#{g}%"] }.to_h
+      matches = DbManga.where(clauses, **params)
+      found_manga = matches.order(Arel.sql('RANDOM()')).first if matches.exists?
+    end
 
     if found_manga
-      image_html = found_manga.image_url.present? ? "<img src=\"#{found_manga.image_url}\" alt=\"#{found_manga.title}\" style=\"max-width:200px; border-radius:8px; margin-bottom:12px; display:block;\">" : ""
-
-      # Traduction du résumé si besoin
-      summary = found_manga.synopsis
-      english_words = %w[the and is are with for on in a an to from]
-      if summary.present? && english_words.any? { |w| summary.downcase.include?(w) }
-        llm_translation_prompt = "Traduis ce texte en français :\n\n#{summary}"
-
-        translation = RubyLLM.chat(model: model_id || "gpt-4o")
-          .with_instructions("Réponds uniquement par la traduction du texte en français, sans reformuler.")
-          .ask(llm_translation_prompt)
-
-        summary =
-          if translation.is_a?(String)
-            translation
-          elsif translation.is_a?(Hash)
-            translation['content'] || translation[:content] || translation.to_s
-          elsif translation.respond_to?(:content)
-            translation.content
-          else
-            translation.to_s
-          end
-
-        summary = summary.strip if summary.present?
-      end
-
-      # Nouveau : Prompt plus strict
-      presentation_prompt = <<~PROMPT
-        Tu es un spécialiste des mangas.
-        Rédige une fiche de présentation claire et engageante en français pour ce manga,
-        en intégrant naturellement et en mettant en valeur le titre, l’auteur, le genre et le résumé ci-dessous.
-        Commence toujours par l’image (si présente, sinon ignore cette consigne).
-        Rédige le texte en plusieurs paragraphes en sautant des lignes (ajoute explicitement un double saut de ligne entre chaque paragraphe).
-        N’utilise ni liste ni markdown, fais un texte fluide, sans aucun tiret, et termine par une petite question pour inviter à la discussion.
-
-        Voici les informations :
-        - Titre : #{found_manga.title}
-        - Auteur : #{found_manga.author}
-        - Genre : #{found_manga.genre}
-        - Résumé : #{summary}
+      summary = found_manga.synopsis.to_s.strip
+      pres_prompt = <<~PROMPT
+      Tu es un véritable expert en mangas. Rédige une fiche de présentation en français, en texte fluide (pas de listes ni de markdown), avec :
+      🎬 Titre  : #{found_manga.title}
+      ✍️ Auteur : #{found_manga.author}
+      🏷️ Genre  : #{found_manga.genre}
+      📖 Résumé : #{summary}
+      Le résumé doit faire **350 caractères maximum**. Commence par un emoji adapté et termine par une question engageante.
       PROMPT
-
-      llm_response = RubyLLM.chat(model: model_id || "gpt-4o")
-        .with_instructions(presentation_prompt)
-        .ask("Rédige-moi cette fiche.")
-
-      final_content =
-        if llm_response.is_a?(String)
-          llm_response
-        elsif llm_response.is_a?(Hash)
-          llm_response['content'] || llm_response[:content] || llm_response.to_s
-        elsif llm_response.respond_to?(:content)
-          llm_response.content
-        else
-          llm_response.to_s
-        end
-
-      # Option : Forcer les doubles retours à la place des simples, si le LLM ne le fait pas bien
-      formatted_content = final_content.gsub(/([^\n])\n([^\n])/, '\1<br><br>\2').gsub(/\n{2,}/, '<br><br>')
-
-      # Met l'image AVANT le texte
-      response_content = "#{image_html}#{formatted_content}"
-
-      messagebots.create!(
-        role: "Light",
-        content: response_content,
-        db_manga: found_manga
-      )
-
+      llm = RubyLLM.chat(model: model_id || "gpt-4o").with_instructions(pres_prompt)
+      resp = llm.ask("Fiche ?")
+      content = resp.respond_to?(:content) ? resp.content : resp.to_s
+      messagebots.create!(role: "assistant", content: content, db_manga: found_manga)
       generate_title_from_first_message if title == "New chat"
-      return response_content
+      return content
     end
 
-    # --- SI RIEN TROUVÉ EN BASE, FLOW LLM COMME AVANT ---
-    manga_context = db_manga.present? ? "Voici le contexte du manga : #{db_manga.synopsis}" : nil
-    full_prompt = [SYSTEM_PROMPT, manga_context].compact.join("\n\n")
-
-    chat = RubyLLM.chat(model: model_id || "gpt-4o").with_instructions(full_prompt)
-
-    previous_messages = messagebots.order(:created_at)[0...-1]
-    previous_messages.each do |msg|
-      cleaned_content = msg.content.to_s.strip
-      next if cleaned_content.blank?
-      chat.add_message(role: msg.role, content: cleaned_content)
-    end
-
-    response = chat.ask(user_input.strip)
-
-    response_content = case response
-                      when String
-                        response
-                      when Hash
-                        response['content'] || response[:content] || response.to_s
-                      else
-                        response.respond_to?(:content) ? response.content : response.to_s
-                      end
-
-    messagebots.create!(
-      role: "Light",
-      content: response_content,
-      db_manga: db_manga
-    )
-
+    chat = RubyLLM.chat(model: model_id || "gpt-4o").with_instructions(SYSTEM_PROMPT)
+    resp = chat.ask(nil)
+    content = resp.respond_to?(:content) ? resp.content : resp.to_s
+    messagebots.create!(role: "assistant", content: content, db_manga: db_manga)
     generate_title_from_first_message if title == "New chat"
-    response_content
+    content
   rescue => e
     Rails.logger.error("Chatbot#ask failed: #{e.message}")
-    Rails.logger.error("Backtrace: #{e.backtrace.join("\n")}")
     nil
   end
 
@@ -147,19 +130,18 @@ class Chatbot < ApplicationRecord
     return unless title.blank?
 
     response = RubyLLM.chat
-      .with_instructions(TITLE_PROMPT)
-      .ask(first_user_message.content.strip)
+                      .with_instructions(TITLE_PROMPT)
+                      .ask(first_user_message.content.strip)
 
-    title_content =
-      if response.is_a?(String)
-        response
-      elsif response.is_a?(Hash)
-        response['content'] || response[:content] || response.to_s
-      elsif response.respond_to?(:content)
-        response.content
-      else
-        response.to_s
-      end
+    title_content = if response.is_a?(String)
+      response
+    elsif response.is_a?(Hash)
+      response['content'] || response[:content] || response.to_s
+    elsif response.respond_to?(:content)
+      response.content
+    else
+      response.to_s
+    end
 
     title_content = title_content.strip.truncate(60, omission: "...") if title_content.present?
     update(title: title_content) if title_content.present?
