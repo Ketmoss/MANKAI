@@ -19,7 +19,7 @@
           </div>
         </div>
 
-      <%# Boutons %>
+
         <%# Boutons de collections dynamiques %>
         <div class="add-to-collection-section">
           <% if user_signed_in? %>
@@ -86,7 +86,7 @@
               <% end %>
             </ul>
           <% end %>
-            <%= link_to "Je donne mon avis", "/reviews/new", class: "btn btn-manga-primary btn-sm mt-2" %>
+            <%= link_to "Je donne mon avis", new_db_manga_review_path(@db_manga), class: "btn btn-manga-primary btn-sm mt-2" %>
         </div>
       </div>
     </div>
