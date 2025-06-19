@@ -2,6 +2,7 @@
   <div class="container mt-4">
     <h2>Mon Calendrier d'Échanges</h2>
 
+
     <!-- Le calendrier Simple Calendar -->
     <%= month_calendar(events: @scheduled_exchanges, attribute: :meeting_date) do |date, exchanges| %>
       <!-- La partial _month_calendar.html.erb sera automatiquement utilisée -->
