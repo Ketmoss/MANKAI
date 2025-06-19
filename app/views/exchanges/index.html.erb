@@ -2,7 +2,7 @@
   <div class="container mt-4">
     <!-- Si il y a des échanges -->
     <% if @exchanges.any? %>
-      <div class="text-center my-2 mb-">
+      <div class="text-center my-2 mb-4">
         <%= link_to "Voir mon calendrier", "/calendar", class: "btn btn-manga-primary"%>
       </div>
       <% @exchanges.sort_by(&:created_at).reverse.each do |exchange| %>
@@ -47,7 +47,14 @@
       <% end %>
     <!-- Si aucun échange -->
     <% else %>
-      <p>Aucune demande d’échange.</p>
+    <div class="card">
+      <p class="text-center">Aucune demande d’échange.</p>
+    </div>
     <% end %>
+
+    <div class="mb-5">
+      <br>
+      <br>
+    </div>
   </div>
 </div>
