@@ -5,31 +5,48 @@ class Chatbot < ApplicationRecord
   has_many :messagebots, dependent: :destroy
 
   GENRE_TRANSLATIONS = {
-    "aventure"        => "adventure",
-    "fantaisie"       => "fantasy",
-    "action"          => "action",
-    "drame"           => "drama",
-    "comédie"         => "comedy",
-    "science-fiction" => "science fiction",
-    "sf"              => "science fiction",
-    "romance"         => "romance",
-    "amour"           => "love",
-    "shonen"          => "shonen",
-    "ninja"           => "ninja",
-    "pirate"          => "pirate",
-    "samurai"         => "samurai",
-    "yokai"           => "yokai",
-    "démon"           => "demon",
-    "magie"           => "magic",
-    "espace"          => "space",
-    "robot"           => "robot",
-    "école"           => "school",
-    "sports"          => "sports",
-    "enquête"         => "mystery",
-    "apocalypse"      => "apocalypse",
-    "voyage"          => "journey",
-    "fantôme"         => "ghost",
-    "arts martiaux"   => "martial arts"
+    # Aventure & Action
+  "aventure"         => "adventure",
+  "voyage"           => "journey",
+  "action"           => "action",
+  "arts martiaux"    => "martial arts",
+  "ninja"            => "ninja",
+  "pirate"           => "pirate",
+  "samurai"          => "samurai",
+  # Fantastique & Surnaturel
+  "fantaisie"        => "fantasy",
+  "magie"            => "magic",
+  "démon"            => "demon",
+  "fantôme"          => "ghost",
+  "yokai"            => "yokai",
+  # Science-fiction & Tech
+  "science-fiction"  => "science fiction",
+  "sf"               => "science fiction",
+  "espace"           => "space",
+  "robot"            => "robot",
+  "apocalypse"       => "apocalypse",
+  # Vie scolaire & Tranche de vie
+  "école"            => "school",
+  "slice of life"    => "slice of life",
+  # Romance & Drame
+  "romance"          => "romance",
+  "amour"            => "love",
+  "drame"            => "drama",
+  # Comédie
+  "comédie"          => "comedy",
+  "humour"           => "comedy",
+  # Sport
+  "sport"            => "sports",
+  "sports"           => "sports", # pour tolérance orthographique
+  # Enquête / Mystère / Thriller
+  "enquête"          => "mystery",
+  "mystère"          => "mystery",
+  "thriller"         => "thriller",
+  # Démographies manga
+  "shonen"           => "shonen",
+  "shojo"            => "shojo",
+  "seinen"           => "seinen",
+  "josei"            => "josei"
   }.freeze
 
   SYSTEM_PROMPT = <<~PROMPT

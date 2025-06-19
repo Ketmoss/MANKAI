@@ -47,7 +47,7 @@
     <!-- target de scroll existant -->
     <div data-chatbot-scroll-target="end"></div>
 
-    <div class="container">
+
       <%= form_with(model: [@chatbot, @messagebot],
                     local: true,
                     html: {
@@ -57,14 +57,13 @@
                       }
                     }) do |form| %>
         <div class="mb-3">
-          <%= form.label :content, "Ta question :", class: "form-label" %>
+          <%= form.label :content, "Ta question :", class: "form-label text-orange" %>
           <%= form.text_area :content, rows: 3,
-                class: "form-control",
+                class: "form-control input-on-surface",
                 placeholder: "Pose ta question..." %>
         </div>
-        <%= form.submit "Envoyer", class: "btn btn-manga-primary" %>
+        <%= form.submit "Envoyer", class: "btn btn-manga-primary mb-4" %>
       <% end %>
-    </div>
 
   </div>
 </div>
