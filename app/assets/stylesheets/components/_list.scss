@@ -1,0 +1,9 @@
+.list-group-item {
+  background-color: $on_surface; // ou $surface si tu utilises des variables
+  border-radius: 8px;
+  color: $manga-primary;
+}
+.list-group {
+  background-color: $on_surface; // ou $surface si tu utilises des variables
+  border-radius: 8px;
+}

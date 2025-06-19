@@ -1,6 +1,8 @@
-<% unread_count = user.notifications.unread.count %>
-<% if unread_count.positive? %>
-  <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-    <%= unread_count %>
-  </span>
-<% end %>
+<div id="notification-counter" data-count="<%= user.notifications.unread.count %>">
+  <% unread_count = user.notifications.unread.count %>
+  <% if unread_count.positive? %>
+    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+      <%= unread_count %>
+    </span>
+  <% end %>
+</div>

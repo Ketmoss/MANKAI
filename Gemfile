@@ -61,6 +61,7 @@ gem 'redis', '~> 5.0'
 gem "geocoder", "~> 1.7"
 gem 'httparty'
 gem 'simple_calendar'
+gem 'pg_search'
 
 group :development, :test do
   gem "dotenv-rails"

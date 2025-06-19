@@ -26,7 +26,7 @@
           <% if user_signed_in? %>
             <% if current_user.user_collections.any? %>
               <div class="dropdown">
-                <button class="btn btn-red dropdown-toggle mb-4"
+                <button class="btn btn-manga-primary dropdown-toggle mb-4"
                         type="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -52,7 +52,7 @@
               </div>
             <% else %>
               <div class="text-muted py-4">
-                <%= link_to new_user_collection_path, class: "btn btn-red" do %>
+                <%= link_to new_user_collection_path, class: "btn btn-manga-primary" do %>
                   <i class="fas fa-bookmark"></i>
                   <span>Je possède ce manga</span>
                 <% end %>
@@ -66,7 +66,7 @@
 
         <%# Demande d'échange %>
         <div>
-      <%= link_to "Faire une demande d'échange", exchange_candidates_db_manga_path(@db_manga), class: "btn btn-red" %>
+      <%= link_to "Faire une demande d'échange", exchange_candidates_db_manga_path(@db_manga), class: "btn btn-manga-primary" %>
         </div>
       </div>
 
@@ -94,7 +94,7 @@
               <% end %>
             </ul>
             <div class="text-center p-3">
-              <%= link_to raw('<i class="fa-solid fa-pen-to-square"></i> Je donne mon avis'), "/reviews/new", class: "btn btn-red" %>
+              <%= link_to raw('<i class="fa-solid fa-pen-to-square"></i> Je donne mon avis'), "/reviews/new", class: "btn btn-manga-primary" %>
             </div>
           </div>
       </div>
