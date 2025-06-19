@@ -31,7 +31,7 @@ class DbMangasController < ApplicationController
 
     if existing_manga
       redirect_back(fallback_location: @db_manga,
-                  alert: 'Ce manga est déjà dans cette collection.')
+                  alert: "Ce manga est déjà dans la collection #{@user_collection.name}.")
     else
       @owned_manga = @user_collection.owned_mangas.create!(
         db_manga: @db_manga,

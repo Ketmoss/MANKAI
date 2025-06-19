@@ -75,12 +75,15 @@
         <div class="text-center">
           <%= form_with url: user_collection_path(@user_collection), method: :delete, data: { turbo_confirm: "Êtes-vous sûr ?" } do %>
           <%= button_tag type: "submit", class: "btn-sm btn-manga-primary px-4" do%>
-          <i class="fas fa-trash-alt"></i>
           <span>Supprimer la collection</span>
           <% end %>
           <% end %>
         </div>
       </div>
+    </div>
+    <div class="mb-5">
+      <br>
+      <br>
     </div>
   </div>
 </div>

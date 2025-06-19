@@ -1,6 +1,7 @@
 /* Styles de base pour Pagy */
 .pagy.nav {
   display: flex;
+  text-decoration: none;
   justify-content: center;
   align-items: center;
   gap: 0.25rem;
@@ -8,6 +9,7 @@
 }
 
 .pagy.nav a {
+  color: $manga-primary;
   display: inline-block;
   padding: 0.5rem 0.75rem;
   text-decoration: none;

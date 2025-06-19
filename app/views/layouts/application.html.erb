@@ -38,10 +38,13 @@
   </head>
 
   <body>
-    <%= render "shared/navbar" %>
-    <%= render "shared/flashes" %>
     <%= render "shared/topbar"%>
-
+    <%= render "shared/navbar" %>
+    <div class="">
+      <div style="max-width: 90%;">
+        <%= render "shared/flashes" %>
+      </div>
+    </div>
     <%= yield %>
   </body>
 </html>

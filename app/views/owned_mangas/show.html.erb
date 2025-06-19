@@ -1,14 +1,19 @@
 <div class="general-style">
   <%# Colone de l'image %>
   <div>
-    <img src="<%= @owned_manga.db_manga.image_url%>" alt="<%= @owned_manga.db_manga.title %>" class="general-style-image py-3">
+    <div class="position-relative">
+  <!-- Image de fond -->
+  <%= image_tag @owned_manga.db_manga.image_url, alt: @owned_manga.db_manga.title, class: "general-style-image py-3" %>
+
+  <!-- Overlay semi-transparent -->
+  <div class="overlay-background"></div>
   </div>
 
   <div class="general-style-details">
     <div class="container">
 
       <%# Carte infos du manga %>
-      <h1 class="text-center mb-4"><%= @owned_manga.db_manga.title%></h1>
+      <h1 class="text-center mx-4 mb-4"><%= @owned_manga.db_manga.title%></h1>
         <div class="card mx-4 mb-4">
           <div class="card-body">
             <p><strong>Author:</strong> <%= @owned_manga.db_manga.author %></p>
@@ -103,7 +108,7 @@
             <% end %>
           </ul>
         <% end %>
-          <%= link_to "Je donne mon avis", "/reviews/new", class: "btn btn-manga-primary btn-sm" %>
+          <%= link_to "Je donne mon avis", "/reviews/new", class: "btn btn-manga-primary btn-sm mt-2" %>
         </div>
       </div>
     </div>
