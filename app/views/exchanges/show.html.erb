@@ -12,11 +12,13 @@
             <div class="d-flex flex-row align-items-center">
               <%= image_tag @exchange.offered_manga.db_manga.image_url, class: "img-cover-fixed", alt: @exchange.offered_manga.db_manga.title  %>
             </div>
-          <% else %>
+          <% elsif @exchange.initiator != current_user%>
             <div>
             <div class="mb-4"><%= link_to "Choisir un manga", edit_exchange_path(@exchange), class: "btn btn-manga-primary" %></div>
             <%= button_to "Refuser l'échange", update_status_exchange_path(@exchange, status: "refused"), method: :patch, class: "btn btn-manga btn-danger" %>
             </div>
+          <% else %>
+            <p>Tu dois attendre que l'autre personne choisisse un manga dans tes collections.</p>
           <% end %>
       </div>
     </div>
@@ -70,8 +72,10 @@
 
     <!-- Boutons -->
     <div class="text-center my-4">
-      <% if @exchange.status != "refused"%>
-        <%= link_to "Discuter de l'échange", chat_path(@exchange.chat), class: "btn btn-manga-primary" %>
+      <% if @exchange.status == "pending" && @exchange.recipient != current_user%>
+        <%= link_to "Discuter de l'échange", chat_path(@exchange.chat), class: "btn btn-manga btn-info" %>
+      <% elsif @exchange.status == "pending" && @exchange.recipient == current_user%>
+        <%= link_to "Discuter de l'échange", chat_path(@exchange.chat), class: "btn btn-manga btn-info" %>
       <% end %>
 
       <% if @exchange.status == "accepted" && @exchange.scheduled_at.present? && @exchange.scheduled_at < Date.today %>

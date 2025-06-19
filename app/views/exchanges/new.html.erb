@@ -1,20 +1,54 @@
 <div class="general-style">
-  <div class="container py-5">
-    <h2 class="text-center py-4">Nouvelle demande d’échange</h2>
-      <div class="d-flex justify-content-center">
-        <div class="col-md-8">
+  <div class="container mt-4">
+      <div>
+          <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+            <div class="manga-card card h-100 shadow-sm d-flex flex-row align-items-start gap-3 mb-4">
+                <% if @wanted_manga.db_manga.image_url.present? %>
+                  <%= image_tag @wanted_manga.db_manga.image_url, class: "img-cover-fixed", alt: @wanted_manga.db_manga.title %>
+                <% else %>
+                  <div class="manga-thumb d-flex align-items-center justify-content-center bg-light">
+                    <i class="fas fa-book fa-2x text-muted"></i>
+                  </div>
+                <% end %>
 
-<%= form_with model: @exchange, url: exchanges_path, local: true do |form| %>
-  <%= form.hidden_field :wanted_manga_id, value: @wanted_manga.id %>
 
-  <div class="mb-3">
-    <%= form.label :initial_message, "Message à l'utilisateur" %><br>
-    <%= form.text_area :initial_message, rows: 4, class: "w-full border rounded p-2" %>
-  </div>
+              <div class="flex-grow-1">
+                <div class="card-body p-0">
+                  <p class="mb-1">Le manga choisi :</p>
+                  <h5 class="mb-1" title="<%= @wanted_manga.db_manga.title %>">
+                  <% if @wanted_manga.db_manga.title.present? %>
+                    <%= @wanted_manga.db_manga.title %>
+                  <% else %>
+                    <%= @wanted_manga.db_manga.author %>
+                  <% end %>
+                  </h5>
+                  <% if @wanted_manga.db_manga.author.present? %>
+                    <p class=" small mb-1">
+                      <i class="fas fa-user me-1"></i><%= @wanted_manga.db_manga.author %>
+                    </p>
+                  <% end %>
+                  <% if @wanted_manga.db_manga.genre.present? %>
+                    <p class=" small mb-0">
+                      <i class="fas fa-tag me-1"></i><%= @wanted_manga.db_manga.genre %>
+                    </p>
+                  <% end %>
+                </div>
+              </div>
 
-  <%= form.submit "Envoyer la demande", class: "btn btn-primary" %>
-<% end %>
-      </div>
+            </div>
+        </div>
+      <div class="row justify-content-center mx-2">
+      <%= form_with model: @exchange, url: exchanges_path, local: true do |form| %>
+        <%= form.hidden_field :wanted_manga_id, value: @wanted_manga.id %>
+
+        <div class="mb-3">
+          <%= form.label :initial_message, "Donner des détails sur l'échange" %><br>
+          <%= form.text_area :initial_message, rows: 4, class: "form-control input-on-surface" %>
+        </div>
+        <div class="">
+        <%= form.submit "Envoyer la demande", class: "btn btn-manga-primary" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

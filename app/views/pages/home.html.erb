@@ -14,7 +14,7 @@
   <% end %>
 
   <!-- Suggestions mangas en sample de 4 -->
-  <div class="row g-4 my-4">
+  <div class="row g-4 mb-4">
     <h3 class="text-center"> Nos suggestions </h3>
     <% dbmangas = @dbmangas.sample(4) %>
     <% dbmangas.each do |manga| %>
@@ -39,6 +39,11 @@
                   <%= manga.author %>
                 <% end %>
                 </h5>
+                <% if manga.author.present? %>
+                  <p class=" small mb-1">
+                    <i class="fas fa-user me-1"></i><%= manga.author %>
+                  </p>
+                <% end %>
                 <% if manga.genre.present? %>
                   <p class=" small mb-0">
                     <i class="fas fa-tag me-1"></i><%= manga.genre %>

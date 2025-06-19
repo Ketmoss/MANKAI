@@ -9,12 +9,12 @@
             <%= form.label :offered_manga_id, "Quel manga souhaites-tu recevoir ?", class: "form-label" %>
             <%= form.collection_select :offered_manga_id, @available_mangas, :id, ->(m) { m.db_manga.title },
                 { prompt: "Choisir un manga" },
-                { class: "form-select" } %>
+                { class: "form-select  input-on-surface" } %>
           </div>
 
           <div class="mb-3">
             <%= form.label :scheduled_at, "Date et heure prévue de l'échange", class: "form-label" %>
-            <%= form.datetime_local_field :scheduled_at, class: "form-control" %>
+            <%= form.datetime_local_field :scheduled_at, class: "form-control input-on-surface" %>
           </div>
 
           <%= form.hidden_field :status, value: "accepted" %>

@@ -2,7 +2,7 @@
   <div class="flex-grow-1 me-2">
     <%= form.text_area :content,
         placeholder: "Tapez votre message...",
-        class: "form-control border-0",
+        class: "form-control input-on-surface",
         style: "resize: none; min-height: 40px; max-height: 120px;",
         rows: 1,
         data: {
@@ -12,7 +12,7 @@
   </div>
   <div>
     <%= form.submit "Envoyer",
-        class: "btn btn-warning",
+        class: "btn btn-manga-primary",
         data: { "chat-form-target": "submit" } %>
   </div>
 <% end %>
