@@ -24,6 +24,7 @@ class UserCollectionsController < ApplicationController
     @user_collection = current_user.user_collections.build
     @owned_mangas = current_user.owned_mangas # Seulement les mangas de l'user
     @db_mangas = DbManga.all
+    @page_title = "Nouvelle collection"
 
     respond_to do |format|
       format.html

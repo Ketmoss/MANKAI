@@ -1,5 +1,6 @@
-<div class="container mt-4">
-  <h1>Laissez un avis !</h1>
+<div class="general-style">
+  <div class="container mt-4">
+  <div class="mx-2">
   <%= simple_form_for [@dbmanga, @review] do |f| %>
   <div class="star-rating">
         <% 5.downto(1) do |i| %>
@@ -7,7 +8,10 @@
           <label for="star<%= i %>"><i class="fas fa-star"></i></label>
         <% end %>
       </div>
-  <%= f.input :content %>
-  <%= f.submit "Envoyer", class: "btn btn-primary" %>
-  <% end %>
+  <div class="mt-4">
+    <%= f.input :content, label: "Pourquoi tu as donné cette note ?", input_html: { class:"form-control input-on-surface" } %>
+    <%= f.submit "Envoyer", class: "btn btn-manga-primary" %>
+    <% end %>
+  </div>
+  </div>
 </div>

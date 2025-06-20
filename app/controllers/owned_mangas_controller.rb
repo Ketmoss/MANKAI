@@ -6,7 +6,6 @@ class OwnedMangasController < ApplicationController
   def show
     @user_collection = UserCollection.find(params[:user_collection_id])
     @owned_manga = OwnedManga.find(params[:id])
-    @page_title = ""
   end
 
   def new

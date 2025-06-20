@@ -7,6 +7,7 @@ before_action :set_dbmanga, only: %i[new create]
 
   def new
     @review = Review.new
+    @page_title = "Donne ton avis"
   end
 
   def create

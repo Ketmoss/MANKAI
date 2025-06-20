@@ -81,7 +81,7 @@
           <% if @db_manga.reviews.present?%>
             <ul class="list-group list-group-flush">
               <% @db_manga.reviews.each do |review| %>
-              <li class="bg-color-surface list-group-item  d-flex justify-content-between align-items-start">
+              <li class="bg-color-surface-v list-group-item  d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
                   <div class="fw-bold"><%= review.user.username%></div>
                   <p><%= review.content %></p>
@@ -90,6 +90,8 @@
               </li>
               <% end %>
             </ul>
+           <% else %>
+            <p>Auncun avis pour le moment.<p>
           <% end %>
             <%= link_to "Je donne mon avis", new_db_manga_review_path(@db_manga), class: "btn btn-manga-primary btn-sm mt-2" %>
         </div>

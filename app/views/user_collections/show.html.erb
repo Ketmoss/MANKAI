@@ -34,10 +34,10 @@
                       </div>
                     </div>
 
-                    <div class="container">
-                    <div class="d-flex gap-4 flex-wrap justify-content-center ">
+                    <div class="">
+                    <div class="d-flex gap-3 flex-wrap justify-content-start ">
                       <%= link_to user_collection_owned_manga_path(@user_collection, owned_manga),
-                                  class: "btn btn-sm btn-orange px-2 d-flex align-items-center gap-1" do %>
+                                  class: "btn btn-sm btn-manga-primary" do %>
                         <i class="fas fa-info-circle"></i> Détails
                       <% end %>
 
@@ -45,7 +45,7 @@
                                     method: :delete,
                                     data: { turbo_confirm: "Êtes-vous sûr ?" },
                                     class: "d-inline" do %>
-                        <%= button_tag type: "submit", class: "btn btn-sm btn-manga-primary px-2 d-flex align-items-center gap-1" do %>
+                        <%= button_tag type: "submit", class: "btn btn-sm btn-manga btn-danger" do %>
                           <i class="fas fa-trash-alt"></i> Retirer
                         <% end %>
                       <% end %>
@@ -58,7 +58,7 @@
             <% end %>
           </div>
         <% else %>
-          <div class="text-center my-5">
+          <div class=" card text-center my-4">
             <p>Aucun manga dans cette collection pour le moment.</p>
           </div>
         <% end %>
@@ -66,7 +66,7 @@
 
       <div class="collection-actions d-flex flex-column flex-md-row justify-content-center gap-3 my-4">
         <div class="text-center">
-          <%= link_to db_mangas_path, class: "btn-sm btn btn-manga-primary" do%>
+          <%= link_to db_mangas_path, class: "btn btn-manga-primary" do%>
           <i class="fas fa-plus"></i>
           <span>Ajouter un manga</span>
           <% end %>
@@ -74,7 +74,7 @@
 
         <div class="text-center">
           <%= form_with url: user_collection_path(@user_collection), method: :delete, data: { turbo_confirm: "Êtes-vous sûr ?" } do %>
-          <%= button_tag type: "submit", class: "btn-sm btn-manga-primary px-4" do%>
+          <%= button_tag type: "submit", class: "btn btn-manga btn-danger" do%>
           <span>Supprimer la collection</span>
           <% end %>
           <% end %>
