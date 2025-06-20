@@ -1,14 +1,16 @@
 <div class="simple-calendar">
-  <div class="calendar-heading">
-    <time datetime="<%= start_date.strftime('%Y-%m') %>" class="calendar-title">
-      <%= t('date.month_names')[start_date.month] %> <%= start_date.year %>
-    </time>
+  <div class="mb-4">
+    <div class="calendar-heading text-center">
+      <time datetime="<%= start_date.strftime('%Y-%m') %>" class="calendar-title">
+        <%= t('date.month_names')[start_date.month] %> <%= start_date.year %>
+      </time>
 
-    <nav>
-      <%= link_to t('simple_calendar.previous', default: 'Previous'), "#{calendar.url_for_previous_view}#calendar-anchor" %>
-      <%= link_to t('simple_calendar.today', default: 'Today'), "#{calendar.url_for_today_view}#calendar-anchor" %>
-      <%= link_to t('simple_calendar.next', default: 'Next'), "#{calendar.url_for_next_view}#calendar-anchor" %>
-    </nav>
+      <nav class="d-flex justify-content-between py-2">
+        <%= link_to t('simple_calendar.previous', default: '<'), "#{calendar.url_for_previous_view}#calendar-anchor" %>
+        <%= link_to t('simple_calendar.today', default: 'Aujourd\'hui'), "#{calendar.url_for_today_view}#calendar-anchor" %>
+        <%= link_to t('simple_calendar.next', default: '>'), "#{calendar.url_for_next_view}#calendar-anchor" %>
+      </nav>
+    </div>
   </div>
 
   <table class="table table-striped">
@@ -31,10 +33,7 @@
                 <div class="exchange-event">
                   <small>
                     <%= link_to exchange_path(event), class: "text-decoration-none" do %>
-                      📚 <%= truncate(event.wanted_manga.db_manga.title, length: 15) %>
-                      <% if event.offered_manga %>
-                        ↔️ <%= truncate(event.offered_manga.db_manga.title, length: 15) %>
-                      <% end %>
+                      <i class="fas fa-book fa text-decoration-none btn-text-secondary"></i>
                     <% end %>
                   </small>
                 </div>

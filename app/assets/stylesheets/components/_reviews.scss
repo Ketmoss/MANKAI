@@ -12,9 +12,9 @@
   cursor: pointer;
 }
 .star-rating input[type="radio"]:checked ~ label {
-  color: $tertiary;
+  color: $secondary;
 }
 .star-rating label:hover,
 .star-rating label:hover ~ label {
-  color: $tertiary;
+  color: $secondary;
 }

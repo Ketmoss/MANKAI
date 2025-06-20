@@ -13,7 +13,6 @@ class DbMangasController < ApplicationController
 
   def show
     @db_manga = DbManga.find(params[:id])
-    @page_title = ""
   end
 
 	def display_db_mangas_list

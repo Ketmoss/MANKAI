@@ -4,7 +4,6 @@
 @import "landing";
 
 .simple-calendar {
-  background-color: #fef2d1;
   border-radius: 12px;
   padding: 10px; // moins d’espace
 }
@@ -13,13 +12,14 @@
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  border-radius: 12px;
 }
 
 .simple-calendar th {
   text-align: center;
   padding: 0.5rem;
-  color: #ffffff;
-  background-color: #444;
+  color: $on-background;
+  background-color: $surface;
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.8rem;
@@ -33,32 +33,33 @@
   overflow: hidden;
   vertical-align: top;
   padding: 4px;
-  border: 1px solid #ddd;
-  background-color: #fffef8;
+  background-color: $surface-variant;
   position: relative;
   transition: background-color 0.3s ease;
 }
 
 .simple-calendar td:hover {
-  background-color: #fef2d1;
+  background-color: $secondary;
+  opacity: 0.2;
 }
 
 .simple-calendar .calendar-heading a {
-  color: #FF914D;
+  color: $manga-primary;
 
   &:hover {
-    text-decoration: underline;
-    color: #FF7020;
+    text-decoration: none;
+    padding: 16px;
+    color: $manga-primary;
   }
 }
 
 .simple-calendar .day_number {
   position: absolute;
-  top: 4px;
-  right: 6px;
-  font-size: 0.7rem;
-  color: #96bca0;
-  font-weight: bold;
+  top: 8px;
+  right: 12px;
+  font-size: 1rem;
+  color: $on-surface;
+  font-weight: 600;
 }
 
 .simple-calendar .event {
@@ -117,12 +118,12 @@
 @media (max-width: 768px) {
   .simple-calendar th,
   .simple-calendar td {
-    padding: 2px;
-    font-size: 0.6rem;
+    padding: 4px;
+    font-size: 0.9rem;
   }
 
   .simple-calendar .day_number {
-    font-size: 0.6rem;
+    font-size: 1.2rem;
   }
 
   .simple-calendar .event {

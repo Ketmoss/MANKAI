@@ -39,10 +39,10 @@
 
 .overlay-background {
   position: absolute;
-  top: -100px;
+  top: -130px;
   left: 0;
   right: 0;
-  height: 500px; // doit correspondre à la hauteur de l'image
+  height: 595px; // doit correspondre à la hauteur de l'image
   background: linear-gradient(#202020, #45454533);
   z-index: 1;
 }

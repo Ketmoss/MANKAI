@@ -76,11 +76,13 @@
 
     <!-- Boutons -->
     <div class="text-center my-4">
-      <% if @exchange.status == "pending" && @exchange.recipient != current_user%>
-        <%= link_to "Discuter de l'échange", chat_path(@exchange.chat), class: "btn btn-manga btn-info" %>
-      <% elsif @exchange.status == "pending" && @exchange.recipient == current_user%>
-        <%= link_to "Discuter de l'échange", chat_path(@exchange.chat), class: "btn btn-manga btn-info" %>
+    <% if @exchange.status == "accepted" %>
+      <% if @exchange.chat.present? %>
+        <%= link_to "Ouvrir le chat", chat_path(@exchange.chat), class: "btn btn-manga-primary" %>
+      <% else %>
+        <%= button_to "Démarrer un chat", start_chat_exchange_path(@exchange), method: :post, class: "btn btn-manga btn-info" %>
       <% end %>
+    <% end %>
 
       <% if @exchange.status == "accepted" && @exchange.meeting_date.present? && @exchange.meeting_date.to_date < Date.today %>
       <div class= "text-center mt-4">

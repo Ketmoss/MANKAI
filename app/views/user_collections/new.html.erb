@@ -1,8 +1,7 @@
 
 <div class="general-style">
-  <div class="container py-4">
-    <div class="form-wrapper">
-      <h1 class="form-title text-center py-4"> <i class="fas fa-book icon-red"></i> Nouvelle collection</h1>
+  <div class="container mt-4">
+    <div class="form-wrapper mx-2">
       <%= simple_form_for(@user_collection) do |f| %>
         <div class="mb-3">
           <%= f.input :name, label: "Nom de la collection", input_html: { class: "form-control input-on-surface" } %>
@@ -11,16 +10,11 @@
         <div class="d-flex justify-content-between align-items-center mt-4">
 
           <%= button_tag type: "submit", class: "btn btn-manga-primary" do %>
-          <i class="fas fa-plus"></i>
+          <i class="fas fa-book"></i>
+          Créer ma collection
           <% end %>
         </div>
       <% end %>
-    </div>
-    <div class="text-center">
-          <%= link_to :back, class: "btn btn-manga-primary text-center" do %>
-          <i class="fas fa-chevron-left"></i>
-          <span>Mes collections</span>
-          <% end %>
     </div>
   </div>
 </div>
