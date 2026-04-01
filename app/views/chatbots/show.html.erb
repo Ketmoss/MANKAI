@@ -1,13 +1,8 @@
 
 <div class="container d-flex justify-content-center align-items-center" data-controller="chatbot-scroll">
-  <!-- loader (caché par défaut via d-none) -->
-  <div class="container-loader d-none d-flex justify-content-center align-items-center"
-       data-chatbot-scroll-target="loader">
-    <div class="loader-chatbot"></div>
-  </div>
-
-  <!-- messages + form (affichés par défaut) -->
-  <div class="messages mt-4 mb-5"
+  <!-- messages (scrollables) -->
+  <div class="messages mt-4"
+       style="height: calc(100vh - 280px); overflow-y: auto; overflow-x: hidden; padding-bottom: 20px;"
        data-chatbot-scroll-target="content">
     <% @messages.each do |message| %>
       <div class="message mb-3 <%= message.role == "user" ? 'user-msg' : 'bot-msg' %>">
@@ -44,26 +39,36 @@
       </div>
     <% end %>
 
+    <!-- loader bubble -->
+    <div class="container-loader d-none my-3" data-chatbot-scroll-target="loader">
+      <div class="d-flex justify-content-start align-items-center">
+        <div class="loader-chatbot"></div>
+        <span class="ms-2 text-muted small">Light écrit...</span>
+      </div>
+    </div>
+
     <!-- target de scroll existant -->
     <div data-chatbot-scroll-target="end"></div>
+  </div>
 
-
-      <%= form_with(model: [@chatbot, @messagebot],
-                    local: true,
-                    html: {
-                      data: {
-                        chatbot_scroll_target: "form",
-                        action: "submit->chatbot-scroll#revealLoader"
-                      }
-                    }) do |form| %>
-        <div class="mb-3">
-          <%= form.label :content, "Ta question :", class: "form-label text-orange" %>
-          <%= form.text_area :content, rows: 3,
-                class: "form-control input-on-surface",
-                placeholder: "Pose ta question..." %>
-        </div>
-        <%= form.submit "Envoyer", class: "btn btn-manga-primary mb-4" %>
-      <% end %>
-
+  <!-- form container (fixé en bas) -->
+  <div class="chatbot-form-container" style="position: fixed; bottom: 70px; left: 0; right: 0; padding: 15px 20px; background-color: #454545; z-index: 1000; border-top: 1px solid #606060;">
+    <%= form_with(model: [@chatbot, @messagebot],
+                  local: true,
+                  html: {
+                    data: {
+                      chatbot_scroll_target: "form",
+                      action: "submit->chatbot-scroll#revealLoader"
+                    }
+                  }) do |form| %>
+      <div class="mb-2">
+        <%= form.text_area :content, rows: 2,
+              class: "form-control input-on-surface",
+              placeholder: "Pose ta question à Light..." %>
+      </div>
+      <div class="d-flex justify-content-end">
+        <%= form.submit "Envoyer", class: "btn btn-manga-primary btn-sm" %>
+      </div>
+    <% end %>
   </div>
 </div>

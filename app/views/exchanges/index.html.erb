@@ -5,7 +5,7 @@
       <div class="text-center my-2 mb-4">
         <%= link_to "Voir mon calendrier", "/calendar", class: "btn btn-manga-primary"%>
       </div>
-      <% @exchanges.sort_by(&:created_at).reverse.each do |exchange| %>
+      <% @exchanges.order(created_at: :desc).each do |exchange| %>
         <%= link_to exchange_path(exchange), class: "text-decoration-none text-light" do %>
           <div class="card shadow-sm d-flex flex-row align-items-center justify-content-between gap-3 mb-4">
             <div class="d-flex flex-row align-items-center">

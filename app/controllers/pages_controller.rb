@@ -2,7 +2,7 @@ class PagesController < ApplicationController
   skip_before_action :authenticate_user!, only: [ :home ]
 
   def home
-    @dbmangas = DbManga.all
+    @dbmangas = DbManga.order("RANDOM()").limit(4)
   end
 
   def profile
@@ -18,7 +18,7 @@ class PagesController < ApplicationController
   def calendar
     @exchanges = Exchange
       .where("initiator_id = ? OR recipient_id = ?", current_user.id, current_user.id)
-      .includes(:wanted_manga, :offered_manga)
+      .includes({ wanted_manga: :db_manga }, { offered_manga: :db_manga }, :initiator, :recipient)
 
     start_date = params.fetch(:start_date, Date.today).to_date
     end_date = start_date.end_of_month

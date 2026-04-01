@@ -7,6 +7,9 @@ class ChatsController < ApplicationController
   end
 
   def show
+    unless @chat.exchange.initiator == current_user || @chat.exchange.recipient == current_user
+      redirect_to root_path, alert: "Tu n'as pas accès à cette discussion."
+    end
   end
 
 

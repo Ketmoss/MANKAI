@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  has_many :user_collections
+  has_many :user_collections, dependent: :destroy
   has_many :owned_mangas, through: :user_collections
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -9,8 +9,8 @@ class User < ApplicationRecord
   has_many :chats, dependent: :destroy
   has_many :chatbots, dependent: :destroy
 
-  has_many :initiated_exchanges, class_name: "Exchange", foreign_key: :initiator_id
-  has_many :received_exchanges, class_name: "Exchange", foreign_key: :recipient_id
+  has_many :initiated_exchanges, class_name: "Exchange", foreign_key: :initiator_id, dependent: :destroy
+  has_many :received_exchanges, class_name: "Exchange", foreign_key: :recipient_id, dependent: :destroy
 
   has_many :notifications, as: :recipient, dependent: :destroy
 

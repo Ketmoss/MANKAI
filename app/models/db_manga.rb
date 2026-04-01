@@ -8,7 +8,7 @@ class DbManga < ApplicationRecord
       trigram:  { threshold: 0.25 }
     }
 
-  has_many :reviews
-	has_many :owned_mangas
+  has_many :reviews, dependent: :destroy
+  has_many :owned_mangas, dependent: :destroy
 
 end

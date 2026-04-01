@@ -3,15 +3,12 @@ class UserCollectionsController < ApplicationController
   before_action :set_user_collection, only: [:show, :edit, :update, :destroy]
 
   def index
-    @usercollections = current_user.user_collections
-    @owned_mangas = current_user.owned_mangas
-    @db_mangas = DbManga.all
+    @usercollections = current_user.user_collections.includes(owned_mangas: :db_manga)
     @page_title = "Ma Mangathèque"
   end
 
   def show
-    @owned_mangas = @user_collection.owned_mangas
-    @db_mangas = DbManga.all
+    @owned_mangas = @user_collection.owned_mangas.includes(:db_manga)
 
     respond_to do |format|
       format.html
@@ -22,8 +19,6 @@ class UserCollectionsController < ApplicationController
 
   def new
     @user_collection = current_user.user_collections.build
-    @owned_mangas = current_user.owned_mangas # Seulement les mangas de l'user
-    @db_mangas = DbManga.all
     @page_title = "Nouvelle collection"
 
     respond_to do |format|
@@ -37,17 +32,12 @@ class UserCollectionsController < ApplicationController
 
     if @user_collection.save
       redirect_to user_collection_path(@user_collection), notice: 'Collection créée avec succès.'
-        else
-      @owned_mangas = current_user.owned_mangas
-      @db_mangas = DbManga.all
+    else
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    @owned_mangas = @user_collection.owned_mangas
-    @db_mangas = DbManga.all
-
     respond_to do |format|
       format.html
       format.json { render json: @user_collection }
@@ -57,9 +47,7 @@ class UserCollectionsController < ApplicationController
   def update
     if @user_collection.update(user_collection_params)
       redirect_to user_collection_path(@user_collection), notice: 'Collection mise à jour avec succès.'
-        else
-      @owned_mangas = @user_collection.owned_mangas
-      @db_mangas = DbManga.all
+    else
       render :edit, status: :unprocessable_entity
     end
   end

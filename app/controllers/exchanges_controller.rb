@@ -6,7 +6,7 @@ class ExchangesController < ApplicationController
   def index
     @exchanges = Exchange
       .where("initiator_id = ? OR recipient_id = ?", current_user.id, current_user.id)
-      .includes(:wanted_manga, :offered_manga)
+      .includes({ wanted_manga: :db_manga }, { offered_manga: :db_manga }, :initiator)
 
     # Compatible avec Simple Calendar - utilise meeting_date
     start_date = params.fetch(:start_date, Date.today).to_date
@@ -52,7 +52,6 @@ class ExchangesController < ApplicationController
     )
 
     if @exchange.save
-      Chat.create(title: "Échange Manga", exchange: @exchange, user: current_user)
       redirect_to exchanges_path, notice: "Demande envoyée avec succès"
     else
       flash.now[:alert] = "Erreur lors de la création de l'échange : #{@exchange.errors.full_messages.join(', ')}"

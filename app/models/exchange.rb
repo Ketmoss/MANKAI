@@ -54,7 +54,7 @@ class Exchange < ApplicationRecord
 
   def create_chat_if_accepted
     if status == "accepted" && chat.nil?
-      create_chat(user: recipient) # ou initiator, selon ton usage
+      create_chat(user: recipient, title: "Échange Manga")
     end
   end
 

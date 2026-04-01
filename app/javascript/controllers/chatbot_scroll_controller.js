@@ -17,9 +17,9 @@ export default class extends Controller {
       .querySelector("input[type=submit], button[type=submit]")
       .setAttribute("disabled", "true");
 
-    // masque le contenu et affiche le loader
-    this.contentTarget.classList.add("d-none");
+    // affiche le loader sans masquer le contenu
     this.loaderTarget.classList.remove("d-none");
+    this.scrollToEnd();
   }
 
   showContent() {

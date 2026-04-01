@@ -111,8 +111,7 @@ class ChatManager {
 
     // Vérifier que tous les éléments sont prêts
     if (!this.checkElementsReady()) {
-      console.log("⏳ Retrying initialization in 200ms...");
-      setTimeout(() => this.initializeChat(), 200);
+      console.log("ℹ️ Pas sur une page de chat, abandon de l'initialisation.");
       return;
     }
 

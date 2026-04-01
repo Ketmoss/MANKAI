@@ -44,10 +44,8 @@
   <body>
     <%= render "shared/topbar"%>
     <%= render "shared/navbar" %>
-    <div class="">
-      <div style="max-width: 90%;">
-        <%= render "shared/flashes" %>
-      </div>
+    <div class="container mt-3">
+      <%= render "shared/flashes" %>
     </div>
     <%= yield %>
   </body>
